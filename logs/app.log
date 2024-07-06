@@ -123,3 +123,4 @@
 2024-06-28T07:28:49.104Z info: Student logged in: papinwit.s@kkumail.com, IP: ::1, User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36
 2024-06-28T07:40:28.348Z info: Student logged in: papinwit.s@kkumail.com, IP: ::1, User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36
 2024-06-28T08:37:42.263Z info: Teacher logged in: hesoyamdavil@gmail.com, IP: ::1, User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36
+2024-07-06T12:55:47.054Z error: Error during Google authentication: db already exists with different case already have: [elearning] trying to create [Elearning]

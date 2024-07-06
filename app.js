@@ -141,7 +141,7 @@ mongoose.connect(url)
         console.log("Connected to MongoDB");
         // Start Express server หลังจากที่ MongoDB เชื่อมต่อเรียบร้อยแล้ว
         app.listen(4000, () => {
-            console.log("Express server is running");
+            console.log("Express server is running in 4000");
         });
     })
     .catch((err) => {
