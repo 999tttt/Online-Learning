@@ -333,7 +333,14 @@ body.dark .icon-dark {
 }
 
 .sidebar_nav a:hover {
-   
+    background-color: #f8f9fa;
     color: #8A2BE2 !important;
 }
 
+body.light .sidebar_nav a:hover {
+    background-color: #f1f1f1;
+}
+
+body.dark .sidebar_nav a:hover {
+    background-color: #444;
+}
