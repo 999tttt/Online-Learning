@@ -70,7 +70,7 @@
     } */
 
     .aside-right {
-      background-color: #dde6ed1a;
+      background-color: var(--bg-color) !important;
       height: 100%;
     }
 
@@ -176,26 +176,44 @@
     .a-list-1 {
       color: #8A2BE2 !important;
     }
+
+    .lesson-bar {
+      border-left: 0.25em solid #007bff !important;
+      padding-left: 0.5em !important;
+      margin-right: 0.5em !important;
+
+    }
+
   </style>
 </head>
 <body>
-  <%- include("./partials/nav.ejs")%>
+  <%- include("./partials/nav2.ejs", { theme: theme, isSidebarOpen: isSidebarOpen }) %>
   <div class="main-content d-flex">
   <%- include("./partials/lessonsList.ejs")%>
   <div class="aside-right bg-white h-auto p-4" style="width: 80%;">
     <div class="manange-bar px-4 py-3 bg-white d-flex w-100">
-      <p class="fw-bold fs-3">จัดการแบบทดสอบ</p>
+      <p class="fw-bold fs-3 lesson-bar">แบบทดสอบภายในระบบ</p>
       <a href="/adminIndex/addQuiz" class="add-button btn btn-primary m-0 p-2">
         เพิ่มแบบทดสอบ<i class="bi bi-plus-circle-fill mx-2"></i>
       </a>
     </div>
   
   <div class="lesson-content p-4 bg-white w-100 my-4">
-    <div class="d-flex">
-      <p class="fw-bold fs-5 my-1 mx-2" style="border-left: 0.25em solid #387bef; padding-left: 0.75em !important;">แบบทดสอบ</p>
-      <p class="header-1">&nbsp;</p>
-    </div>
-      <% if (quiz.length > 0) { %>
+
+    
+    <% if (quiz.length == 0) { %>
+      <div class="d-flex">
+        <div class="set-border">
+          <p class="fw-bold fs-5 my-1 mx-2">ยังไม่มีแบบทดสอบใด ๆ ภายในระบบ</p>
+          <a href="/adminIndex/addLesson" class="a-add text-primary m-0 p-2">
+            เพิ่มแบบทดสอบ<i class="bi bi-plus-circle-fill mx-2"></i>
+          </a>
+        </div>
+      </div>
+    <% } else if (quiz.length > 0) { %>
+      <div class="d-flex">
+        <div class="set-border d-flex">
+          <p class="fw-bold fs-5 my-1 mx-2" style="border-left: 0.25em solid #387bef; padding-left: 0.75em !important;">แบบทดสอบ</p>
         <div class="px-3 my-3">
           <div class="setColumn">
             <% quiz.forEach(quiz => { %>

@@ -29,6 +29,9 @@
     position: sticky;
 
   }
+  .dark #footer{
+    border-top: 1px solid #494949 !important;
+  }
 
   #footer2 {
     background: #f7f7f7;
@@ -117,6 +120,9 @@
   .use-links li a:hover {
     color: #000;
   }
+  .dark .use-links li a:hover {
+    color: white;
+  }
 
   .address h2 {
     padding-bottom: 15px;
@@ -197,9 +203,26 @@
     transform: scale(1.1);
     transition: 0.3s;
   }
+  body.dark {
+    background-color: #121212; /* Dark background color */
+    color: #fff; /* Light text color */
+  }
+
+  .dark #footer {
+    background-color: #333; /* Dark footer background */
+    color: #fff; /* Light text color */
+  }
+
+  .dark .useful-link,
+  .dark .address {
+    border-color: #555; /* Darker border color */
+  }
+  
+  /* Additional styles for dark mode */
+ 
 </style>
 <!-- footer section start -->
-<footer id="footer">
+<footer id="footer" class="<%= theme === 'dark' ? 'dark' : 'light' %>">
   <div class="container p-4">
     <div class="row">
       <div class="col-md-3">

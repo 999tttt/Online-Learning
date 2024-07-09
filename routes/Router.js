@@ -10,6 +10,8 @@ const assignmentsController = require("../controller/adminManageAssignment");
 const studentController = require("../controller/studentController");
 const studentAssignment = require("../controller/studentAssignment");
 const notification = require("../controller/notificationController");
+const adminQuizController  = require('../controller/adminQuizController');
+const profileController = require('../controller/profileController');
 
 // Middleware For Files Uploading
 const upload = require("../middleware/multer");
@@ -122,5 +124,23 @@ router.get('/exportLogs', LogsFile.exportLogs);
 //Notification
 router.get('/adminIndex/maskAllAsRead', /* teacherMiddleware, */ notification.markAsReadAll);
 router.get('/markAsRead', /* teacherMiddleware, */ notification.markAsRead);
+
+//Quiz
+router.get('/adminIndex/adminExamsIndex', adminQuizController.adminExamsIndex);
+router.get('/adminIndex/addQuiz', adminQuizController.addQuizPage);
+router.get('/adminIndex/eachQuizs', adminQuizController.eachQuizs);
+// router.get('/deleteQuiz', adminEditDelete.deleteQuiz);
+router.post('/createquiz',adminQuizController.createQuiz)
+router.get('/getuploadquiz',adminQuizController.getUploadquiz)
+router.get('/gethomequiz',adminQuizController.getHomequiz)
+router.get('/seestudent',adminQuizController.seeStudent)
+router.delete('/deletequiz/:id',adminQuizController.deleteQuiz)
+router.post('/uploadquiz',adminQuizController.uploadQuiz)
+router.get('/getallquestion/:id',adminQuizController.getAllQuestion)
+
+//Profile
+router.get('/profile',profileController.profileIndex);
+router.post('/profile/edit',profileController.editProfile);
+
 
 module.exports = router;

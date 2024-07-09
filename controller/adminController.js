@@ -29,7 +29,9 @@ const adminIndex = async (req, res) => {
     const getLessonId = req.query.lessonId;
     const lesson = await Lesson.findById(getLessonId);
     console.log(userData);
-    res.render("adminIndex", { lessons, lesson, userData });
+    const theme = req.session.theme || 'light'; 
+    const isSidebarOpen = false; 
+    res.render("adminIndex", { lessons, lesson, userData, theme, isSidebarOpen });
   } catch (err) {
     console.error(err);
     res.status(500).send("เกิดข้อผิดพลาด");
@@ -67,7 +69,9 @@ const uploadStudent = async (req, res) => {
     const getLessonId = req.query.lessonId;
     const lesson = await Lesson.findById(getLessonId);
     const allStudents = await Student.find().populate('user');
-    res.render("upload-excelAndmanual", { lessons, lesson, allStudents });
+    const theme = req.session.theme || 'light'; 
+    const isSidebarOpen = false; 
+    res.render("upload-excelAndmanual", { lessons, lesson, allStudents, theme , isSidebarOpen });
   } catch (err) {
     console.error(err);
     res.status(500).send("เกิดข้อผิดพลาด");
@@ -132,7 +136,9 @@ const adminLessonIndex = async (req, res) => {
     const schoolYears = await SchoolYear.find().sort({ schoolYear: 0 });
     const findYear = null;
     console.log(lessons);
-    res.render("adminLessonIndex", { mytitle: "adminLessonIndex", lessons, originPage: originPage, schoolYears, findYear });
+    const theme = req.session.theme || 'light'; 
+    const isSidebarOpen = false; 
+    res.render("adminLessonIndex", { mytitle: "adminLessonIndex", lessons, originPage: originPage, schoolYears, findYear,theme ,isSidebarOpen });
 
   } catch (err) {
     console.error(err);
@@ -163,7 +169,9 @@ const addLesson = async (req, res) => {
     const schoolYearId = req.query.schoolYearId;
     const lessons = await Lesson.find().sort({ createdAt: 1 }).exec();
     const schoolYears = await SchoolYear.find().sort({ schoolYear: 0 });
-    res.render("addLesson", { mytitle: "addLesson", lessons, schoolYears, schoolYearId });
+    const theme = req.session.theme || 'light'; 
+    const isSidebarOpen = false; 
+    res.render("addLesson", { mytitle: "addLesson", lessons, schoolYears, schoolYearId, theme ,isSidebarOpen  });
   } catch (err) {
     console.error(err);
     res.status(500).send("เกิดข้อผิดพลาด");

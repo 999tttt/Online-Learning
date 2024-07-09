@@ -93,6 +93,11 @@
       /* padding-top: 2em !important; */
 
     }
+    .dark .classroomDiv {
+      border-top: 1px solid #494949;
+      /* padding-top: 2em !important; */
+
+    }
 
     .a-list-1 {
       color: #8A2BE2 !important;
@@ -209,13 +214,67 @@
     .lesson-content{
       height: fit-content !important;
     }
+    body.light {
+      background-color: #ffffff;
+      color: #000000;
+    }
+
+    body.dark {
+      background-color: #121212;
+      color: #ffffff;
+    }
+
+    .dark .bg-white {
+      background-color: #333333 !important;
+      color: #ffffff !important;
+    }
+
+    .dark .text-dark {
+      color: #ffffff !important;
+    }
+
+    .dark .text-primary {
+      color: #bb86fc !important;
+    }
+
+    .dark .bg-primary {
+      background-color: #bb86fc !important;
+    }
+
+    /* Additional dark mode styles as needed */
+    .dark .classroom-p {
+      
+      color: white !important;
+    }
+
+    /* Override other styles for dark mode */
+    .dark .lesson-content {
+      background-color: #333333 !important;
+    }
+
+    .dark .up-down-a:hover,
+    .dark .up-down-a:hover .bi {
+      color: #bb86fc !important;
+    }
+
+    .dark .setColumn-p {
+      border-bottom-color: #bb86fc;
+    }
+
+    .dark .setColumn-p-lesson {
+      border-bottom-color: #bb86fc;
+    }
+
+    .dark .a-link {
+      color: #bb86fc !important;
+    }
   </style>
 
 </head>
 
 <body>
   <nav>
-    <%- include("./partials/nav.ejs") %>
+    <%- include("./partials/nav2.ejs", { theme: theme, isSidebarOpen: isSidebarOpen }) %>
     <!-- <div class="element-student">
     </div> -->
   </nav>

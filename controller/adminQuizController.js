@@ -189,7 +189,9 @@ exports.deleteQuestion = (req, res) => {
 exports.adminExamsIndex = async (req, res) => {
   try {
     const quiz = await Quiz.find().sort({ createdAt: 1 }).exec();
-    res.render("adminExam", { mytitle: "adminExam", quiz, user: req.user }); // ถ้าไฟล์อยู่ในโฟลเดอร์ views
+    const theme = req.session.theme || 'light'; 
+    const isSidebarOpen = false; 
+    res.render("adminExam", { mytitle: "adminExam", quiz, user: req.user,theme ,isSidebarOpen }); // ถ้าไฟล์อยู่ในโฟลเดอร์ views
   } catch (err) {
     console.error(err);
     res.status(500).send("เกิดข้อผิดพลาด");
@@ -197,7 +199,7 @@ exports.adminExamsIndex = async (req, res) => {
 }
 // เพิ่มการแสดงหน้าสร้างแบบทดสอบ
 exports.addQuizPage = async (req, res) => {
-  if (req.user) {
+  // if (req.user) {
     try {
       const quiz = await Quiz.find().sort({ createdAt: 1 }).exec();
       res.render("addQuiz", { mytitle: "addQuiz", quiz, user: req.user }); // เปลี่ยนชื่อหน้าตามที่คุณต้องการ
@@ -206,13 +208,13 @@ exports.addQuizPage = async (req, res) => {
       res.status(500).send("เกิดข้อผิดพลาด");
     }
   }
-  else {
-    res.redirect('/login');
-  }
-}
+//   else {
+//     res.redirect('/login');
+//   }
+// }
 
 exports.eachQuizs = async (req, res) => {
-  if (req.user) {
+  // if (req.user) {
     try {
       const quizs = await Quiz.find().sort({ createdAt: 1 }).exec();
       const quizid = req.query.quizId;
@@ -262,13 +264,13 @@ exports.eachQuizs = async (req, res) => {
       res.status(500).send("เกิดข้อผิดพลาด");
     }
   }
-  else {
-    res.redirect('/login');
-  }
-}
+  // else {
+  //   res.redirect('/login');
+  // }
+// }
 
 exports.createQuestion = async function (req, res, next) {
-  if (req.user.role === 'teacher') {
+  // if (req.user.role === 'teacher') {
     try {
       if (req.files && req.files.quizImage) {
         const uploadedFile = req.files.quizImage;
@@ -299,7 +301,7 @@ exports.createQuestion = async function (req, res, next) {
     }
 
   }
-  else {
-    res.redirect('/login');
-  }
-}
+  // else {
+  //   res.redirect('/login');
+  // }
+// }
