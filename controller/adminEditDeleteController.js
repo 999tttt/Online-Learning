@@ -45,6 +45,7 @@ const deleteLesson = async (req, res) => {
 }
 
 const editLesson = async function (req, res, next) {
+  const userData = await User.findById(req.session.userId);
   const lessons = await Lesson.find().sort({ createdAt: 1 }).exec();
   const lessonId = req.query.lesson;
   const lesson = await Lesson.findById(lessonId).populate("schoolYear");
@@ -88,7 +89,7 @@ const editLesson = async function (req, res, next) {
 
 
   // res.json(foundLayouts);
-  res.render("adminEdit", { mytitle: "adminEdit", lesson, lessons, foundLayouts });
+  res.render("adminEdit", { mytitle: "adminEdit",userData, lesson, lessons, foundLayouts });
 
 }
 

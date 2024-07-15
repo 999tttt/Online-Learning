@@ -40,13 +40,22 @@ const authGoogleCallback = async (req, res) => {
         if (user) {
             const getRole = user.role;
             req.session.userId = user.id;
-            if (getRole == "teacher") {
-                logger.info(`Teacher logged in: ${getEmail}, IP: ${req.ip}, User Agent: ${req.headers['user-agent']}`);
-                return res.redirect('/adminIndex');
-            } else if (getRole == "student") {
-                logger.info(`Student logged in: ${getEmail}, IP: ${req.ip}, User Agent: ${req.headers['user-agent']}`);
-                return res.redirect('/studentIndex');
-            }
+            req.session.isLoggedIn = true;
+            //ตรวจสอบว่าโค้ดทั้งหมดที่เกี่ยวข้องกับการตั้งค่าและการใช้งาน session ทำงานถูกต้อง เช่น การเรียก req.session.save()
+            //ในบางครั้ง session อาจไม่ถูกบันทึกถ้าหากมีการเปลี่ยนแปลง session object หลังจากที่ response ถูกส่งไปแล้ว
+            req.session.save((err) => {
+                if (err) {
+                    logger.error(`Session save error: ${err.message}`);
+                    return res.redirect('/');
+                }
+                if (getRole == "teacher") {
+                    logger.info(`Teacher logged in: ${getEmail}, IP: ${req.ip}, User Agent: ${req.headers['user-agent']}`);
+                    return res.redirect('/adminIndex');
+                } else if (getRole == "student") {
+                    logger.info(`Student logged in: ${getEmail}, IP: ${req.ip}, User Agent: ${req.headers['user-agent']}`);
+                    return res.redirect('/studentIndex');
+                }
+            });
         } else if (!user && gmailRegex.test(getEmail)) {
             const createUser = new User({ email: getEmail, role: 'teacher' });
             await createUser.save();
@@ -54,14 +63,28 @@ const authGoogleCallback = async (req, res) => {
             await createTeacher.save();
             await User.findByIdAndUpdate(createUser._id, { $push: { teacher: createTeacher._id } }, { new: true });
 
-            logger.info(`New teacher created and logged in: ${getEmail}, IP: ${req.ip}, User Agent: ${req.headers['user-agent']}`);
-            return res.redirect('/adminIndex');
+            req.session.userId = createUser.id;
+            req.session.save((err) => {
+                if (err) {
+                    logger.error(`Session save error: ${err.message}`);
+                    return res.redirect('/');
+                }
+                logger.info(`New teacher created and logged in: ${getEmail}, IP: ${req.ip}, User Agent: ${req.headers['user-agent']}`);
+                return res.redirect('/adminIndex');
+            });
         } else if (!user && kkumailRegex.test(getEmail)) {
             const createUser = new User({ email: getEmail, role: 'student' });
             await createUser.save();
 
-            logger.info(`New student created: ${getEmail}, IP: ${req.ip}, User Agent: ${req.headers['user-agent']}`);
-            return res.render('studentInformation', { getUser: createUser });
+            req.session.userId = createUser.id;
+            req.session.save((err) => {
+                if (err) {
+                    logger.error(`Session save error: ${err.message}`);
+                    return res.redirect('/');
+                }
+                logger.info(`New student created: ${getEmail}, IP: ${req.ip}, User Agent: ${req.headers['user-agent']}`);
+                return res.render('studentInformation', { getUser: createUser });
+            });
         }
 
     } catch (err) {
@@ -72,20 +95,28 @@ const authGoogleCallback = async (req, res) => {
 
 const logoutGoogle = async (req, res) => {
     try {
-        // สร้าง URL สำหรับล็อกเอาท์ออกจากระบบ Google
-        const logoutUrl = `https://www.google.com/accounts/Logout?continue=https://appengine.google.com/_ah/logout?continue=${YOUR_REDIRECT_URL}`;
         const user = await User.findById(req.session.userId);
         logger.info(`User logged out: ${user.email}, IP: ${req.ip}, User Agent: ${req.headers['user-agent']}`);
-        // ลิ้งค์ไปยัง URL สำหรับล็อกเอาท์
-        req.session.destroy();
-        // ทำการลบคุกกี้ที่เกี่ยวข้องกับการเข้าสู่ระบบด้วย Google (ถ้ามี)
-        res.clearCookie('google_access_token');
-        res.clearCookie('google_id_token');
-        res.redirect(logoutUrl);
+        
+        // ทำการลบ session
+        req.session.destroy((err) => {
+            if (err) {
+                return res.status(500).send('Failed to log out.');
+            }
+
+            // ทำการลบคุกกี้ที่เกี่ยวข้องกับการเข้าสู่ระบบด้วย Google (ถ้ามี)
+            res.clearCookie('google_access_token');
+            res.clearCookie('google_id_token');
+
+            // ทำการลิ้งค์ไปยังหน้าแรกหรือหน้าล็อกอินของเว็บแอปพลิเคชันของคุณ
+            res.redirect('/');
+        });
     } catch (error) {
-        console.error(error)
+        console.error(error);
+        res.status(500).send('An error occurred while logging out.');
     }
 };
+
 
 const ifNotLoggedIn = async (req, res, next) => {
 

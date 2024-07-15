@@ -187,7 +187,7 @@
     }
 
     .discription-layout {
-      color: #747474 !important;
+      color: var(--text-color) !important;
     }
 
     .form-grid {
@@ -292,6 +292,7 @@
     }
 
     .layout-1-typing {
+      color: black !important;
       /* box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px !important; */
       box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
       border-radius: 0.25em;
@@ -405,6 +406,7 @@
     } */
 
     .layout-2-typing {
+      color: black !important;
       /* box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px !important; */
       box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
       border-radius: 0.25em;
@@ -428,6 +430,7 @@
 
     .layout-3-typing {
       /* box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px !important; */
+      color: black !important;
       box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
       border-radius: 0.25em;
       border-top: 0.125em solid #007bff;
@@ -456,25 +459,515 @@
     .custom-layout {
       display: none;
     }
+    * {
+      box-sizing: border-box !important;
+    }
+
+    .card-1,
+    .card-body-1 {
+      border: none !important;
+    }
+
+    .descp {
+      text-indent: 2em;
+      margin: 0 2em;
+    }
+
+    .rectangle-141 {
+      background-color: white;
+      border-radius: 0.75em;
+      box-shadow: 0em 0.75em 1.5em -0.25em #919eab1f, 0em 0em 0.125em #919eab33;
+      height: 14.6875em;
+      width: 75%;
+      margin: 2em 2em;
+    }
+
+    .home-div,
+    .a-home {
+      color: #999999 !important;
+    }
+
+    .above-nav {
+      background-color: white !important;
+      border-bottom: 1px solid #999999;
+    }
+
+    .dark .above-nav-status {
+      background-color: #333 !important;
+      border-right:1px solid #494949 ;
+    }
+
+    .status-a {
+      color: #404258 !important;
+    }
+
+    .list-lesson-p {
+      color: #8A2BE2;
+    }
+
+    .list-lesson-p-span {
+      color: #4B0082;
+    }
+
+    .each-lesson {
+      border-top: 0.1em solid #8A2BE2;
+    }
+
+    .aside-right {
+      background-color: var(--bg-color) !important;
+      height: 100%;
+    }
+
+    .manange-bar {
+      border-radius: 0.5em;
+      justify-content: space-between !important;
+      
+    }
+
+
+    .lesson-content {
+      height: fit-content !important;
+      border-radius: 1em !important;
+      justify-content: center !important;
+    }
+    .dark .manange-bar, .dark .lesson-content{
+      background-color: #333 !important;
+    }
+
+    .lesson-nothing {
+      margin: 25% 0 !important;
+      padding: 0 !important;
+    }
+
+    .each-lesson-a {
+      text-decoration: none !important;
+    }
+
+    .each-lesson-a:hover .each-lesson {
+      border-left: 0.2em solid #8A2BE2 !important;
+    }
+
+    .card-img-top {
+      box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px !important;
+    }
+
+    .setColumn {
+      display: grid !important;
+      grid-template-columns: 1fr 1fr 1fr !important;
+    }
+
+    .card-a {
+      text-decoration: none !important;
+    }
+
+    .card-a:hover,
+    .card-a:hover .p-lesson-name {
+      color: #007bff !important;
+      transition: 0.5s;
+    }
+
+    .card-a:hover .bi-book {
+      color: #007bff !important;
+      transition: color 0.5s;
+    }
+
+    .bi-book-fill {
+      display: none;
+    }
+
+    .card-a:hover .bi-book-fill {
+      display: inline-block !important;
+      transition: 0.5s;
+    }
+
+    .card-a:hover .bi-book {
+      display: none;
+      transition: 0.5s;
+    }
+
+    .manange-bar,
+    .lesson-content {
+      box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px !important;
+      border-radius: 0.5em;
+    }
+
+    .card-1 {
+      width: 90% !important;
+      height: fit-content !important;
+      transition: all 0.8s cubic-bezier(0.15, 0.83, 0.66, 1);
+      cursor: pointer;
+      border-radius: 0.5em;
+      box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px !important;
+    }
+    .dark .card-1{
+      box-shadow: lightgray 0px 2px 5px -1px !important;
+    }
+
+    .card-1:hover {
+      transform: scale(1.05);
+    }
+
+    .card-header {
+      border-right: 1px solid #EAEFF4;
+      border-bottom: 1px solid #EAEFF4;
+    }
+
+    .a-list-1,
+    .bi-1 {
+      color: #8A2BE2 !important;
+    }
+
+
+
+    #yearSelector {
+      border-color: #EAEFF4;
+      border-radius: 0.5em;
+      background-color: white !important;
+      font-size: smaller;
+      padding: 0.5em !important;
+    }
+
+    #yearSelector option {
+      color: #404258;
+      background-color: white !important;
+
+    }
+
+    /* .set-border {
+      border-bottom: 1px solid #EAEFF4;
+      padding-bottom: 1em !important;
+
+    } */
+
+    .set-border-bottom {
+      border-bottom: 1px solid #EAEFF4;
+      margin-bottom: 1em !important;
+
+    }
+
+    .lesson-bar {
+      border-left: 0.25em solid #007bff !important;
+      padding-left: 0.5em !important;
+      margin-right: 0.5em !important;
+
+    }
+
+    .a-add{
+      color: #007bff !important;
+    }
+
+    .a-add:hover{
+      color: #0053ac !important;
+    }
+    
+    .descp {
+      text-indent: 2em;
+      margin: 0 2em;
+    }
+
+    .rectangle-141 {
+      background-color: white;
+      border-radius: 0.75em;
+      box-shadow: 0em 0.75em 1.5em -0.25em #919eab1f, 0em 0em 0.125em #919eab33;
+      height: 14.6875em;
+      left: 4.6875em;
+      top: 37.3125em;
+      width: 39.125em;
+      width: 75%;
+      margin: 2em 2em;
+    }
+
+    .home-div,
+    .a-home {
+      color: #999999 !important;
+    }
+
+    .above-nav {
+      background-color: #dde6ed33;
+    }
+
+    .status-a {
+      color: #404258 !important;
+    }
+
+    .list-lesson-p {
+      color: #8A2BE2;
+
+    }
+
+    .list-lesson-p-span {
+      color: #4B0082;
+    }
+
+    .each-lesson {
+      border-top: 0.1em solid #8A2BE2;
+
+    }
+
+    .aside-right {
+      background-color: #dde6ed1a;
+      height: 100%;
+    }
+
+    .manange-bar {
+      border-radius: 1em;
+      /* grid-template-columns: 1fr 1fr; */
+      /* justify-content: space-between !important; */
+
+    }
+
+
+    .main-content {
+      height: 100%;
+    }
+
+    .lesson-content {
+      height: 100%;
+      border-radius: 1em !important;
+
+      justify-content: center !important;
+      border-top: 0.5em solid #8A2BE2;
+    }
+
+    .lesson-nothing {
+      /* margin: 25% 0 !important; */
+      padding: 0 !important;
+    }
+
+    .add-lesson-btn {
+      float: right;
+      width: auto;
+    }
+
+
+    .show-layout-2 {
+      display: block;
+      opacity: 1;
+      /* สิ้นสุดที่ความทึบ 1 */
+      transition: opacity 0.5s ease;
+      /* กำหนดการเปลี่ยนแปลงที่ต้องการ */
+    }
+
+    .layout01-mainDes {
+
+      font-size: xx-large !important;
+      font-weight: bolder !important;
+
+    }
+
+    /* .input-mainSubDes,
+    .input-mainDes,
+    .input-mainSubDes2 {
+      white-space: pre-wrap !important;
+      overflow: auto !important;
+    } */
+
+    .subDes,
+    .subDesNumber2 {
+      border: none !important;
+    }
+
+    .layout1-contents {
+      background-color: #dde6ed1a;
+      width: 85%;
+
+    }
+
+    .layout01_gird {
+      display: grid;
+      grid-template-columns: 0.75fr 1.25fr;
+    }
+
+
+    .Topic1 {
+      background-color: #8A2BE2 !important;
+      color: white !important;
+      border-radius: 1em !important;
+      width: 70% !important;
+    }
+
+    .Topic1::placeholder {
+      color: white !important;
+      font-size: xx-large;
+      font-weight: bolder;
+      text-align: center !important;
+    }
+
+    #file-input {
+      display: none !important;
+    }
+
+    .center {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: ฟ;
+      /* ทำให้สูงเต็มหน้าจอ */
+    }
+
+    video {
+      border-radius: 0.5em;
+      box-shadow: rgba(67, 71, 85, 0.27) 0px 0px 0.25em, rgba(90, 125, 188, 0.05) 0px 0.25em 1em;
+
+    }
+
+    .file-icon {
+      font-size: 7em;
+    }
+
+    .content-2 {
+      border-top: 0.5em solid #8A2BE2;
+      border-radius: 1em !important;
+      height: 100% !important;
+      background-color: #dde6ed1a !important;
+      box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px !important;
+    }
+
+    .main-content-long-text {
+      color: #8A2BE2 !important;
+      border: none !important;
+
+    }
+
+    .text-areas-indent {
+      text-indent: 2em;
+    }
+
+    .main-content-long-text::placeholder {
+      color: #8A2BE2 !important;
+      /* text-indent: 2em !important; */
+    }
+
+    .setEdge1,
+    .setEdge2 {
+      border-right: 1px solid #8A2BE2 !important;
+      border-bottom-width: 50% !important;
+      box-shadow: rgb(204, 219, 232) 3px 3px 6px 0px inset, rgba(255, 255, 255, 0.5) -3px -3px 6px 1px inset !important;
+    }
+
+    .add-button-2 {
+      float: right;
+
+    }
+
+    .layout01_gird {
+      display: grid;
+      grid-template-columns: 0.75fr 1.25fr;
+    }
+
+    .allCOntent {
+      height: fit-content;
+    }
+
+    .subLayout2Contents2 div {
+      height: fit-content !important;
+    }
+
+    .setborder {
+      border-radius: 0.5em !important;
+    }
+
+    .addContent-a {
+      text-decoration: none !important;
+      transition-duration: 0.3s;
+    }
+
+    .addContent-a:hover {
+      color: #0d57d6 !important;
+      transition: 0.3s;
+    }
+
+    .lesson-bar {
+      border-left: 0.25em solid #387bef !important;
+      padding-left: 0.5em !important;
+    }
+
+    .comment-table tr th {
+      padding-top: 1em !important;
+      padding-bottom: 1em !important;
+      border-bottom: 1px solid #ced4daa0;
+      color: #5a6a85 !important;
+
+    }
+
+    .comment-table tr td {
+      padding-top: 1em !important;
+      /* padding-bottom: 1em !important; */
+      /* border-bottom: 1px solid #ced4daa0; */
+
+    }
+
+    .comment {
+      display: flex;
+      align-items: center;
+      padding: 15px;
+      max-height: 104px;
+    }
+
+    .comment img {
+      width: 50px;
+      height: 50px;
+      border-radius: 25%;
+      margin-right: 1em !important;
+      object-fit: cover;
+
+    }
+
+    /* .comment .content {
+      flex-grow: 1;
+    } */
+
+    .comment-color {
+      color: #7C8FAC !important;
+    }
+
+    .fancyBox {
+      width: 10%;
+      height: auto;
+    }
+
+    .comment-files {
+      width: 125px;
+      height: 125px;
+      margin-right: 1em !important;
+      border-radius: 10%;
+    }
+
+    .commentOption {
+      position: absolute;
+
+    }
+
+    .optionComment:hover {
+      color: #003ba1 !important;
+      transition: 0.3s;
+    }
+
+    .reply-comment {
+      display: none;
+    }
+    
+
+    /* .spn-comment {
+      font-size:xx-small !important;
+      border: 2px solid white;
+      padding: 0.25em !important;
+      border-radius: 0.25em;
+    } */
+    @media screen and (max-width: 768px) {
+      .above-nav-status{
+        display: none;
+      }
+    }
   </style>
 
 
 </head>
 
-<body>
+<body class="<%= theme === 'dark' ? 'dark' : 'light' %>">
   <div id="blur-container">
-    <%- include("./partials/nav.ejs")%>
-    <!-- <div class="above-nav d-flex px-4 py-3">
-      <div class="home-div above-nav-home d-flex mx-2 my-0 align-middle">
-        <i class="bi bi-house mx-2"></i>
-        <a href="/adminIndex" class="a-home">
-          <p class="m-0">หน้าหลัก &nbsp;&nbsp;></p>
-        </a>
-      </div>
-      <a href="#" class="status-a mx-2 my-0 align-middle">
-        <p class="m-0">บทเรียน</p>
-      </a>
-    </div> -->
+    <%- include("./partials/nav2.ejs")%>
+
     <div class="main-content bg-white d-flex w-100 h-auto">
       <%- include("./partials/lessonsList.ejs")%>
       <div class=" row allContent bg-white" style="width: 80%;">
@@ -488,7 +981,7 @@
                   ปีการศึกษา:
                   <span class="fw-normal fs-6 text-primary"><%=lesson.schoolYear.schoolYear%></span>
                 </p>
-                <a href="/adminIndex/eachLessons?lessonId=<%=lesson._id%>" class="edit-a text-dark px-2" style="border-left: 1px solid #ced4daa0 ;margin:0em 1em !important; font-size: small;">แก้ไขชื่อและรูปปก<i class="bi bi-pencil mx-2"></i>
+                <a href="/adminIndex/eachLessons?lessonId=<%=lesson._id%>" class="edit-a  px-2" style="border-left: 1px solid #ced4daa0 ;margin:0em 1em !important; font-size: small;">แก้ไขชื่อและรูปปก<i class="bi bi-pencil mx-2"></i>
                 </a>
               </div>
               <div class="d-flex w-25 justify-content-end" style="align-items: center; margin-top: 0.5 !important;">
@@ -610,7 +1103,7 @@
                 </div>
               </div>
               <p class="discription-layout-1 mx-2 my-2">
-                <span class="fw-bold text-dark">คำอธิบาย: </span>
+                <span class="fw-bold ">คำอธิบาย: </span>
                 เลือกรูปแบบการจัดวางองค์ประกอบของเนื้อหา สามารถเลือกใช้เทมเพลตที่มีให้หรือเลือกที่จะกำหนดเองได้
               </p>
 
@@ -619,7 +1112,7 @@
                   <a href="" class="custom-a">
                     <div class="choose-layout text-primary text-center">
                       <p class="fw-bold fs-4">Custom Layout<br>
-                        <span class="fw-normal fs-5 text-dark">กำหนดเอง</span>
+                        <span class="fw-normal fs-5 ">กำหนดเอง</span>
                       </p>
                     </div>
                   </a>
@@ -629,7 +1122,7 @@
                     <div class="choose-layout text-primary text-center">
                       <p class="fw-bold fs-4">Template Layout
                         <br>
-                        <span class="fw-normal fs-5 text-dark">เทมเพลต</span>
+                        <span class="fw-normal fs-5">เทมเพลต</span>
                       </p>
                     </div>
                   </a>
@@ -639,7 +1132,7 @@
           </div>
           <div class="lesson-content p-4 my-4 bg-white w-100 h-auto custom-layout">
             <p class="discription-layout mx-2">
-              <span class="fw-bold text-dark">คำอธิบาย: </span>
+              <span class="fw-bold ">คำอธิบาย: </span>
               ทำการออกแบบได้ตามที่คุณต้องการ ซึ่งสามารถลากวางและปรับขนาดของวัตถุได้ <br>
             </p>
             <p class="text-primary mx-2 fw-bold mt-2">เลือกกำหนดวัตถุตามที่ต้องการ</p>
@@ -658,7 +1151,7 @@
                 <p class="fw-bold fs-4 my-3 setpBorder2">รูปแบบที่ 1</p>
               </div>
               <p class="discription-layout mx-4">
-                <span class="fw-bold text-dark">คำอธิบาย: </span>
+                <span class="fw-bold ">คำอธิบาย: </span>
                 รูปแบบที่ 1 นี้จะมีองค์ประกอบ ประกอบอยู่ 5 ส่วน ได้แก่ <br>
                 <span class="fw-bold text-primary">ส่วนที่ 1:</span>
                 หัวข้อ เหมาะสำหรับข้อความที่เป็นหัวข้อ
@@ -723,7 +1216,7 @@
                     <p class="fw-normal text-secondary my-1" style="font-size: small;"><i class="bi bi-info-circle text-primary" style="margin-right: 0.25em !important;"></i>
                       สามารถกรอกข้อมูลต่าง ๆ พร้อมกับดูรูปแบบที่และหน้าตาที่จะได้ในเวลาพร้อมกัน
                     </p>
-                    <p class="fw-bold text-dark my-1" style="font-size: small;">คำอธิบาย: <span class="fw-normal text-secondary">ตัวเลขใช้แทนส่วนต่าง ๆ เมื่อกรอกข้อมูลลงไป</span></p>
+                    <p class="fw-bold my-1" style="font-size: small;">คำอธิบาย: <span class="fw-normal text-secondary">ตัวเลขใช้แทนส่วนต่าง ๆ เมื่อกรอกข้อมูลลงไป</span></p>
 
                     <div class="layout-1-typing my-2">
                       <!-- <p class="fs-2 layout-1-topic-p w-auto h-auto"> -->
@@ -766,7 +1259,7 @@
                       </div>
                     </div>
                     <div>
-                      <p class="fw-bold text-center text-dark my-2">
+                      <p class="fw-bold text-center  my-2">
                         รูปแบบที่ได้เมื่อกรอกข้อมูล
                       </p>
                     </div>
@@ -790,7 +1283,7 @@
                 <p class="fw-bold fs-4 my-3 setpBorder2">รูปแบบที่ 2</p>
               </div>
               <p class="discription-layout mx-4">
-                <span class="fw-bold text-dark">คำอธิบาย: </span>
+                <span class="fw-bold ">คำอธิบาย: </span>
                 รูปแบบที่ 2 นี้จะมีองค์ประกอบ ประกอบอยู่ 4 ส่วน ได้แก่ <br>
                 <span class="fw-bold text-primary">ส่วนที่ 1:</span>
                 หัวข้อ เหมาะกับข้อความที่เป็นหัวข้อ มีขนาดตัวอักษรที่เด่นกว่าส่วนอื่น ๆ
@@ -938,7 +1431,7 @@
                 <p class="fw-bold fs-4 my-3 setpBorder2">รูปแบบที่ 3</p>
               </div>
               <p class="discription-layout mx-4">
-                <span class="fw-bold text-dark">คำอธิบาย: </span>
+                <span class="fw-bold ">คำอธิบาย: </span>
                 รูปแบบที่ 3 นี้จะมีองค์ประกอบ ประกอบอยู่ 2 ส่วน ได้แก่ <br>
                 <span class="fw-bold text-primary">ส่วนที่ 1:</span>
                 คำอธิบาย ใช้อธิบายส่วนที่ 2 ซึ่งในส่วนนั้นสามารถเป็นรูปภาพหรือวิดีโอก็ได้
@@ -981,7 +1474,7 @@
                     <p class="fw-normal text-secondary my-1" style="font-size: small;"><i class="bi bi-info-circle text-primary" style="margin-right: 0.25em !important;"></i>
                       สามารถกรอกข้อมูลต่าง ๆ พร้อมกับดูรูปแบบที่และหน้าตาที่จะได้ในเวลาพร้อมกัน
                     </p>
-                    <p class="fw-bold text-dark my-1" style="font-size: small;">คำอธิบาย: <span class="fw-normal text-secondary">ตัวเลขใช้แทนส่วนต่าง ๆ เมื่อกรอกข้อมูลลงไป</span></p>
+                    <p class="fw-bold  my-1" style="font-size: small;">คำอธิบาย: <span class="fw-normal text-secondary">ตัวเลขใช้แทนส่วนต่าง ๆ เมื่อกรอกข้อมูลลงไป</span></p>
 
                     <div class="layout-3-typing my-2">
                       <!-- <p class="fs-2 layout-1-topic-p w-auto h-auto"> -->
@@ -1019,7 +1512,7 @@
                 <p class="fw-bold fs-4 my-3 setpBorder2">รูปแบบที่ 4</p>
               </div>
               <p class="discription-layout mx-4">
-                <span class="fw-bold text-dark">คำอธิบาย: </span>
+                <span class="fw-bold ">คำอธิบาย: </span>
                 รูปแบบที่ 4 นี้จะมีองค์ประกอบ ประกอบอยู่ 3 ส่วน ได้แก่ <br>
                 <span class="fw-bold text-primary">ส่วนที่ 1:</span>
                 หัวข้อ เหมาะสำหรับข้อความที่เป็นหัวข้อ
@@ -1170,8 +1663,8 @@
             </div>-->
 
             <div class="lesson-content p-4 my-4 bg-white w-100 h-auto template-layout">
-              <p class="discription-layout mx-2">
-                <span class="fw-bold text-dark">คำอธิบาย: </span>
+              <p class="discription-layout mx-2 " >
+                <span class="fw-bold ">คำอธิบาย: </span>
                 ให้ทำการเลือกรูปแบบที่ต้องการ ซึ่งแต่ละรูปแบบจะมีการจัดวางเนื้อหาหรือองค์ประกอบ และมีการเก็บข้อมูลเก็บไฟล์ในรูปแบบที่แตกต่างกัน
               </p>
               <div class="layouts-div px-4 py-3">

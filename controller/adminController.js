@@ -40,8 +40,9 @@ const adminIndex = async (req, res) => {
 
 
 const notLoggedIn = async (req, res) => {
+  const theme = req.session.theme || 'light'; // กำหนดค่า default ของ theme
   try {
-    res.render("notLoggedIn");
+    res.render("notLoggedIn", { theme });
   } catch (err) {
     console.error(err);
     res.status(500).send("เกิดข้อผิดพลาด");
@@ -53,8 +54,10 @@ const manageStudent = async (req, res) => {
     const lessons = await Lesson.find().sort({ createdAt: 1 }).exec();
     const getLessonId = req.query.lessonId;
     const lesson = await Lesson.findById(getLessonId);
+    const theme = req.session.theme || 'light'; 
+    const isSidebarOpen = false; 
 
-    res.render("manageStudent", { lessons, lesson });
+    res.render("manageStudent", { lessons, lesson, theme ,isSidebarOpen });
     // res.json(allStudents);
 
   } catch (err) {
@@ -65,13 +68,14 @@ const manageStudent = async (req, res) => {
 
 const uploadStudent = async (req, res) => {
   try {
+    const userData = await User.findById(req.session.userId);
     const lessons = await Lesson.find().sort({ createdAt: 1 }).exec();
     const getLessonId = req.query.lessonId;
     const lesson = await Lesson.findById(getLessonId);
     const allStudents = await Student.find().populate('user');
     const theme = req.session.theme || 'light'; 
     const isSidebarOpen = false; 
-    res.render("upload-excelAndmanual", { lessons, lesson, allStudents, theme , isSidebarOpen });
+    res.render("upload-excelAndmanual", { userData ,lessons, lesson, allStudents, theme , isSidebarOpen });
   } catch (err) {
     console.error(err);
     res.status(500).send("เกิดข้อผิดพลาด");
@@ -120,7 +124,7 @@ const editLessonName = async (req, res) => {
     );
 
     const lessons = await Lesson.find().sort({ createdAt: 1 }).exec();
-    res.render("adminLessonIndex", { mytitle: "adminLessonIndex", lessons });
+    res.render("adminLessonIndex", { mytitle: "adminLessonIndex", lessons, userData });
   } catch (err) {
     console.error(err);
     res.status(500).send("เกิดข้อผิดพลาด");
@@ -130,15 +134,15 @@ const editLessonName = async (req, res) => {
 
 const adminLessonIndex = async (req, res) => {
   try {
+    const userData = await User.findById(req.session.userId);
     const originPage = req.query.originPage;
     const lessons = await Lesson.find().sort({ createdAt: 1 }).populate("schoolYear");
-    // console.log(lessons)
     const schoolYears = await SchoolYear.find().sort({ schoolYear: 0 });
     const findYear = null;
     console.log(lessons);
     const theme = req.session.theme || 'light'; 
     const isSidebarOpen = false; 
-    res.render("adminLessonIndex", { mytitle: "adminLessonIndex", lessons, originPage: originPage, schoolYears, findYear,theme ,isSidebarOpen });
+    res.render("adminLessonIndex", { mytitle: "adminLessonIndex", userData, lessons, originPage: originPage, schoolYears, findYear,theme ,isSidebarOpen });
 
   } catch (err) {
     console.error(err);
@@ -226,6 +230,8 @@ const createLayout = async function (req, res, next) {
         const layout02 = lesson.LayOut2ArrayObject;
         const layout03 = lesson.LayOut3ArrayObject;
         const layout04 = lesson.LayOut4ArrayObject;
+        const theme = req.session.theme || 'light'; 
+        const isSidebarOpen = false; 
 
         const foundLayouts = [];
         async function findLayoutsAndStoreData(deleteLayouts, Layout) {
@@ -277,7 +283,7 @@ const createLayout = async function (req, res, next) {
 
         createNotification(`${userData._id}`, `${userData.fname} ${userData.lname}`, `${whatCome} "${name}" ถูกเพิ่มใหม่ลงในระบบ`, req, res, next)
 
-        res.render("eachLessons", { mytitle: "eachLessons", lesson, lessons, foundLayouts, schYear });
+        res.render("eachLessons", { mytitle: "eachLessons", lesson, lessons, foundLayouts, schYear, theme , isSidebarOpen });
         // console.log(addId)
         // const lesson_id = lesson._id;
         // const lesson_name = lesson.lessonName;
@@ -354,7 +360,7 @@ const createLayout = async function (req, res, next) {
         }));
         createNotification(`${userData._id}`, `${userData.fname} ${userData.lname}`, `${whatCome} "${name}" ถูกเพิ่มใหม่ลงในระบบ`, req, res, next)
 
-        res.render("eachLessons", { mytitle: "eachLessons", lesson, lessons, foundLayouts, schYear });
+        res.render("eachLessons", { mytitle: "eachLessons", lesson, lessons, foundLayouts, schYear, theme, isSidebarOpen });
         // res.render("adminCreateLayout", { mytitle: "adminCreateLayout", lesson, lesson_id, lesson_name });
       }
     } else if (!checkExists) {
@@ -436,7 +442,7 @@ const createLayout = async function (req, res, next) {
         }));
         createNotification(`${userData._id}`, `${userData.fname} ${userData.lname}`, `${whatCome} "${name}" ถูกเพิ่มใหม่ลงในระบบ`, req, res, next)
 
-        res.render("eachLessons", { mytitle: "eachLessons", lesson, lessons, foundLayouts, schYear });
+        res.render("eachLessons", { mytitle: "eachLessons", lesson, lessons, foundLayouts, schYear, theme , isSidebarOpen });
         // res.render("adminCreateLayout", { mytitle: "adminCreateLayout", lesson, lesson_id, lesson_name });
       } else {
         const lessonCreate = new Lesson({
@@ -508,7 +514,7 @@ const createLayout = async function (req, res, next) {
         }));
         createNotification(`${userData._id}`, `${userData.fname} ${userData.lname}`, `${whatCome} "${name}" ถูกเพิ่มใหม่ลงในระบบ`, req, res, next)
 
-        res.render("eachLessons", { mytitle: "eachLessons", lesson, lessons, foundLayouts, schYear });
+        res.render("eachLessons", { mytitle: "eachLessons", lesson, lessons, foundLayouts, schYear, theme , isSidebarOpen });
         // res.render("adminCreateLayout", { mytitle: "adminCreateLayout", lesson, lesson_id, lesson_name });
       }
     }
@@ -573,6 +579,9 @@ const eachLessons = async (req, res) => {
     const layout04 = lesson.LayOut4ArrayObject;
     const layout05 = lesson.LayOut5ArrayObject;
 
+    const theme = req.session.theme || 'light'; 
+    const isSidebarOpen = false;
+
     const lessonComment = await Lesson.findById(lessonId)
       .populate({
         path: "comments",
@@ -663,7 +672,7 @@ const eachLessons = async (req, res) => {
     });
     // res.json(foundLayouts)
     // res.json(lay01_contents)
-    res.render("eachLessons", { mytitle: "eachLessons", lesson, lessons, foundLayouts, schYear, lessonComment, userData });
+    res.render("eachLessons", { mytitle: "eachLessons", lesson, lessons, foundLayouts, schYear, lessonComment, userData , theme , isSidebarOpen});
   } catch (err) {
     console.error(err);
     res.status(500).send("เกิดข้อผิดพลาด");
@@ -685,6 +694,9 @@ const eachLessonStudent = async (req, res) => {
     const layout04 = lesson.LayOut4ArrayObject;
     const layout05 = lesson.LayOut5ArrayObject;
 
+    const theme = req.session.theme || 'light'; 
+    const isSidebarOpen = false;
+
     const lessonComment = await Lesson.findById(lessonId)
       .populate({
         path: "comments",
@@ -775,7 +787,7 @@ const eachLessonStudent = async (req, res) => {
     });
     // res.json(foundLayouts)
     // res.json(lay01_contents)
-    res.render("eachLessonStudent", { mytitle: "eachLessons", lesson, lessons, foundLayouts, schYear, lessonComment, userData });
+    res.render("eachLessonStudent", { mytitle: "eachLessons", lesson, lessons, foundLayouts, schYear, lessonComment, userData, theme ,isSidebarOpen  });
   } catch (err) {
     console.error(err);
     res.status(500).send("เกิดข้อผิดพลาด");
@@ -853,8 +865,10 @@ const logsFile = async (req, res) => {
     const lessons = await Lesson.find().sort({ createdAt: 1 }).exec();
     const getLessonId = req.query.lessonId;
     const lesson = await Lesson.findById(getLessonId);
+    const theme = req.session.theme || 'light'; 
+    const isSidebarOpen = false; 
     console.log(userData);
-    res.render("logsFile", { lessons, lesson, userData });
+    res.render("logsFile", { lessons, lesson, userData, theme, isSidebarOpen });
   } catch (err) {
     console.error(err);
     res.status(500).send("เกิดข้อผิดพลาด");

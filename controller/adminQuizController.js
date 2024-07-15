@@ -188,10 +188,11 @@ exports.deleteQuestion = (req, res) => {
 
 exports.adminExamsIndex = async (req, res) => {
   try {
+    const userData = await User.findById(req.session.userId);
     const quiz = await Quiz.find().sort({ createdAt: 1 }).exec();
     const theme = req.session.theme || 'light'; 
     const isSidebarOpen = false; 
-    res.render("adminExam", { mytitle: "adminExam", quiz, user: req.user,theme ,isSidebarOpen }); // ถ้าไฟล์อยู่ในโฟลเดอร์ views
+    res.render("adminExam", { mytitle: "adminExam",userData, quiz,theme ,isSidebarOpen }); // ถ้าไฟล์อยู่ในโฟลเดอร์ views
   } catch (err) {
     console.error(err);
     res.status(500).send("เกิดข้อผิดพลาด");

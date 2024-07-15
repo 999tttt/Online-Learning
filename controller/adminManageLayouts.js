@@ -91,6 +91,10 @@ const createLayout_01 = async function (req, res, next) {
         const layout02 = lesson.LayOut2ArrayObject;
         const layout03 = lesson.LayOut3ArrayObject;
         const layout04 = lesson.LayOut4ArrayObject;
+
+        const theme = req.session.theme || 'light'; 
+        const isSidebarOpen = false; 
+
         const foundLayouts = [];
 
         async function findLayoutsAndStoreData(deleteLayouts, Layout) {
@@ -126,7 +130,7 @@ const createLayout_01 = async function (req, res, next) {
         });
 
         // res.json(savedLayout1);
-        res.render("getMoreAddContent", { mytitle: "getMoreAddContent", lesson, lessons, foundLayouts });
+        res.render("getMoreAddContent", { mytitle: "getMoreAddContent", lesson, lessons, foundLayouts, theme ,isSidebarOpen  });
     } catch (err) {
         console.error(err);
         res.status(500).send("เกิดข้อผิดพลาด");
@@ -159,6 +163,10 @@ const createLayout_02 = async function (req, res, next) {
         const layout02 = lesson.LayOut2ArrayObject;
         const layout03 = lesson.LayOut3ArrayObject;
         const layout04 = lesson.LayOut4ArrayObject;
+
+        const theme = req.session.theme || 'light'; 
+        const isSidebarOpen = false; 
+
         const foundLayouts = [];
 
         async function findLayoutsAndStoreData(deleteLayouts, Layout) {
@@ -194,7 +202,7 @@ const createLayout_02 = async function (req, res, next) {
         });
 
         // res.json(savedLayout1);
-        res.render("getMoreAddContent", { mytitle: "getMoreAddContent", lesson, lessons, foundLayouts });
+        res.render("getMoreAddContent", { mytitle: "getMoreAddContent", lesson, lessons, foundLayouts, theme , isSidebarOpen });
     } catch (err) {
         console.error(err);
         res.status(500).send("เกิดข้อผิดพลาด");
@@ -211,6 +219,10 @@ const getMoreAddContent = async (req, res) => {
         const layout02 = lesson.LayOut2ArrayObject;
         const layout03 = lesson.LayOut3ArrayObject;
         const layout04 = lesson.LayOut4ArrayObject;
+
+        const theme = req.session.theme || 'light'; 
+        const isSidebarOpen = false; 
+
         const foundLayouts = [];
 
         async function findLayoutsAndStoreData(deleteLayouts, Layout) {
@@ -245,7 +257,7 @@ const getMoreAddContent = async (req, res) => {
             }
         });
 
-        res.render("getMoreAddContent", { mytitle: "getMoreAddContent", lesson, lessons, foundLayouts });
+        res.render("getMoreAddContent", { mytitle: "getMoreAddContent", lesson, lessons, foundLayouts, theme , isSidebarOpen });
         // res.json(lesson);
 
     } catch (err) {
@@ -296,6 +308,10 @@ const createLayout03 = async (req, res) => {
         const layout02 = lesson.LayOut2ArrayObject;
         const layout03 = lesson.LayOut3ArrayObject;
         const layout04 = lesson.LayOut4ArrayObject;
+
+        const theme = req.session.theme || 'light'; 
+        const isSidebarOpen = false; 
+        
         const foundLayouts = [];
 
         async function findLayoutsAndStoreData(deleteLayouts, Layout) {
@@ -331,7 +347,7 @@ const createLayout03 = async (req, res) => {
         });
 
         // res.json(savedLayout1);
-        res.render("getMoreAddContent", { mytitle: "getMoreAddContent", lesson, lessons, foundLayouts });
+        res.render("getMoreAddContent", { mytitle: "getMoreAddContent", lesson, lessons, foundLayouts, theme , isSidebarOpen });
 
     } catch (error) {
         console.error(error);
@@ -382,6 +398,10 @@ const createLayout04 = async (req, res) => {
         const layout02 = lesson.LayOut2ArrayObject;
         const layout03 = lesson.LayOut3ArrayObject;
         const layout04 = lesson.LayOut4ArrayObject;
+
+        const theme = req.session.theme || 'light'; 
+        const isSidebarOpen = false; 
+
         const foundLayouts = [];
 
         async function findLayoutsAndStoreData(deleteLayouts, Layout) {
@@ -417,7 +437,7 @@ const createLayout04 = async (req, res) => {
         });
 
         // res.json(savedLayout1);
-        res.render("getMoreAddContent", { mytitle: "getMoreAddContent", lesson, lessons, foundLayouts });
+        res.render("getMoreAddContent", { mytitle: "getMoreAddContent", lesson, lessons, foundLayouts, theme ,isSidebarOpen });
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'เกิดข้อผิดพลาดในการบันทึกข้อมูล' });

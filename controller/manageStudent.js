@@ -190,8 +190,10 @@ const editAccount = async (req, res) => {
     const getLessonId = req.query.lessonId;
     const lesson = await Lesson.findById(getLessonId);
     const allStudents = await Student.find().populate('user');
+    const theme = req.session.theme || 'light'; 
+    const isSidebarOpen = false; 
 
-    res.render("editStudentAccount", { lessons, lesson, allStudents, stuInfo, findSchool, firstName, lastName });
+    res.render("editStudentAccount", { lessons, lesson, allStudents, stuInfo, findSchool, firstName, lastName ,theme ,isSidebarOpen});
     // res.render("editStudentAccount", { mytitle: "editStudentAccount", lesson, lessons, foundLayouts });
 
   } catch (error) {

@@ -14,6 +14,7 @@ const { sendEmail } = require('../service/notification');
 
 const assignmentIndex = async (req, res) => {
   try {
+    const userData = await User.findById(req.session.userId);
     const lessons = await Lesson.find().sort({ createdAt: 1 }).exec();
     const schoolYear = await SchoolYear.find();
     // สร้างฟังก์ชันสำหรับการแปลงวันที่ในแต่ละ object ในอาร์เรย์
@@ -31,11 +32,13 @@ const assignmentIndex = async (req, res) => {
     };
     const assignments = await Assignments.find().populate("schoolYear").sort({ createdAt: 1 }).exec();
     const formattedAssignments = formatAssignmentDates(assignments);
+    const theme = req.session.theme || 'light'; 
+    const isSidebarOpen = false; 
     // res.json(formattedAssignments);
     //ใช้ตอนแสดงผล
     // const getStartTimeMoment12h = moment(getStartTime).format('DD/MM/YYYY hh:mm A');
     // const getEndTimeMoment12h = moment(getendTime).format('DD/MM/YYYY hh:mm A');
-    res.render('assignmentIndex', { lessons, formattedAssignments, schoolYear });
+    res.render('assignmentIndex', { lessons, userData, formattedAssignments, schoolYear,theme ,isSidebarOpen  });
 
   } catch (error) {
     console.error(error);

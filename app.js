@@ -18,7 +18,7 @@ var multer = require('multer');
 const cors = require('cors');
 const passport = require('passport');
 
-// const MongoStore = require('connect-mongo');
+const MongoStore = require('connect-mongo');
 // const authRouter = require('./routes/auth');
 
 const app = express();
@@ -80,22 +80,15 @@ app.use(loadNotificationsMiddleware);
 
 app.use('/pdfs', express.static('uploads'));
 
-// //session_middleware
-// app.use(session({
-//     secret: 'keyboard cat',
-//     resave: false,
-//     saveUninitialized: true,
-//     store: MongoStore.create({ mongoUrl: 'mongodb://localhost:27017/Elearning', collectionName: "session" }),
-//     cookie: {
-//         maxAge: 1000 * 60 * 60 * 24
-//     }
-// }));
+
 
 app.use(flash());
 app.use(session({
     secret: "ppw.smw_094",
-    resave: true,
-    saveUninitialized: true
+    resave: false,
+    saveUninitialized: true,
+    store: MongoStore.create({ mongoUrl: 'mongodb://127.0.0.1:27017/elearning', collectionName: "session" }),
+    cookie: { maxAge: 1000 * 60 * 60 * 24 }
 }));
 
 // custom middleware for login
@@ -134,7 +127,7 @@ app.use((req, res, next) => {
 app.use(cors());
 
 
-const url = "mongodb://127.0.0.1:27017/Elearning";
+const url = "mongodb://127.0.0.1:27017/elearning";
 
 mongoose.connect(url)
     .then(() => {

@@ -207,6 +207,10 @@ const getMoreAddContent = async (req, res) => {
         const layout02 = lesson.LayOut2ArrayObject;
         const layout03 = lesson.LayOut3ArrayObject;
         const layout04 = lesson.LayOut4ArrayObject;
+
+        const theme = req.session.theme || 'light'; 
+        const isSidebarOpen = false; 
+
         const foundLayouts = [];
 
         async function findLayoutsAndStoreData(deleteLayouts, Layout) {
@@ -242,7 +246,7 @@ const getMoreAddContent = async (req, res) => {
         });
 
 
-        res.render("getMoreAddContent", { mytitle: "getMoreAddContent", lesson, lessons, foundLayouts,user:req.user });
+        res.render("getMoreAddContent", { mytitle: "getMoreAddContent", lesson, lessons, foundLayouts,user:req.user, theme ,isSidebarOpen });
         // res.json(lesson);
 
     } catch (err) {

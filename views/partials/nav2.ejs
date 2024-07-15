@@ -164,7 +164,7 @@
                     </a>
                     <ul class="dropdown">
                         <li class="drop-li my-1"><a class="a-li" href="/adminIndex/adminLessonIndex">บทเรียน</a></li>
-                        <li class="drop-li my-1"><a class="a-li" href="/adminIndex/adminAssignment">งานที่มอบหมาย</a>
+                        <li class="drop-li my-1"><a class="a-li" href="/adminIndex/assignmentIndex">งานที่มอบหมาย</a>
                         </li>
                         <li class="drop-li my-1"><a class="a-li" href="/adminIndex/adminExamsIndex">แบบทดสอบ</a></li>
                     </ul>
@@ -177,7 +177,7 @@
                         <li class="drop-li my-1"><a class="a-li" href="#">แดชบอร์ด (Dashboard)</a></li>
                         <li class="drop-li my-1"><a class="a-li" href="/adminIndex/uploadStudent">รายชื่อนักศึกษา</a>
                         </li>
-                        <li class="drop-li my-1"><a class="a-li" href="#">การเข้าใช้งาน (Logs file)</a></li>
+                        <li class="drop-li my-1"><a class="a-li" href="/adminIndex/logsFile">การเข้าใช้งาน (Logs file)</a></li>
                         <li class="drop-li my-1"><a class="a-li" href="#">การกำหนดสิทธิ์</a></li>
                     </ul>
                 </li>
@@ -211,17 +211,17 @@
             <div class="sub-menu-wrap" id="subMenu">
                 <div class="sub-menu">
                     <div class="user-info">
-                        <h5>ก้องกังวาลย์ วันสุพงศ์</h5>
+                        <h5><%= userData.fname %> <%= userData.lname %></h5>
                     </div>
                     <hr />
                     <a href="/profile" class="sub-menu-link">
                         <i class="bi bi-person-fill"></i>&nbsp;โปรไฟล์
                     </a>
-                    <a href="/logout" class="sub-menu-link"
+                    <a href="/logoutGoogle" class="sub-menu-link"
                         onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                         <i class="bi bi-box-arrow-right"></i>&nbsp;ออกจากระบบ
                     </a>
-                    <form id="logout-form" action="/logout" method="post" style="display: none;">
+                    <form id="logout-form" action="/logoutGoogle" method="post" style="display: none;">
                         <!-- สร้าง form ซ่อนไว้สำหรับส่ง POST request ไปยัง /logout -->
                         <!-- สามารถเพิ่ม CSRF token หรือ headers อื่น ๆ ตามความเหมาะสม -->
                     </form>
