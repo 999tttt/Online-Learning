@@ -1,0 +1,365 @@
+/* Light Mode (Default) */
+/* body.light {
+    --background-color: #f4f4f9;
+    --text-color: black;
+    --border-color: #f4f4f9;
+    --input-background-color: white;
+    --input-border-color: #f4f4f9;
+    --question-background-color: white;
+    --question-border-left-color: #387bef;
+    --question-input-color: black;
+    --select-background-color: transparent;
+    --button-launch-background-color: #1976d2;
+    --button-danger-background-color: red;
+    --button-hover-color: white;
+} */
+
+
+
+
+.section{
+    margin: auto;
+    width: 50%;
+}
+
+.question_form.light{
+    background-color: #f4f4f9 !important;
+    height: 100%;
+    padding-bottom: 30px;
+}
+.question_form_top.light{
+    background-color: white;
+    /* border-top: 8px solid rgb(103, 58, 183); */
+    border-radius: 8px;
+    padding: 30px 25px;
+    text-transform: capitalize;
+}
+.question_form_top_name{
+    /* box-sizing: border-box; */
+    font-family: 'Google Sans',Roboto,Arial,sans-serif;
+    font-size: 32px;
+    font-weight: 400;
+    line-height: 40px;
+    line-height: 135%;
+    width: 100%;
+    border: none;
+    outline: none;
+    /* border-bottom: 1px solid #f4f4f9; */
+    border-left: 0.2em  solid #387bef;
+    padding-left: 0.50em !important;
+    margin-bottom: 0.5em !important;
+    color: black;
+    height: 35px;
+}
+
+.question_form_top_desc{
+    box-sizing: border-box;
+    margin-top: 10px;
+    font-family: 'Google Sans',Roboto,Arial,sans-serif;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 40px;
+    width: 100%;
+    border: none;
+    outline: none;
+    border-bottom: 1px solid #f4f4f9;
+    color: black;
+    height: 20px;
+}
+
+.question_boxes{
+    display:flex;
+    flex-direction: row;
+    justify-content: center;
+}
+.add_question{
+    border-radius: 8px;
+    padding: 25px 22px;
+    text-transform: capitalize;
+    display: flex;
+    flex-direction: column;
+    padding-top: 0px;
+    width: 93%;
+    margin-left: 10px;
+}
+.add_question.light{
+    background-color: white;
+}
+.add_question_top{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+.question{
+    box-sizing: border-box;
+    margin-top:10px;
+    font-family: 'Google Sans',Roboto,Arial,sans-serif;
+    font-size: 15px;
+    font-weight: 400;
+    flex: 1;
+    line-height: 40px;
+    width: 40%;
+    border: none;
+    outline: none;
+    height: 40px;
+    margin-right: 10px;
+    line-height: 10px;
+    padding: 10px;
+}
+
+
+.question:focus{
+    border-bottom: 1px solid rgb(103, 58, 183);
+    background-color: #f4f4f9;
+}
+
+
+.select{
+    height: 40px;
+    max-width: 25em;
+    /* border: 0.5px solid; */
+    padding: 5px 15px;
+    margin-left: 10px;
+    margin-right: 10px;
+    /* border: 1.5px solid #f4f4f9; */
+    /* border-radius: 3px; */
+    /* background:transparent; */
+}
+select.light{
+    color: black;
+}
+.menuitem{
+    color: rgba(118, 118, 118, 0.3);
+}
+
+.add_question_body{
+    display: flex;
+    align-items: center;
+}
+
+.text_input{
+    outline: none;
+    border: none;
+    height: 40px;
+    width: 3rem;
+    min-width: 490px;
+    font-family: Roboto,Arial,sans-serif;
+    font-size:13px;
+    font-weight: 400;
+    letter-spacing: .2px;
+
+    color: #202124;
+}
+
+.text_input:focus{
+    border-bottom: 1.5px solid rgb(103, 58, 183);
+}
+
+.add_footer{
+    /* display: flex; */
+    justify-content: space-between;
+}
+.add_question_bottom{
+    margin-top: 12px;
+    border-top:1px solid rgba(118, 1118, 118, 0.3);
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+
+.add_border{
+    border-left:6px solid #8A2BE2 ;
+}
+
+/* .question_edit{
+    display: flex;
+    justify-content: flex-start;
+    flex-grow: 1;
+} */
+
+.edit{
+    color: #4285f4;
+    text-decoration: none;
+  
+    
+}
+
+.question_edit :hover{
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.points{
+    box-sizing: border-box;
+    font-family: 'Google Sans',Roboto,Arial,sans-serif;
+    font-size: 15px;
+    font-weight: 400;
+    width: 8%;
+    border: 1px solid blue;
+    outline: none;
+    color: black;
+    height: 40px;
+    margin-right: 10px;
+    line-height: 10px;
+    padding: 4px;
+}
+.question_button{
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 2em;
+    margin-right: 5em;
+}
+
+.danger {
+    background-color: red !important;
+    color: white !important;
+  }
+.danger:hover{
+    background-color: darkred !important;
+    color: white !important;
+}
+  .launch {
+    background-color: #1976d2 !important;
+    color: white !important;
+  }
+  .launch:hover{
+    background-color: #0b67c4 !important; 
+    color: white !important;
+  }
+
+/* กำหนดสไตล์พื้นฐานของ input-number */
+.input-number {
+    border: 1px solid #ccc;
+    padding: 5px;
+    border-radius: 4px;
+    max-width: 3em;
+    color: #5f6368;
+  }
+  
+ 
+  .input-number.light {
+    background-color: white;
+  }
+  
+ 
+  .input-number.dark {
+    background-color: #333;
+    color: #f0f0f0;
+  }
+  
+
+.container {
+    padding: 10px;
+  }
+  
+ 
+  .container.light .select, 
+  .container.light .input-number {
+    background-color: white;
+    color: #5f6368;
+  }
+  
+
+  
+
+  
+  /* ปรับแต่งเพิ่มเติมสำหรับ input-number */
+  .input-number {
+    border: 1px solid #ccc;
+    padding: 5px;
+    border-radius: 4px;
+    max-width: 3em;
+  }
+  .light.accordion-summary {
+    background-color: #fff;
+    color: #333;
+    /* border-bottom: 1px solid #ddd; */
+}
+
+
+.light .saved_questions {
+    background-color: #fff;
+    color: #000;
+    padding: 10px;
+    border-radius: 4px;
+}
+
+.light .typography{
+    color: #000;
+}
+.light .menuItem{
+    color: #000;
+    background-color: #f9f9f9
+}
+
+
+  
+  .iconButtonLight {
+    color: #5f6368 !important;
+  }
+  .saved_questions {
+    display: flex;
+    flex-direction: column; /* จัดลูกภายในให้เรียงเป็น column */
+    width: 100%;
+}
+
+.dragIcon {
+    position: absolute; /* ให้ไอคอนอยู่กลางของ div */
+    left: 50%;
+    transform: translateX(-50%) rotate(-90deg); /* แก้ไขการหมุนและจัดให้อยู่กลาง */
+    color: #A3A3A3;
+    font-size: small;
+    align-items: center;
+}
+
+  @media screen and (max-width: 768px) {
+    /* เปลี่ยนการจัดวางของ .question_form_top */
+    .question_form_top {
+        flex-direction: column;
+    }
+
+    /* ปรับขนาดของ input, Select และ input-number ให้เต็มหน้าจอ */
+    .question_form_top_name,
+    .question_form_top_desc,
+    .input-number,
+    .select {
+        width: 100%;
+        max-width: none; /* ลบขนาดสูงสุดที่ตั้งไว้ */
+    }
+
+    /* ปรับขนาดปุ่มให้เหมาะสมกับหน้าจอเล็ก */
+    .question_button {
+        flex-direction: column;
+        align-items: flex-end;
+    }
+
+    .launch,
+    .danger {
+        width: 100%;
+        margin: 5px 0;
+    }
+
+    /* จัดข้อความใน .text ให้เป็น column */
+    .text {
+        flex-direction: column;
+        align-items: flex-start;
+        min-width: 200px;
+    }
+    .question_button{
+        
+        align-items: center;
+    }
+    .text_input{
+        min-width: 120px;
+    }
+    .select{
+        min-width: 180px;
+       
+    }
+    .input-number{
+        min-width: 90px;
+        margin-left: 0.7rem;
+    }
+}

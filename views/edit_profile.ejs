@@ -49,7 +49,7 @@
             }
 
             .form {
-                border-radius: 20px;
+                /* border-radius: 20px; */
                 box-sizing: border-box;
                 height: 500px;
                 padding: 20px;
@@ -87,7 +87,7 @@
             }
 
             .input {
-                border-radius: 12px;
+                /* border-radius: 12px; */
                 border: 0;
                 box-sizing: border-box;
                 color: #eee;
@@ -100,7 +100,7 @@
 
             .cut {
                 background-color: #15172b;
-                border-radius: 10px;
+                /* border-radius: 10px; */
                 height: 20px;
                 left: 20px;
                 position: absolute;
@@ -146,7 +146,7 @@
 
             .submit {
                 background-color: #08d;
-                border-radius: 12px;
+                /* border-radius: 12px; */
                 border: 0;
                 box-sizing: border-box;
                 color: #eee;
@@ -164,15 +164,22 @@
             }
 
             .form-control {
+
                 border: 1px solid #ccc;
                 display: block;
                 width: 100%;
-                height: 40px;
-                padding: 0 20px !important;
-                border-radius: 20px;
+                height: 30px;
+                padding: 0 15px !important;
                 font-family: muli-bold;
                 background: 0 0;
                 background-color: white;
+                color: black;
+            }
+
+            .dark .form-control:disabled {
+                background-color: #444;
+                color: white;
+                border: none;
             }
 
             input,
@@ -218,12 +225,36 @@
             .light .card-body {
                 background-color: #FCFCFD;
             }
+
+            .label {
+                display: inline-block;
+                width: 10rem;
+                /* กำหนดความกว้างตามต้องการ */
+            }
+
+            .text-right {
+                display: inline-block;
+                color: gray;
+
+            }
+
+            .dark .text-right {
+                color: lightgray;
+            }
+
+            .grey {
+                color: gray !important;
+            }
+
+            .dark .grey {
+                color: lightgray !important
+            }
         </style>
 
 </head>
 
 <body>
-    <%- include("./partials/nav2.ejs")%>
+    <%- include("./partials/nav2.ejs") %>
         <br><br><br><br><br>
         <div class="container-my-4">
             <div class="row m-xl-0 p-xl-0">
@@ -233,42 +264,81 @@
                             <div class="col-lg-6">
                                 <div class="profile-image text-center">
                                     <form action="/profile/edit" method="POST" enctype="multipart/form-data">
-                                        <!-- <img src="<%= userData.img %>" alt="Profile Image" class="img-fluid rounded-circle mx-auto" width="250" height="250"> -->
-                                        <img src="#" alt="Profile Image" class="img-fluid rounded-circle mx-auto"
-                                            width="250" height="250">
+                                        <img src="/images/image-9.png" alt="Default Image" class="img-fluid mx-auto"
+                                            width="310" height="350">
                                         <input type="file" name="profileImage" accept="image/png, image/jpeg">
-
+                                        <div class="text-center"><b>รูปโปรไฟล์</b></div>
                                 </div>
                             </div>
                             <div class="col-lg-6">
-                                <div class="form-group">
-                                    <div class="form-wrapper">
-                                        <label for="">ชื่อ:</label>
-                                        <input type="text" class="form-control" value="<%= userData.fname %>" id="fname"
-                                            name="fname" placeholder="">
-                                    </div>
-                                    <div class="form-wrapper">
-                                        <label for="">นามสกุล:</label>
-                                        <input type="text" class="form-control" value="<%= userData.lname %>" id="lname"
-                                            name="lname" placeholder="">
+                                <div class="mb-3">
+                                    <div class="form-group">
+                                        <div class="form-wrapper">
+                                            <label for="fname">ชื่อ:</label>
+                                            <input type="text" class="form-control" value="<%= userData.fname %>"
+                                                id="fname" name="fname" placeholder="">
+                                        </div>
+                                        <div class="form-wrapper">
+                                            <label for="lname">นามสกุล:</label>
+                                            <input type="text" class="form-control" value="<%= userData.lname %>"
+                                                id="lname" name="lname" placeholder="">
+                                        </div>
                                     </div>
                                 </div>
-                                <br><br>
-                            </div><br>
-                            <br><br><br><br>
-                            <div class="mt-auto text-end ">
-                                <button type="submit" class="button-save"> บันทึก <i
-                                        class="bi bi-floppy-fill"></i></button>
-                                </form>
+                                <hr class="mb-3">
+                                <div class="mb-5">
+                                    <div class="mb-1">
+                                        <b class="label">รหัสนักศึกษา:</b>
+                                        <div class="text-right">
+                                            <input type="text" class="form-control" value="643021096-4" id="student_id"
+                                                name="student_id" placeholder="รหัสนักศึกษา" disabled>
+                                        </div>
+                                    </div>
+                                    <div class="mb-1">
+                                        <b class="label">ชื่อเล่น:</b>
+                                        <div class="text-right">
+                                            <input type="text" class="form-control" value="กัปตัน" id="nickname"
+                                                name="nickname" placeholder="ชื่อเล่น">
+                                        </div>
+                                    </div>
+                                    <div class="mb-1">
+                                        <b class="label">คณะ:</b>
+                                        <div class="text-right">
+                                            <input type="text" class="form-control" value="CP" id="faculty"
+                                                name="faculty" placeholder="คณะ" disabled>
+                                        </div>
+                                    </div>
+                                    <div class="mb-1">
+                                        <b class="label">นักศึกษาจาก:</b>
+                                        <div class="text-right">
+                                            <input type="text" class="form-control" value="มหาวิทยาลัยขอนแก่น"
+                                                id="student_where" name="student_where" placeholder="นักศึกษาจาก"
+                                                disabled>
+                                        </div>
+                                    </div>
+                                    <div class="mb-1">
+                                        <b class="label">หมายเหตุ:</b>
+                                        <div class="text-right">
+                                            <input type="text" class="form-control" value="-" id="notes" name="notes"
+                                                placeholder="หมายเหตุ">
+                                        </div>
+                                    </div>
+                                </div>
+
                             </div>
+                            <div class="mt-auto text-end">
+                                <button type="submit" class="button-save">บันทึก <i
+                                        class="bi bi-floppy-fill"></i></button>
+                            </div>
+                            </form>
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-4">
                     <div class="card-body m-3 mx-lg-2 my-lg-0 px-5 pt-3 pb-4 rounded-4 shadow-lg">
                         <p>
-                        <div class="grey">@email:</div>
-                        <div>
+                        <div>@email:</div>
+                        <div class="grey">
                             <%= userData.email %>
                         </div>
                         </p>
@@ -277,5 +347,6 @@
             </div>
         </div>
 </body>
+
 
 </html>

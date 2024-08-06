@@ -11,112 +11,231 @@
   <link rel="stylesheet" href="/css/fixedSwal.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/noty@4/lib/noty.css">
   <script src="https://cdn.jsdelivr.net/npm/noty@4/lib/noty.min.js"></script>
+
+  <style>
+    * {
+        box-sizing: border-box !important;
+      }
   
+      .card-1,
+      .card-body-1 {
+        border: none !important;
+      }
+  
+      .descp {
+        text-indent: 2em;
+        margin: 0 2em;
+      }
+  
+      .rectangle-141 {
+        background-color: white;
+        border-radius: 0.75em;
+        box-shadow: 0em 0.75em 1.5em -0.25em #919eab1f, 0em 0em 0.125em #919eab33;
+        height: 14.6875em;
+        width: 75%;
+        margin: 2em 2em;
+      }
+  
+      .home-div,
+      .a-home {
+        color: #999999 !important;
+      }
+  
+      .above-nav-status {
+         background-color: white !important;
+       }
+   
+       .dark .above-nav-status {
+         background-color: #333 !important;
+         border-right:1px solid #494949 ;
+       }
+  
+      .status-a {
+        color: #404258 !important;
+      }
+  
+      .list-lesson-p {
+        color: #8A2BE2;
+      }
+  
+      .list-lesson-p-span {
+        color: #4B0082;
+      }
+  
+      .each-lesson {
+        border-top: 0.1em solid #8A2BE2;
+      }
+  
+      .aside-right {
+        background-color: var(--bg-color) !important;
+        height: 100%;
+      }
+  
+      .manange-bar {
+        border-radius: 0.5em;
+        justify-content: space-between !important;
+        
+      }
+  
+      .add-button {
+        border-radius: 0.5em !important;
+        width: 20% !important;
+        height: auto !important;
+      }
+  
+      .lesson-content {
+        height: fit-content !important;
+        border-radius: 1em !important;
+        justify-content: center !important;
+      }
+      .dark .manange-bar, .dark .lesson-content{
+        background-color: #333 !important;
+      }
+  
+      .lesson-nothing {
+        margin: 25% 0 !important;
+        padding: 0 !important;
+      }
+  
+      .each-lesson-a {
+        text-decoration: none !important;
+      }
+  
+      .each-lesson-a:hover .each-lesson {
+        border-left: 0.2em solid #8A2BE2 !important;
+      }
+  
+      .card-img-top {
+        box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px !important;
+      }
+  
+      .setColumn {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr 1fr !important;
+      }
+  
+      .card-a {
+        text-decoration: none !important;
+      }
+  
+      .card-a:hover,
+      .card-a:hover .p-lesson-name {
+        color: #007bff !important;
+        transition: 0.5s;
+      }
+  
+      .card-a:hover .bi-book {
+        color: #007bff !important;
+        transition: color 0.5s;
+      }
+  
+      .bi-book-fill {
+        display: none;
+      }
+  
+      .card-a:hover .bi-book-fill {
+        display: inline-block !important;
+        transition: 0.5s;
+      }
+  
+      .card-a:hover .bi-book {
+        display: none;
+        transition: 0.5s;
+      }
+  
+      .manange-bar,
+      .lesson-content {
+        box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px !important;
+        border-radius: 0.5em;
+      }
+  
+      .card-1 {
+        width: 90% !important;
+        height: fit-content !important;
+        transition: all 0.8s cubic-bezier(0.15, 0.83, 0.66, 1);
+        cursor: pointer;
+        border-radius: 0.5em;
+        box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px !important;
+      }
+  
+      .card-1:hover {
+        transform: scale(1.05);
+      }
+  
+      .card-header {
+        border-right: 1px solid #EAEFF4;
+        border-bottom: 1px solid #EAEFF4;
+      }
+  
+      .a-list-2,
+      .bi-2 {
+        color: #8A2BE2 !important;
+      }
+  </style>
 </head>
 
 <body>
   <div id="blur-container">
     <%- include("./partials/studentNav.ejs")%>
-    <!-- <div class="above-nav d-flex px-4 py-3">
-      <div class="home-div above-nav-home d-flex mx-2 my-0 align-middle">
-        <i class="bi bi-house mx-2"></i>
-        <a href="/adminIndex" class="a-home">
-          <p class="m-0">หน้าหลัก &nbsp;&nbsp;></p>
-        </a>
-      </div>
-      <a href="#" class="status-a mx-2 my-0 align-middle">
-        <p class="m-0">บทเรียน</p>
-      </a>
-    </div> -->
   </div>
   <div class="main-content d-flex w-100 h-auto">
     <%- include("./partials/studentAside.ejs")%>
     <div class="aside-right w-75 h-auto p-4">
       <div class="manange-bar px-4 py-3 bg-white d-flex w-100 row" id="topBar">
         <div class="col-6">
-          <p class="fw-bold fs-3 lesson-bar">งานที่มอบหมาย</p>
+          <p class="fw-bold fs-3 lesson-bar">งานที่ได้รับมอบหมาย</p>
         </div>
         <div class="col-6 d-flex justify-content-end">
-          <a href="/historyAssignment" class="btn btn-secondary py-2 px-2">ประวัติการส่งงาน <i class="bi bi-clock-history"></i>
-          </a>
+          <a href="/historyAssignment" class="btn btn-secondary py-2 px-2">ประวัติการส่งงาน <i class="bi bi-clock-history"></i></a>
         </div>
-        <!-- <div>
-          <a href="/adminIndex/addAssign" class="add-button btn btn-primary m-0 p-2">
-            มอบหมายงาน <i class="bi bi-file-arrow-up-fill"></i>
-          </a>
-          <a href="#" class="add-button btn btn-dark m-0 p-2">
-            นำออกข้อมูลนักศึกษา (Export file) <i class="bi bi-file-arrow-down-fill"></i>
-            </i>
-          </a>
-        </div> -->
       </div>
       <div class="lesson-content bg-white w-100 p-4 my-4" style="height: fit-content;">
         <p class="fw-bold">
           <i class="bi bi-card-list text-primary fs-5"></i>
-          <span class="mx-1 fs-5 py-1">รายชื่องานที่มอบหมาย
-          </span>
+          <span class="mx-1 fs-5 py-1">รายชื่องานที่ได้รับมอบหมาย</span>
         </p>
-        <% const schoolYear = userData.student.schoolYear.schoolYear%>
-        <% const assignments = userData.student.schoolYear.Assignments %>
-        <div class="showYear show<%=schoolYear%>">
-          <div class="set-border-bottom">
-            <p class="my-2 p-schoolYear"><span class="text-dark fw-bold">ปีการศึกษา: </span>
-              <span class="text-primary"> <%=schoolYear%></span>
-            </p>
+        <% if (userData && userData.student && userData.student.schoolYear) { %>
+          <% const schoolYear = userData.student.schoolYear.schoolYear %>
+          <% const assignments = userData.student.schoolYear.Assignments %>
+          <div class="showYear show<%= schoolYear %>">
+            <div class="set-border-bottom">
+              <p class="my-2 p-schoolYear"><span class="text-dark fw-bold">ปีการศึกษา: </span><span class="text-primary"><%= schoolYear %></span></p>
+            </div>
           </div>
-        </div>
-        <% if (assignments.length > 0) { %>
-        <div class="list-div">
-          <p class="fs-6 fw-bold">
-            ชื่อ
-          </p>
-          <p class="fs-6 fw-bold">
-            วันที่เปิดให้ส่ง
-          </p>
-          <p class="fs-6 fw-bold">
-            วันที่หมดเขตส่ง
-          </p>
-          <p class="fs-6 fw-bold text-center">
-            จำนวนที่นักศึกษาส่งงาน
-          </p>
-          <p class="fs-6 fw-bold text-center">
-            คะแนนเต็ม
-          </p>
-        </div>
-        <% assignments.forEach(assign => { %>
-        <% const startDate = new Date(assign.StartDate).toLocaleString('en-US', {timeZone: 'Asia/Bangkok', hour12: true, year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit'}); %>
-        <% const Deadline = new Date(assign.Deadline).toLocaleString('en-US', {timeZone: 'Asia/Bangkok', hour12: true, year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit'});%>
-        <a href="/studentAssignDetail?id=<%= assign._id %>" class="data-a">
-          <div class="list-div-data py-3">
-            <p class="fs-6 fw-normal text-dark">
-              <%= assign.name %>
-            </p>
-            <p class="fs-6 fw-normal text-success">
-              <%= startDate.replace(',', '')%>
-            </p>
-            <p class="fs-6 fw-normal text-danger">
-              <%= Deadline.replace(',', '') %>
-            </p>
-            <p class="fs-6 fw-normal text-center">
-              <%= assign.sentCount %>
-            </p>
-            <p class="fs-6 fw-normal text-success text-center">
-              <%= assign.Score %>
-            </p>
+          <% if (assignments.length > 0) { %>
+            <div class="list-div">
+              <p class="fs-6 fw-bold">ชื่อ</p>
+              <p class="fs-6 fw-bold">วันที่เปิดให้ส่ง</p>
+              <p class="fs-6 fw-bold">วันที่หมดเขตส่ง</p>
+              <p class="fs-6 fw-bold text-center">จำนวนที่นักศึกษาส่งงาน</p>
+              <p class="fs-6 fw-bold text-center">คะแนนเต็ม</p>
+            </div>
+            <% assignments.forEach(assign => { %>
+              <% const startDate = new Date(assign.StartDate).toLocaleString('en-US', {timeZone: 'Asia/Bangkok', hour12: true, year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit'}); %>
+              <% const Deadline = new Date(assign.Deadline).toLocaleString('en-US', {timeZone: 'Asia/Bangkok', hour12: true, year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit'}); %>
+              <a href="/studentAssignDetail?id=<%= assign._id %>" class="data-a">
+                <div class="list-div-data py-3">
+                  <p class="fs-6 fw-normal text-dark"><%= assign.name %></p>
+                  <p class="fs-6 fw-normal text-success"><%= startDate.replace(',', '') %></p>
+                  <p class="fs-6 fw-normal text-danger"><%= Deadline.replace(',', '') %></p>
+                  <p class="fs-6 fw-normal text-center"><%= assign.sentCount %></p>
+                  <p class="fs-6 fw-normal text-success text-center"><%= assign.Score %></p>
+                </div>
+              </a>
+            <% }); %>
+          <% } else { %>
+            <div class="list-no-assign">
+              <p class="text-start text-secondary" style="font-size: small;">ยังไม่มีงานที่มอบหมายในระบบในปีการศึกษา: <span class="mx-1 text-primary"><%= schoolYear %></span></p>
+            </div>
+          <% } %>
+        <% } else { %>
+          <div class="list-no-assign">
+            <p class="text-start text-secondary" style="font-size: small;">ไม่มีข้อมูลนักศึกษา</p>
           </div>
-        </a>
-        <% }); %>
-        <% } else if (assignments.length < 1) {%>
-        <div class="list-no-assign">
-          <p class="text-start text-secondary" style="font-size: small;">ยังไม่มีงานที่มอบหมายในระบบในปีการศึกษา: <span class="mx-1 text-primary"><%=schoolYear%></span></p>
-        </div>
         <% } %>
       </div>
     </div>
-
   </div>
   <%- include("./partials/footer.ejs")%>
 </body>
-
-
 </html>

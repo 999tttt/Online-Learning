@@ -14,36 +14,22 @@
             <i class="close-btn" onclick="toggleSidebar()">&#x2715;</i> <!-- Icon close (X) -->
         </div>
         <ul class="sidebar_nav">
-            <li><a class="bi-2 bi pb-2" href="/adminIndex" onclick="toggleSidebar()">หน้าหลัก</a></li>
+            <li><a class="bi-2 bi pb-2" href="/studentIndex" onclick="toggleSidebar()">หน้าหลัก</a></li>
             <li>
                 <p class="fs-6 fw-bold bold-menus" style="margin-bottom: 1em !important;">
                     ห้องเรียน
                 </p>
                 <ul class="submenu">
-                    <li><a class="bi-1" href="/adminIndex/adminLessonIndex"
+                    <li><a class="bi-1" href="/studentLesson"
                             onclick="toggleSidebar()"><i class="bi-1 bi bi-book-half mx-2"></i>บทเรียน</a></li>
-                    <li><a class="bi-2" href="/adminIndex/adminAssignment"
-                            onclick="toggleSidebar()"><i class="bi-2 bi bi-list-task mx-2"></i>งานที่มอบหมาย</a></li>
-                    <li><a class="bi-3" href="/adminIndex/adminExamsIndex"
+                    <li><a class="bi-2" href="/studentAssignment"
+                            onclick="toggleSidebar()"><i class="bi-2 bi bi-list-task mx-2"></i>งานที่ได้รับมอบหมาย</a></li>
+                    <li><a class="bi-3" href="/studentExam"
                             onclick="toggleSidebar()"><i class="bi-3 bi bi-pencil-square mx-2"></i>แบบทดสอบ</a></li>
                 </ul>
+                <li><a class="bi-2 bi pb-2" href="#"  onclick="toggleSidebar()">แจ้งเตือน</a></li>
             </li>
-            <li>
-                <p class="fs-6 fw-bold bold-menus" style="margin-bottom: 1em !important;">
-                    จัดการข้อมูลนักศึกษา
-                </p>
-                <ul class="submenu">
-                    <li><a href="/adminIndex/adminLessonIndex"
-                            onclick="toggleSidebar()"><i class="bi-4 bi-bar-chart mx-2"></i>แดชบอร์ด (Dashboard)</a></li>
-                    <li><a href="/adminIndex/uploadStudent"
-                            onclick="toggleSidebar()"><i class="bi-5 bi-person-lines-fill mx-2"></i>รายชื่อนักศึกษา</a></li>
-                    <li><a href="#" onclick="toggleSidebar()"><i class="bi-6 bi-clock-history mx-2"></i>การเข้าใช้งาน (Logs
-                            file)</a></li>
-                    <li><a href="#" onclick="toggleSidebar()"> <i class="bi-7 bi-bar-chart mx-2"></i>การกำหนดสิทธิ์</a></li>
-                </ul>
-            </li>
-            <li><a class="bi-2 bi pb-2" href="#"  onclick="toggleSidebar()">แจ้งเตือน</a></li>
-
+   
             <br>
             <li class="theme-toggle">
                 <label class="switch_theme_sidebar">
@@ -54,7 +40,6 @@
             </li>
         </ul>
     </div>
-<!-- เพิ่มแจ้งเตือน -->
 
     <script>
         // Function to toggle the sidebar

@@ -13,7 +13,7 @@ const schoolYearSchema = new Schema(
         ref: 'student',
         default: 0
     }],
-    quizes:[{
+    quizArray:[{
         type: mongoose.Schema.ObjectId,
         ref: 'Quiz',
         default: 0

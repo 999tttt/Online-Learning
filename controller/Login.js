@@ -37,10 +37,15 @@ const authGoogleCallback = async (req, res) => {
         const getEmail = profile.email;
 
         const user = await User.findOne({ email: getEmail });
+        req.session.email = getEmail; 
         if (user) {
             const getRole = user.role;
             req.session.userId = user.id;
             req.session.isLoggedIn = true;
+            req.session.name = user.name;
+            req.session.fname = user.fname; 
+            req.session.lname = user.lname; 
+
             //ตรวจสอบว่าโค้ดทั้งหมดที่เกี่ยวข้องกับการตั้งค่าและการใช้งาน session ทำงานถูกต้อง เช่น การเรียก req.session.save()
             //ในบางครั้ง session อาจไม่ถูกบันทึกถ้าหากมีการเปลี่ยนแปลง session object หลังจากที่ response ถูกส่งไปแล้ว
             req.session.save((err) => {
@@ -116,6 +121,10 @@ const logoutGoogle = async (req, res) => {
         res.status(500).send('An error occurred while logging out.');
     }
 };
+
+
+
+
 
 
 const ifNotLoggedIn = async (req, res, next) => {
@@ -285,7 +294,7 @@ const saveInfoStudent = async (req, res) => {
             req.flash('validationErrors', validationErrors)
             req.flash('data', req.body)
         }
-        return res.redirect('/login')
+        return res.redirect('/')
     }
 }
 

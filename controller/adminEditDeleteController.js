@@ -4,6 +4,8 @@ const Layout2 = require("../models/Layout2");
 const Layout3 = require("../models/Layout3");
 const Layout4 = require("../models/Layout4");
 const SchoolYear = require("../models/schoolYear");
+const User = require("../models/user.model");
+
 
 const fs = require('fs');
 const multer = require('multer');
@@ -36,16 +38,16 @@ const deleteLesson = async (req, res) => {
 
   // res.redirect(pageName);
 
-  const lessons = await Lesson.find().sort({ createdAt: 1 }).populate("schoolYear");
-  // console.log(lessons)
-  const schoolYears = await SchoolYear.find().sort({ schoolYear: 0 });
-  const findYear = null;
+ 
 
-  res.render("adminLessonIndex", { mytitle: "adminLessonIndex", lessons, schoolYears, findYear });
+  res.redirect(`/adminIndex/adminLessonIndex`);
 }
 
 const editLesson = async function (req, res, next) {
   const userData = await User.findById(req.session.userId);
+  const theme = req.session.theme || 'light'; 
+  const isSidebarOpen = false; 
+
   const lessons = await Lesson.find().sort({ createdAt: 1 }).exec();
   const lessonId = req.query.lesson;
   const lesson = await Lesson.findById(lessonId).populate("schoolYear");
@@ -89,7 +91,7 @@ const editLesson = async function (req, res, next) {
 
 
   // res.json(foundLayouts);
-  res.render("adminEdit", { mytitle: "adminEdit",userData, lesson, lessons, foundLayouts });
+  res.render("adminEdit", { mytitle: "adminEdit",userData, lesson, lessons, foundLayouts ,theme ,isSidebarOpen });
 
 }
 

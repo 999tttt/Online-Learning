@@ -1,4 +1,6 @@
-var mongoose = require('mongoose')
+var mongoose = require('mongoose');
+const questionSchema = require('./question').schema;
+
 var quizSchema = mongoose.Schema({
     quizname: {
         type: String,
@@ -6,10 +8,10 @@ var quizSchema = mongoose.Schema({
     },
     quizdescription: {
         type: String,
-        required: true
     },
-    upload:{
-        type: Boolean, default: false
+    upload: {
+        type: Boolean,
+        default: false
     },
     owner: {
         type: String,
@@ -27,22 +29,36 @@ var quizSchema = mongoose.Schema({
             default: null
         }
     },
-    question1ArrayObject: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'question1',
-    }],
-    question2ArrayObject: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'question2',
-    }],
-    question3ArrayObject: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'question3',
-    }],
-    question4ArrayObject: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'question4',
-    }]
+    questions: [questionSchema],
 
-})
-module.exports = mongoose.model('Quiz',quizSchema)
+    schoolYear: {
+        type: mongoose.Schema.ObjectId,
+        ref: 'schoolYear',
+        default: 0
+    },
+    timeLimit: {
+        value: {
+            type: String, // ตัวอย่างเช่น '15min', '30min', '1hour'
+            required: true
+        },
+        display: {
+            type: String, // ตัวอย่างเช่น '15 นาที', '30 นาที', '1 ชั่วโมง'
+            required: true
+        }
+    },
+    attemptLimit: {
+        type: Number,
+        default: 1,
+        min: 1
+    },
+    deadline: {
+        type: Date,
+        default: null
+    },
+    isReleased: {
+        type: Boolean,
+        default: false
+    }
+});
+
+module.exports = mongoose.model('Quiz', quizSchema);

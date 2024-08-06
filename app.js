@@ -1,4 +1,6 @@
 require('dotenv').config();
+
+const Swal = require('sweetalert2')
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
@@ -21,7 +23,7 @@ const passport = require('passport');
 const MongoStore = require('connect-mongo');
 // const authRouter = require('./routes/auth');
 
-const app = express();
+var app = express();
 
 app.locals.pluralize = require('pluralize');
 
@@ -52,7 +54,7 @@ const Lesson = require('./models/Lessons');
 
 // const addMatch = require('./models/EventOat')
 
-
+app.use(express.static(path.join(__dirname, 'public')));
 const Router = require('./routes/Router.js');
 const manageStudent = require('./controller/manageStudent.js');
 
@@ -68,10 +70,11 @@ const loadNotificationsMiddleware = require('./middleware/notificationMiddleware
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.use(logger('dev'));
-app.use(express.json());
 app.use(express.urlencoded({
     extended: true
 }));
+app.use(express.json());
+
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')))
 app.use(express.static(path.join(__dirname, 'uploads')))
@@ -86,18 +89,16 @@ app.use(flash());
 app.use(session({
     secret: "ppw.smw_094",
     resave: false,
-    saveUninitialized: true,
-    store: MongoStore.create({ mongoUrl: 'mongodb://127.0.0.1:27017/elearning', collectionName: "session" }),
-    cookie: { maxAge: 1000 * 60 * 60 * 24 }
+    saveUninitialized: false,
 }));
 
 // custom middleware for login
-const ifNotLoggedIn = (req, res, next) => {
-    if (!req.session.isLoggedIn) {
-        return res.render('LoginPage');
-    }
-    next();
-}
+// const ifNotLoggedIn = (req, res, next) => {
+//     if (!req.session.isLoggedIn) {
+//         return res.render('LoginPage');
+//     }
+//     next();
+// }
 
 app.get('/students', (req, res, next) => {
     res.render('studentInformation');

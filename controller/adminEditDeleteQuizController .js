@@ -1,44 +1,86 @@
 const Quiz = require("../models/quiz");
+const Question = require("../models/question");
 const question1 = require("../models/question1");
 const question2 = require("../models/question2");
 const question3 = require("../models/question3");
 const question4 = require("../models/question4");
+const SchoolYear = require("../models/schoolYear");
+const User = require("../models/user.model");
+const mongoose = require('mongoose');
+
+
 const fs = require('fs');
 const multer = require('multer');
 const upload = multer({ dest: 'uploads/' });
 
-const deleteLesson = async (req, res) => {
-   if(req.user.role === 'teacher'){
-  const getLesson_id = req.query.lessonId;
-  // const pageName = req.query.pageName;
-  const getLesson = await Lesson.findById(getLesson_id);
+const deleteQuiz = async (req, res) => {
+  const getQuiz_id = req.query.quizId;
 
-  const deleteLayout01 = getLesson.LayOut1ArrayObject;
-  const deleteLayout02 = getLesson.LayOut2ArrayObject;
-  const deleteLayout03 = getLesson.LayOut3ArrayObject;
-  const deleteLayout04 = getLesson.LayOut4ArrayObject;
+  try {
+      // หา Quiz ที่ต้องการลบ
+      const getQuiz = await Quiz.findById(getQuiz_id);
 
-  async function deleteLayouts(deleteLayouts, Layout) {
-    if (deleteLayouts.length > 0) {
-      for (const layoutId of deleteLayouts) {
-        const deletedLayout = await Layout.findByIdAndDelete(layoutId);
+      if (!getQuiz) {
+          return res.status(404).send('Quiz not found');
       }
-    }
+
+      // หา question IDs ทั้งหมดที่อยู่ใน quiz นี้
+      const questionIds = getQuiz.questions.map(question => question._id);
+
+      // ลบ questions ทั้งหมดที่เกี่ยวข้องกับ quiz นี้
+      async function deleteQuestions(questionIds) {
+          if (questionIds.length > 0) {
+              for (const questionId of questionIds) {
+                  await Question.findByIdAndDelete(questionId);
+              }
+          }
+      }
+
+      // เรียกใช้ฟังก์ชัน deleteQuestions
+      await deleteQuestions(questionIds);
+
+      // ลบ quiz
+      await Quiz.findByIdAndDelete(getQuiz_id);
+
+      res.redirect('/adminIndex/adminExamsIndex');
+  } catch (error) {
+      console.error('Error deleting quiz:', error);
+      res.status(500).send('Internal Server Error');
   }
-  // เรียกใช้ฟังก์ชั่น deleteLayouts สำหรับแต่ละประเภทของ Layout
-  await deleteLayouts(deleteLayout01, Layout1);
-  await deleteLayouts(deleteLayout02, Layout2);
-  await deleteLayouts(deleteLayout03, Layout3);
-  await deleteLayouts(deleteLayout04, Layout4);
+};
 
-  const deleteLesson = await Lesson.findByIdAndDelete(getLesson_id)
+const updateQuiz = async (req, res) => {
+  try {
+      const { quizId, quizname, quizdescription, attemptLimit, timeLimit, schoolYear } = req.body;
+      console.log("Request data:",req.body);
+      // Ensure that schoolYear is a valid ObjectId
+      if (!mongoose.Types.ObjectId.isValid(schoolYear)) {
+          return res.status(400).json({ success: false, message: 'Invalid schoolYear ObjectId' });
+      }
 
-  // res.redirect(pageName);
-}
-else{
-  res.redirect('/login');
-}
-}
+      const updatedQuiz = await Quiz.findByIdAndUpdate(quizId, {
+          quizname,
+          quizdescription,
+          attemptLimit,
+          timeLimit, // This should be an object
+          schoolYear: mongoose.Types.ObjectId(schoolYear)
+      }, { new: true });
+
+      if (!updatedQuiz) {
+          return res.status(404).json({ success: false, message: 'Quiz not found' });
+      }
+
+      res.json({ success: true, quiz: updatedQuiz });
+  } catch (error) {
+      console.error('Error updating quiz:', error);
+      res.status(500).json({ success: false, message: 'Internal server error' });
+  }
+};
+
+
+
+
+
 
 const editLesson = async function (req, res, next) {
   if(req.user.role === 'teacher'){
@@ -49,6 +91,7 @@ const editLesson = async function (req, res, next) {
   const layout02 = lesson.LayOut2ArrayObject;
   const layout03 = lesson.LayOut3ArrayObject;
   const layout04 = lesson.LayOut4ArrayObject;
+  
 
   const foundLayouts = [];
   async function findLayoutsAndStoreData(deleteLayouts, Layout) {
@@ -131,6 +174,7 @@ const makeEdit = async function (req, res, next) {
     const layout02 = lesson.LayOut2ArrayObject;
     const layout03 = lesson.LayOut3ArrayObject;
     const layout04 = lesson.LayOut4ArrayObject;
+    
   
     const foundLayouts = [];
     async function findLayoutsAndStoreData(deleteLayouts, Layout) {
@@ -382,8 +426,9 @@ const makeEdit4 = async function (req, res, next) {
 
 
 module.exports = {
-  deleteLesson,
+  deleteQuiz,
   editLesson,
+  updateQuiz,
   makeEdit,
   makeEdit2,
   makeEdit3,

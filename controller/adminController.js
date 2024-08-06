@@ -170,12 +170,13 @@ const schoolYearRender = async (req, res) => {
 
 const addLesson = async (req, res) => {
   try {
+    const userData = await User.findById(req.session.userId);
     const schoolYearId = req.query.schoolYearId;
     const lessons = await Lesson.find().sort({ createdAt: 1 }).exec();
     const schoolYears = await SchoolYear.find().sort({ schoolYear: 0 });
     const theme = req.session.theme || 'light'; 
     const isSidebarOpen = false; 
-    res.render("addLesson", { mytitle: "addLesson", lessons, schoolYears, schoolYearId, theme ,isSidebarOpen  });
+    res.render("addLesson", { mytitle: "addLesson",userData, lessons, schoolYears, schoolYearId, theme ,isSidebarOpen  });
   } catch (err) {
     console.error(err);
     res.status(500).send("เกิดข้อผิดพลาด");
@@ -185,11 +186,14 @@ const addLesson = async (req, res) => {
 
 const copyLessons = async (req, res) => {
   try {
+    const userData = await User.findById(req.session.userId);
     const lessons = await Lesson.find().sort({ createdAt: 1 }).populate("schoolYear");
     const schoolYears = await SchoolYear.find().sort({ schoolYear: 0 });
     const findYear = null;
+    const theme = req.session.theme || 'light'; 
+    const isSidebarOpen = false; 
 
-    res.render("copyLessons", { mytitle: "copyLessons", lessons, schoolYears, findYear });
+    res.render("copyLessons", { mytitle: "copyLessons",userData , lessons, schoolYears, findYear, theme ,isSidebarOpen  });
   } catch (err) {
     console.error(err);
     res.status(500).send("เกิดข้อผิดพลาด");

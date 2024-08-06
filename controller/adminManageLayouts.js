@@ -9,6 +9,7 @@ const Layout5 = require("../models/Layout5");
 const pdfFile = require("../models/pdfFile");
 const asyncWrapper = require("../middleware/asyncWrapper");
 
+const User = require("../models/user.model");
 const SchoolYear = require("../models/schoolYear");
 const iconv = require('iconv-lite');
 const mongoose = require('mongoose');
@@ -37,6 +38,7 @@ const createLayout_01 = async function (req, res, next) {
 
         // แน่ใจว่า Layout1 ถูก require และอ้างถึงในโค้ดของคุณ
 
+        const userData = await User.findById(req.session.userId);
         const layoutCounter = req.body.layoutCounter;
         const _id = req.body._id;
         console.log(req.file)
@@ -130,7 +132,7 @@ const createLayout_01 = async function (req, res, next) {
         });
 
         // res.json(savedLayout1);
-        res.render("getMoreAddContent", { mytitle: "getMoreAddContent", lesson, lessons, foundLayouts, theme ,isSidebarOpen  });
+        res.render("getMoreAddContent", { mytitle: "getMoreAddContent",userData, lesson, lessons, foundLayouts, theme ,isSidebarOpen  });
     } catch (err) {
         console.error(err);
         res.status(500).send("เกิดข้อผิดพลาด");
@@ -138,6 +140,7 @@ const createLayout_01 = async function (req, res, next) {
 };
 const createLayout_02 = async function (req, res, next) {
     try {
+        const userData = await User.findById(req.session.userId);
         const _id = req.body._id;
         const newLayout02 = await new Layout2({
             Topic: req.body.Topic,
@@ -202,7 +205,7 @@ const createLayout_02 = async function (req, res, next) {
         });
 
         // res.json(savedLayout1);
-        res.render("getMoreAddContent", { mytitle: "getMoreAddContent", lesson, lessons, foundLayouts, theme , isSidebarOpen });
+        res.render("getMoreAddContent", { mytitle: "getMoreAddContent", userData,lesson, lessons, foundLayouts, theme , isSidebarOpen });
     } catch (err) {
         console.error(err);
         res.status(500).send("เกิดข้อผิดพลาด");
@@ -212,6 +215,7 @@ const createLayout_02 = async function (req, res, next) {
 
 const getMoreAddContent = async (req, res) => {
     try {
+        const userData = await User.findById(req.session.userId);
         const lessons = await Lesson.find().sort({ createdAt: 1 }).exec();
         const lessonId = req.query.lesson;
         const lesson = await Lesson.findById(lessonId).populate("schoolYear");
@@ -257,7 +261,7 @@ const getMoreAddContent = async (req, res) => {
             }
         });
 
-        res.render("getMoreAddContent", { mytitle: "getMoreAddContent", lesson, lessons, foundLayouts, theme , isSidebarOpen });
+        res.render("getMoreAddContent", { mytitle: "getMoreAddContent",userData, lesson, lessons, foundLayouts, theme , isSidebarOpen });
         // res.json(lesson);
 
     } catch (err) {
@@ -269,6 +273,7 @@ const getMoreAddContent = async (req, res) => {
 const createLayout03 = async (req, res) => {
     try {
         // รับข้อมูลจากฟอร์ม
+        const userData = await User.findById(req.session.userId);
         const { _id, Description } = req.body;
         const { FileForm } = req.files;
         //   console.log(FileForm);
@@ -347,7 +352,7 @@ const createLayout03 = async (req, res) => {
         });
 
         // res.json(savedLayout1);
-        res.render("getMoreAddContent", { mytitle: "getMoreAddContent", lesson, lessons, foundLayouts, theme , isSidebarOpen });
+        res.render("getMoreAddContent", { mytitle: "getMoreAddContent", userData,lesson, lessons, foundLayouts, theme , isSidebarOpen });
 
     } catch (error) {
         console.error(error);
@@ -358,6 +363,7 @@ const createLayout03 = async (req, res) => {
 const createLayout04 = async (req, res) => {
     try {
         // รับข้อมูลจากฟอร์ม
+        const userData = await User.findById(req.session.userId);
         const { _id, Topic, Description, list, layoutCounter2 } = req.body;
         const getReq = req.body;
         // console.log(getReq)
@@ -437,7 +443,7 @@ const createLayout04 = async (req, res) => {
         });
 
         // res.json(savedLayout1);
-        res.render("getMoreAddContent", { mytitle: "getMoreAddContent", lesson, lessons, foundLayouts, theme ,isSidebarOpen });
+        res.render("getMoreAddContent", { mytitle: "getMoreAddContent",userData, lesson, lessons, foundLayouts, theme ,isSidebarOpen });
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'เกิดข้อผิดพลาดในการบันทึกข้อมูล' });

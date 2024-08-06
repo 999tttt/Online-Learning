@@ -4,6 +4,7 @@ const Student = require("../models/student.model");
 const Teacher = require("../models/teacher.model")
 const fs = require('fs');
 const path = require('path');
+const Question = require("../models/question");
 const question1 = require("../models/question1");
 const question2 = require("../models/question2");
 const question3 = require("../models/question3");
@@ -16,6 +17,33 @@ const upload = multer();
 
 const Grid = require('gridfs-stream');
 const { Readable } = require('stream');
+
+const addQuestion = async function addQuestion() {
+    const newQuestion = {
+        questionText: 'คำถาม',
+        options: [{ optionText: 'ตัวเลือก 1' }],
+        questionType: 'MCQ',
+        points: 1,
+        open: true
+    };
+
+    try {
+        // ส่งคำถามใหม่ไปยังเซิร์ฟเวอร์
+        const response = await axios.post('/api/questions', newQuestion);
+        
+        // เพิ่มคำถามลงในอาร์เรย์ questions
+        questions.push(response.data); // สมมติว่าเซิร์ฟเวอร์ส่งคำถามที่เพิ่มเข้ามา
+
+        updateQuestionCount();
+        calculateTotalPoints();
+        renderQuestions();
+    } catch (error) {
+        console.error('Error adding question:', error);
+        // แสดงข้อความผิดพลาดหรือจัดการข้อผิดพลาดตามต้องการ
+    }
+}
+
+
 
 const createQuestion_1 = async function (req, res, next) {
     try {
@@ -77,7 +105,7 @@ const createQuestion_1 = async function (req, res, next) {
             { new: true }
         );
 
-        const quizs = await Quiz.find().sort({ createdAt: 1 }).exec();
+      const quizzes = await Quiz.find().sort({ createdAt: 1 }).exec();
       const quizid = req.query.quizid;
       const quiz = await Quiz.findById(quizid);
       const question1 = quiz.question1ArrayObject;
@@ -121,311 +149,15 @@ const createQuestion_1 = async function (req, res, next) {
       });
 
         // res.json(savedLayout1);
-        res.render("nextCreateQuestion", { mytitle: "nextCreateQuestion", quiz, quizs, foundQuestions });
-    } catch (err) {
-        console.error(err);
-        res.status(500).send("เกิดข้อผิดพลาด");
-    }
-};
-const createLayout_02 = async function (req, res, next) {
-    try {
-        const _id = req.body._id;
-        const newLayout02 = await new Layout2({
-            Topic: req.body.Topic,
-            TextArea1: req.body.TextArea1,
-            TextArea2: req.body.TextArea2,
-            TextArea3: req.body.TextArea3,
-
-            LessonArrayObject: [{
-                LessonId: _id
-            }]
-        });
-
-        const savedLayout2 = await newLayout02.save();
-        const getLayout02_Id = savedLayout2._id;
-        const updatedLesson = await Lesson.findByIdAndUpdate(
-            _id,
-            { $push: { LayOut2ArrayObject: getLayout02_Id } },
-            { new: true }
-        );
-        const lessons = await Lesson.find().sort({ LessonNumber: 1 }).exec();
-        const lesson = await Lesson.findById(_id);
-        const layout01 = lesson.LayOut1ArrayObject;
-        const layout02 = lesson.LayOut2ArrayObject;
-        const layout03 = lesson.LayOut3ArrayObject;
-        const layout04 = lesson.LayOut4ArrayObject;
-        const foundLayouts = [];
-
-        async function findLayoutsAndStoreData(deleteLayouts, Layout) {
-
-            if (deleteLayouts.length > 0) {
-                for (const layoutId of deleteLayouts) {
-                    const foundLayout = await Layout.findById(layoutId);
-                    if (foundLayout) {
-                        foundLayouts.push(foundLayout);
-                    }
-                }
-            }
-
-            return foundLayouts;
-        }
-
-        const foundLayouts1 = await findLayoutsAndStoreData(layout01, Layout1);
-        const foundLayouts2 = await findLayoutsAndStoreData(layout02, Layout2);
-        const foundLayouts3 = await findLayoutsAndStoreData(layout03, Layout3);
-        const foundLayouts4 = await findLayoutsAndStoreData(layout04, Layout4);
-
-        foundLayouts.sort((a, b) => {
-            const dateA = new Date(a.createdAt);
-            const dateB = new Date(b.createdAt);
-
-            if (dateA < dateB) {
-                return -1;
-            } else if (dateA > dateB) {
-                return 1;
-            } else {
-                return 0;
-            }
-        });
-
-        // res.json(savedLayout1);
-        res.render("nextCreateLayout", { mytitle: "nextCreateLayout", lesson, lessons, foundLayouts });
-
-    } catch (err) {
-        console.error(err);
-        res.status(500).send("เกิดข้อผิดพลาด");
-    }
-}
-
-
-const getMoreAddContent = async (req, res) => {
-    try {
-        const lessons = await Lesson.find().sort({ LessonNumber: 1 }).exec();
-        const lessonId = req.query.lesson;
-        const lesson = await Lesson.findById(lessonId);
-        const layout01 = lesson.LayOut1ArrayObject;
-        const layout02 = lesson.LayOut2ArrayObject;
-        const layout03 = lesson.LayOut3ArrayObject;
-        const layout04 = lesson.LayOut4ArrayObject;
-
-        const theme = req.session.theme || 'light'; 
-        const isSidebarOpen = false; 
-
-        const foundLayouts = [];
-
-        async function findLayoutsAndStoreData(deleteLayouts, Layout) {
-
-            if (deleteLayouts.length > 0) {
-                for (const layoutId of deleteLayouts) {
-                    const foundLayout = await Layout.findById(layoutId);
-                    if (foundLayout) {
-                        foundLayouts.push(foundLayout);
-                    }
-                }
-            }
-
-            return foundLayouts;
-        }
-
-        const foundLayouts1 = await findLayoutsAndStoreData(layout01, Layout1);
-        const foundLayouts2 = await findLayoutsAndStoreData(layout02, Layout2);
-        const foundLayouts3 = await findLayoutsAndStoreData(layout03, Layout3);
-        const foundLayouts4 = await findLayoutsAndStoreData(layout04, Layout4);
-
-        foundLayouts.sort((a, b) => {
-            const dateA = new Date(a.createdAt);
-            const dateB = new Date(b.createdAt);
-
-            if (dateA < dateB) {
-                return -1;
-            } else if (dateA > dateB) {
-                return 1;
-            } else {
-                return 0;
-            }
-        });
-
-
-        res.render("getMoreAddContent", { mytitle: "getMoreAddContent", lesson, lessons, foundLayouts,user:req.user, theme ,isSidebarOpen });
-        // res.json(lesson);
-
+        res.render("nextCreateQuestion", { mytitle: "nextCreateQuestion", quiz, quizzes, foundQuestions });
     } catch (err) {
         console.error(err);
         res.status(500).send("เกิดข้อผิดพลาด");
     }
 };
 
-const createLayout03 = async (req, res) => {
-    try {
-        // รับข้อมูลจากฟอร์ม
-        const { _id, Topic } = req.body;
-        const { FileForm } = req.files;
-        //   console.log(FileForm);
 
-        if (!FileForm) {
-            return res.status(400).json({ error: 'กรุณาเลือกไฟล์' });
-        }
-
-        // สร้าง Layout4 object
-        const newLayout = new Layout3({
-            Description: Topic,
-            File: {
-                data: FileForm.data,
-                metadata: {
-                    contentType: FileForm.mimetype,
-                    size: FileForm.size,
-                },
-            },
-            LessonArrayObject: {
-                LessonId: _id
-            }
-        });
-
-        // บันทึกลงในฐานข้อมูล
-        const savedLayout = await newLayout.save();
-        const getLayout02_Id = savedLayout._id;
-
-        const updatedLesson = await Lesson.findByIdAndUpdate(
-            _id,
-            { $push: { LayOut3ArrayObject: getLayout02_Id } },
-            { new: true }
-        );
-
-        const lessons = await Lesson.find().sort({ LessonNumber: 1 }).exec();
-        const lesson = await Lesson.findById(_id);
-        const layout01 = lesson.LayOut1ArrayObject;
-        const layout02 = lesson.LayOut2ArrayObject;
-        const layout03 = lesson.LayOut3ArrayObject;
-        const layout04 = lesson.LayOut4ArrayObject;
-        const foundLayouts = [];
-
-        async function findLayoutsAndStoreData(deleteLayouts, Layout) {
-
-            if (deleteLayouts.length > 0) {
-                for (const layoutId of deleteLayouts) {
-                    const foundLayout = await Layout.findById(layoutId);
-                    if (foundLayout) {
-                        foundLayouts.push(foundLayout);
-                    }
-                }
-            }
-
-            return foundLayouts;
-        }
-
-        const foundLayouts1 = await findLayoutsAndStoreData(layout01, Layout1);
-        const foundLayouts2 = await findLayoutsAndStoreData(layout02, Layout2);
-        const foundLayouts3 = await findLayoutsAndStoreData(layout03, Layout3);
-        const foundLayouts4 = await findLayoutsAndStoreData(layout04, Layout4);
-
-        foundLayouts.sort((a, b) => {
-            const dateA = new Date(a.createdAt);
-            const dateB = new Date(b.createdAt);
-
-            if (dateA < dateB) {
-                return -1;
-            } else if (dateA > dateB) {
-                return 1;
-            } else {
-                return 0;
-            }
-        });
-
-        // res.json(savedLayout1);
-        res.render("nextCreateLayout", { mytitle: "nextCreateLayout", lesson, lessons, foundLayouts });
-
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'เกิดข้อผิดพลาดในการบันทึกข้อมูล' });
-    }
-};
-
-const createLayout04 = async (req, res) => {
-    try {
-        // รับข้อมูลจากฟอร์ม
-        const { _id, Topic, Description,list, layoutCounter2 } = req.body;
-        const newLayout04 = new Layout4({
-            Topic: Topic,
-            Description: Description,
-            list: list,
-            LessonArrayObject: {
-                LessonId: _id
-            }
-        });
-
-        // บันทึกลงในฐานข้อมูล
-        const savedLayout4 = await newLayout04.save();
-        const layout04_id = savedLayout4._id;
-
-        for (let i = 1; i <= layoutCounter2; i++) {
-            const updatedContentLayout04 = {
-              list: req.body[`list${i}`]
-            };
-          
-            await Layout4.findByIdAndUpdate(
-              layout04_id,
-              { $push: { Lists: updatedContentLayout04 } },
-              { new: true }
-            );
-          }
-
-        const updatedLesson = await Lesson.findByIdAndUpdate(
-            _id,
-            { $push: { LayOut4ArrayObject: layout04_id } },
-            { new: true }
-        );
-
-        const lessons = await Lesson.find().sort({ LessonNumber: 1 }).exec();
-        const lesson = await Lesson.findById(_id);
-        const layout01 = lesson.LayOut1ArrayObject;
-        const layout02 = lesson.LayOut2ArrayObject;
-        const layout03 = lesson.LayOut3ArrayObject;
-        const layout04 = lesson.LayOut4ArrayObject;
-        const foundLayouts = [];
-
-        async function findLayoutsAndStoreData(deleteLayouts, Layout) {
-
-            if (deleteLayouts.length > 0) {
-                for (const layoutId of deleteLayouts) {
-                    const foundLayout = await Layout.findById(layoutId);
-                    if (foundLayout) {
-                        foundLayouts.push(foundLayout);
-                    }
-                }
-            }
-
-            return foundLayouts;
-        }
-
-        const foundLayouts1 = await findLayoutsAndStoreData(layout01, Layout1);
-        const foundLayouts2 = await findLayoutsAndStoreData(layout02, Layout2);
-        const foundLayouts3 = await findLayoutsAndStoreData(layout03, Layout3);
-        const foundLayouts4 = await findLayoutsAndStoreData(layout04, Layout4);
-
-        foundLayouts.sort((a, b) => {
-            const dateA = new Date(a.createdAt);
-            const dateB = new Date(b.createdAt);
-
-            if (dateA < dateB) {
-                return -1;
-            } else if (dateA > dateB) {
-                return 1;
-            } else {
-                return 0;
-            }
-        });
-
-        // res.json(savedLayout1);
-        res.render("nextCreateLayout", { mytitle: "nextCreateLayout", lesson, lessons, foundLayouts });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'เกิดข้อผิดพลาดในการบันทึกข้อมูล' });
-    }
-};
 module.exports = {
+    addQuestion,
     createQuestion_1,
-    getMoreAddContent,
-    createLayout_02,
-    createLayout03,
-    createLayout04
 }
