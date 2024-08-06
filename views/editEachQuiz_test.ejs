@@ -683,16 +683,16 @@
             height: 100%;
         }
 
-       
 
-        
+
+
 
         .subDes,
         .subDesNumber2 {
             border: none !important;
         }
 
-       
+
 
         #file-input {
             display: none !important;
@@ -1001,13 +1001,26 @@
 
         .bi-check2 {
             color: greenyellow !important;
-            font-size: 1.6rem;
-            margin-top: 0.5rem;
+            font-size: 1.2rem;
+            margin-top: 0.2rem;
         }
-        select, .input-number{
+
+        select,
+        .input-number {
             border: 1px solid lightgray;
         }
-       
+
+        .question:active {
+            /* background-color: #b2ebf2; */
+            /* เปลี่ยนสีพื้นหลังเมื่อกำลังลาก */
+            box-shadow: 0 8px 24px #8A2BE2;
+            /* เงาเมื่อถูกลาก */
+        }
+
+        .dragging {
+            opacity: 0.8;
+            /* ลดความโปร่งแสงขณะลาก */
+        }
 
         @media screen and (max-width: 768px) {
             body {
@@ -1512,7 +1525,9 @@
 
             function addQuestionType(index, type) {
                 questions[index].questionType = type;
-                renderQuestions(); // ทำการ re-render คำถามเมื่อประเภทของคำถามเปลี่ยนแปลง
+                updateQuestionCount();
+                calculateTotalPoints();
+                renderQuestions();
                 console.log(questions);
             }
 
@@ -1535,6 +1550,7 @@
             function addOption(i) {
                 if (questions[i].options.length < 31) {
                     questions[i].options.push({ optionText: `ตัวเลือก ${questions[i].options.length + 1}` });
+
                     renderQuestions();
                 } else {
                     console.log("Max 31 Options");
@@ -1559,6 +1575,7 @@
                     open: true
                 });
                 updateQuestionCount();
+
                 calculateTotalPoints();
                 renderQuestions();
             }
@@ -1566,6 +1583,8 @@
             function copyQuestion(index) {
                 const copiedQuestion = JSON.parse(JSON.stringify(questions[index]));
                 questions.splice(index + 1, 0, copiedQuestion); // แทรกคำถามที่คัดลอกในตำแหน่งถัดไปของคำถามต้นฉบับ
+                updateQuestionCount();
+                calculateTotalPoints();
                 renderQuestions();
             }
 
@@ -1573,6 +1592,9 @@
             function setQuestions(newQuestions) {
                 questions = newQuestions;
                 console.log('State updated:', questions); // ตรวจสอบว่าการอัพเดต state ถูกต้อง
+                updateQuestionCount();
+                initializeSortable();
+                calculateTotalPoints();
                 renderQuestions();
             }
 
@@ -1621,8 +1643,8 @@
                     answerContent = `
             ${question.options.map((option, i) => `
                 <div class="form-check" style="display: flex; align-items: center;">
-                    <input class="form-check-input" type="radio" name="correctAnswer" id="correctAnswer_${i}" value="${i}" ${i === question.answer ? 'checked' : ''}>
-                    <label class="form-check-label ms-1" for="correctAnswer_${i}">
+                    <input class="form-check-input mt-0" type="radio" name="correctAnswer" id="correctAnswer_${i}" value="${i}" ${i === question.answer ? 'checked' : ''}>
+                    <label class="form-check-label ms-2" for="correctAnswer_${i}">
                         ${option.optionText}
                     </label>
                     <i class="bi bi-check2 ms-2 ${i === question.answer ? '' : 'd-none'}"></i>
@@ -1633,8 +1655,8 @@
                     answerContent = `
             ${question.options.map((option, i) => `
                 <div class="form-check" style="display: flex; align-items: center;">
-                    <input class="form-check-input" type="checkbox" name="correctAnswer" id="correctAnswer_${i}" value="${i}" ${Array.isArray(question.answer) && question.answer.includes(i) ? 'checked' : ''}>
-                    <label class="form-check-label ms-1" for="correctAnswer_${i}">
+                    <input class="form-check-input mt-0" type="checkbox" name="correctAnswer" id="correctAnswer_${i}" value="${i}" ${Array.isArray(question.answer) && question.answer.includes(i) ? 'checked' : ''}>
+                    <label class="form-check-label ms-2" for="correctAnswer_${i}">
                         ${option.optionText}
                     </label>
                     <i class="bi bi-check2 ms-2 ${Array.isArray(question.answer) && question.answer.includes(i) ? '' : 'd-none'}"></i>
@@ -1722,8 +1744,14 @@
                 }
 
                 $('#answerModal').modal('hide');
+                updateQuestionCount();
+                initializeSortable();
+                calculateTotalPoints();
                 renderQuestions();
             }
+
+
+            let sortableInitialized = false; // ตัวแปรเพื่อเช็คว่า Sortable ถูกติดตั้งหรือยัง
 
             function renderQuestions() {
                 const container = document.getElementById('quizContainer');
@@ -1776,33 +1804,36 @@
 
                 updateQuestionCount();
                 calculateTotalPoints();
-                updateQuestionPoints();
-                initializeSortable();
+
+                if (!sortableInitialized) {
+                    initializeSortable(); // เรียกใช้งาน Sortable แค่ครั้งแรก
+                    sortableInitialized = true; // ทำเครื่องหมายว่าได้ติดตั้ง Sortable แล้ว
+                }
             }
+
             function initializeSortable() {
                 const container = document.getElementById('quizContainer');
                 Sortable.create(container, {
                     animation: 150,
+                    onStart: function (evt) {
+                        const draggedItem = evt.item;
+                        draggedItem.classList.add('dragging'); // เพิ่มคลาส dragging
+                        draggedItem.style.zIndex = 1000; // เพิ่ม z-index เพื่อให้แน่ใจว่าคำถามที่ลากอยู่ด้านบน
+                    },
                     onEnd: function (evt) {
                         const oldIndex = evt.oldIndex;
                         const newIndex = evt.newIndex;
-
-                        // เคลื่อนย้ายคำถามในอาร์เรย์
                         const movedQuestion = questions.splice(oldIndex, 1)[0];
                         questions.splice(newIndex, 0, movedQuestion);
-
-                        // รีเรนเดอร์คำถามหลังจากการเคลื่อนย้าย
                         renderQuestions();
+                    },
+                    onRemove: function (evt) {
+                        const draggedItem = evt.item;
+                        draggedItem.classList.remove('dragging'); // ลบคลาส dragging
+                        draggedItem.style.zIndex = ''; // รีเซ็ต z-index
                     }
                 });
             }
-
-            document.addEventListener('DOMContentLoaded', () => {
-                updateQuestionCount();
-                calculateTotalPoints();
-                updateQuestionPoints
-                renderQuestions();
-            });
 
             function renderOptions(question, questionIndex) {
                 if (question.questionType === 'MCQ' || question.questionType === 'checkbox') {
@@ -1810,7 +1841,7 @@
             <div class="form-check p-0" style="display: flex; align-items: center;">
                 <input class="input_check" type="${question.questionType === 'MCQ' ? 'radio' : 'checkbox'}" name="Answ_${questionIndex}" value="${i}" disabled>
                 <input type="text" name="option_${questionIndex}_${i}" value="${option.optionText}" onfocus="showImageButton(${questionIndex}, ${i})" onblur="hideImageButton(${questionIndex}, ${i})" oninput="changeOptionValue(this.value, ${questionIndex}, ${i})">
-                <i class="bi bi-check2 ms-2 ${question.questionType === 'MCQ' && i === question.answer ? '' : (question.questionType === 'checkbox' && Array.isArray(question.answer) && question.answer.includes(i) ? '' : 'd-none')}" ></i>
+                <i class="bi bi-check2 ms-2 mt-2 ${question.questionType === 'MCQ' && i === question.answer ? '' : (question.questionType === 'checkbox' && Array.isArray(question.answer) && question.answer.includes(i) ? '' : 'd-none')}" ></i>
                 <button type="button" class="btn imagebutton" id="imageButton_${questionIndex}_${i}" data-toggle="modal" data-target="#exampleModalLong" onclick="selectedbody('question_${questionIndex}_${i}') " style="display: none;">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-image" viewBox="0 0 16 16">
                         <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
@@ -1833,6 +1864,7 @@
                 calculateTotalPoints();
                 updateQuestionPoints
                 renderQuestions();
+
             });
             function showImageButton(questionIndex, optionIndex) {
                 const button = document.getElementById(`imageButton_${questionIndex}_${optionIndex}`);
