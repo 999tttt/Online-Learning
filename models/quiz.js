@@ -1,13 +1,79 @@
-var mongoose = require('mongoose');
-const questionSchema = require('./question').schema;
+const mongoose = require('mongoose');
 
-var quizSchema = mongoose.Schema({
+const optionSchema = mongoose.Schema({
+    optionText: {
+        type: String,
+        required: true,
+        trim: true
+    }
+});
+
+const questionSchema = mongoose.Schema({
+    questionText: {
+        type: String,
+        required: true,
+        trim: true
+    },
+    questionType: {
+        type: String,
+        enum: ['MCQ', 'checkbox', 'Paragraph', 'short_answ'],
+        required: true
+    },
+    options: {
+        type: [optionSchema],
+        validate: {
+            validator: function (v) {
+                if (this.questionType === 'MCQ' || this.questionType === 'checkbox') {
+                    return v.length > 0;
+                }
+                return true;
+            },
+            message: 'Options are required for MCQ and checkbox question types.'
+        }
+    },
+    answer: {
+        type: Boolean,
+        default: false
+    },
+    answerKey: {
+        type: String,
+        default: "",
+        trim: true
+    },
+    points: {
+        type: Number,
+        default: 0,
+        min: 0
+    },
+    open: {
+        type: Boolean,
+        default: true
+    }
+});
+
+// เพิ่ม schema สำหรับเก็บข้อมูลจำนวนครั้งที่เข้าทำแบบทดสอบของนักเรียน
+const attemptSchema = mongoose.Schema({
+    studentId: {
+        type: mongoose.Schema.ObjectId,
+        ref: 'Student', // อ้างอิงไปยังคอลเล็กชันของนักเรียน
+        required: true
+    },
+    attemptCount: {
+        type: Number,
+        default: 0,
+        min: 0
+    }
+});
+
+const quizSchema = mongoose.Schema({
     quizname: {
         type: String,
-        required: true
+        required: true,
+        trim: true
     },
     quizdescription: {
         type: String,
+        trim: true
     },
     upload: {
         type: Boolean,
@@ -15,9 +81,11 @@ var quizSchema = mongoose.Schema({
     },
     owner: {
         type: String,
+        trim: true
     },
     owneremail: {
         type: String,
+        trim: true
     },
     quizImage: {
         data: {
@@ -29,27 +97,39 @@ var quizSchema = mongoose.Schema({
             default: null
         }
     },
-    questions: [questionSchema],
-
+    questions: {
+        type: [questionSchema],
+        default: []
+    },
     schoolYear: {
         type: mongoose.Schema.ObjectId,
         ref: 'schoolYear',
-        default: 0
+        default: null
     },
     timeLimit: {
         value: {
-            type: String, // ตัวอย่างเช่น '15min', '30min', '1hour'
-            required: true
+            type: String,
+            required: true,
+            trim: true
         },
         display: {
-            type: String, // ตัวอย่างเช่น '15 นาที', '30 นาที', '1 ชั่วโมง'
-            required: true
+            type: String,
+            required: true,
+            trim: true
         }
     },
     attemptLimit: {
         type: Number,
         default: 1,
         min: 1
+    },
+    attempts: { // เก็บข้อมูลจำนวนครั้งที่นักเรียนเข้าทำแบบทดสอบ
+        type: [attemptSchema],
+        default: []
+    },
+    releaseWhen: {
+        type: Date,
+        default: null 
     },
     deadline: {
         type: Date,
@@ -59,6 +139,9 @@ var quizSchema = mongoose.Schema({
         type: Boolean,
         default: false
     }
-});
+}
+, 
+{ timestamps: true });
+
 
 module.exports = mongoose.model('Quiz', quizSchema);

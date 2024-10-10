@@ -39,19 +39,19 @@
 
 .sidebar_nav li a {
     text-decoration: none;
-    color: #333;
+    color:  var(--secondary-color);
     display: block;
 }
 
 /* สไตล์สำหรับธีม light */
 .sidebar  {
     background-color: var(--bg-color);;
-    color: #333;
+    color:  var(--secondary-color);
 }
 
 
 .sidebar  .sidebar_nav li a {
-    color: #333;
+    color:  var(--secondary-color);
 }
 
 .sidebar .sidebar_nav li a:hover {
@@ -64,20 +64,20 @@
 /* สำหรับธีม Light */
 body.light .sidebar {
     background-color: #fff;
-    color: #333;
+    color:  var(--secondary-color);
 }
 body.light .sidebar .sidebar_header{
     background-color: #fff;
 }
 /* สำหรับธีม Dark */
 body.dark .sidebar {
-    background-color: #333;
+    background-color:  var(--secondary-color);
     color: #fff;
 }
 
 /* ปรับสีของ Header ในธีม Dark */
 body.dark .sidebar .sidebar_header {
-    background-color: #333;
+    background-color:  var(--secondary-color);
 }
 
 /* ปรับสีของเมนูซ้าย ในธีม Dark */

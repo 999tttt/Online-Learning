@@ -1083,7 +1083,7 @@
     }
 
     #backToEditBtn {
-      position: absolute;
+      position: fixed;
       bottom: 25px;
       right: 25px;
       width: 50px;
@@ -1241,9 +1241,43 @@
             <span id="all-points-count" class="grey d-none"></span>
           </div>
 
-          <div id="questionContainer">
-
+          <div class="questionContainer">
+            <% questions.forEach((question, i)=> { %>
+              <div class="question" id="question_<%= i %>">
+                <div class="first">
+                  <div class="input-question">
+                    <%= question.questionText %>
+                  </div>
+                  <span class="grey ms-4">
+                    <%= question.points %> คะแนน
+                  </span>
+                </div>
+                <br>
+                <div class="options">
+                  <% if (question.questionType==='MCQ' || question.questionType==='checkbox' ) { %>
+                    <% question.options.forEach((option, j)=> { %>
+                      <div class="form-check" style="display: flex; align-items: center;">
+                        <input class="input_check"
+                          type="<%= question.questionType === 'MCQ' ? 'radio' : 'checkbox' %>" name="Answ_<%= i %>"
+                          value="<%= j %>" >
+                        <div style="flex-grow: 1; padding: 5px;">
+                          <%= option.optionText %>
+                        </div>
+                      </div>
+                      <% }) %>
+                        <% } else if (question.questionType==='Paragraph' ) { %>
+                          <textarea class="form-control mx-4 mt-2" name="answer_<%= i %>" rows="1"
+                            style="width:90%;" readonly></textarea>
+                          <% } else if (question.questionType==='short_answ' ) { %>
+                            <textarea class="form-control ms-4 mt-2" name="answer_<%= i %>" rows="1"
+                              style="width:50%;" readonly></textarea>
+                            <% } %>
+                </div>
+              </div>
+              <% }) %>
+              
           </div>
+
           <div class="d-flex" style="padding: 0 2rem; ">
             <button type="submit" class="btn btn-primary px-4 " style="background-color: #8A2BE2; border: 1px solid #8A2BE2;">ส่ง</button>
           </div>
@@ -1420,38 +1454,38 @@
       ];
 
       
-      function renderQuestions() {
-        const container = document.getElementById('questionContainer');
-        container.innerHTML = '';
+    //   function renderQuestions() {
+    //     const container = document.getElementById('questionContainer');
+    //     container.innerHTML = '';
 
-        questions.forEach((question, i) => {
-          const questionDiv = document.createElement('div');
-          questionDiv.className = 'question';
-          questionDiv.id = `question_${i}`;
+    //     questions.forEach((question, i) => {
+    //       const questionDiv = document.createElement('div');
+    //       questionDiv.className = 'question';
+    //       questionDiv.id = `question_${i}`;
 
-          questionDiv.innerHTML = `
-                    <div class="first">
-                      <div class="input-question "  >
-        ${question.questionText}
-    </div> 
+    //       questionDiv.innerHTML = `
+    //                 <div class="first">
+    //                   <div class="input-question "  >
+    //     ${question.questionText}
+    // </div> 
     
                       
-                        <span class="grey  ms-4" >${question.points} คะแนน</span>
+    //                     <span class="grey  ms-4" >${question.points} คะแนน</span>
                       
-                    </div>
-                    <br>
+    //                 </div>
+    //                 <br>
                   
-                    <div class="options" id="options_${i}">
-                        ${renderOptions(question, i)}
-                    </div>
+    //                 <div class="options" id="options_${i}">
+    //                     ${renderOptions(question, i)}
+    //                 </div>
                   
                    
                    
-                `;
+    //             `;
 
-          container.appendChild(questionDiv);
-        });
-      }
+    //       container.appendChild(questionDiv);
+    //     });
+    //   }
 
       function renderOptions(question, questionIndex) {
         if (question.questionType === 'MCQ' || question.questionType === 'checkbox') {

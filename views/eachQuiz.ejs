@@ -51,7 +51,7 @@
       }
 
       .dark .above-nav-status {
-        background-color: #333 !important;
+        background-color: var(--secondary-color) !important;
         border-right: 1px solid #494949;
       }
 
@@ -85,8 +85,8 @@
 
 
       .dark .manange-bar,
-      .dark .lesson-content {
-        background-color: #333 !important;
+      .dark .question-content {
+        background-color: var(--secondary-color) !important;
       }
 
       .answer_key input {
@@ -102,8 +102,8 @@
 
       .question {
         background-color: white;
-        margin: 30px !important;
-        padding: 41px;
+        margin: 24px auto !important;
+        padding: 41px !important;
         border-radius: 14px;
         position: relative;
         border-left: 6px solid #ffffff;
@@ -111,8 +111,8 @@
       }
 
       .dark .question {
-        background-color: #333;
-        border-left: 6px solid #333;
+        background-color: var(--secondary-color);
+        border-left: 6px solid var(--secondary-color);
       }
 
       .question_option-prop,
@@ -162,7 +162,7 @@
       }
 
       .dark .options input {
-        background-color: #333;
+        background-color: var(--secondary-color);
         color: var(--text-color);
 
       }
@@ -384,7 +384,7 @@
       }
 
       .dark .above-nav-status {
-        background-color: #333 !important;
+        background-color: #444 !important;
         border-right: 1px solid #494949;
       }
 
@@ -416,15 +416,15 @@
       }
 
 
-      .lesson-content {
+      .question-content {
         height: fit-content !important;
         border-radius: 1em !important;
         justify-content: center !important;
       }
 
       .dark .manange-bar,
-      .dark .lesson-content {
-        background-color: #333 !important;
+      .dark .question-content {
+        background-color: #444 !important;
       }
 
       .lesson-nothing {
@@ -479,7 +479,7 @@
       }
 
       .manange-bar,
-      .lesson-content {
+      .question-content {
         box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px !important;
         border-radius: 0.5em;
       }
@@ -558,7 +558,7 @@
       }
 
       .manange-bar,
-      .lesson-content {
+      .question-content {
         box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px !important;
         border-radius: 0.5em;
       }
@@ -694,12 +694,12 @@
         height: 100%;
       }
 
-      .lesson-content {
+      .question-content {
         height: 100%;
         border-radius: 1em !important;
 
         justify-content: center !important;
-        border-top: 0.5em solid #8A2BE2;
+        /* border-top: 0.5em solid #8A2BE2; */
       }
 
       .lesson-nothing {
@@ -925,6 +925,7 @@
         justify-content: center !important;
         align-items: center !important;
         text-align: center !important;
+
       }
 
       .swal-title {
@@ -942,7 +943,8 @@
       }
 
       .swal-confirm-button,
-      .swal-cancel-button {
+      .swal-cancel-button,
+      .swal-launch-button {
         margin: 2em 1em !important;
       }
 
@@ -952,10 +954,287 @@
         padding: 0.75rem !important;
       }
 
+      .swal-launch-button {
+        background-color: #0d6efd;
+        border-color: #0d6efd;
+        padding: 0.75rem !important;
+      }
+
       .swal-cancel-button {
         background-color: gray;
         border-color: gray;
         padding: 0.75rem !important;
+      }
+
+
+      .container {
+        display: flex;
+        margin-top: 12px;
+        width: 200%;
+        justify-content: center;
+      }
+
+
+
+      .dark .question {
+        background-color: #444;
+        border-left: 6px solid #444;
+      }
+
+      .question_option-prop,
+      .dark .question_option-prop {
+        border-left: 6px solid rgb(103, 58, 183);
+
+      }
+
+      .first {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+
+        /* align-items: center; */
+      }
+
+      .double_item {
+        display: inline-block;
+        padding: 3px;
+        text-decoration: none;
+        /* margin: 0 24px; */
+        margin-bottom: 1rem;
+      }
+
+      .double_item:hover {
+        text-decoration: underline;
+        border-radius: 7px;
+
+      }
+
+      .options {
+        padding-top: 8px;
+        padding-bottom: 8px;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .options input {
+        margin: 4px;
+        margin-top: 19px;
+        border-top: 0px;
+        border-right: 0px;
+        border-left: 0px;
+
+      }
+
+      .dark .options input {
+        background-color: #444;
+        color: var(--text-color);
+
+      }
+
+      .description_class {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .description_class :first-child {
+        padding-bottom: 15px;
+        margin-bottom: 27px;
+        border: none;
+        border-bottom: 1px solid gray;
+      }
+
+      select.description_class:first-child:focus {
+        outline: none;
+        box-shadow: none !important;
+      }
+
+      .description_class :last-child {
+        outline: none;
+        border: none;
+      }
+
+      .footer {
+        background-color: #F8F9FA;
+      }
+
+      .answer_key {
+        margin-top: 20px;
+        text-decoration: none;
+      }
+
+      .answer_key:hover {
+        text-decoration: underline;
+      }
+
+      .input_check {
+        margin: 0px;
+        display: inline-block;
+        width: 3%;
+        padding: 0px;
+      }
+
+      .setting_menu {
+        margin-left: 20px;
+        background-color: white;
+        width: 80%;
+        height: 440px;
+        border-radius: 10px;
+      }
+
+      .addition {
+        background-color: white;
+      }
+
+
+
+      /* on off  */
+      .switch {
+        position: relative;
+        display: inline-block;
+        width: 48px;
+        height: 25px;
+      }
+
+      .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+
+      .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 6px;
+        right: -5px;
+        bottom: 0;
+        background-color: #ccc;
+        -webkit-transition: .4s;
+        transition: .4s;
+      }
+
+      .slider:before {
+        position: absolute;
+        content: "";
+        height: 17px;
+        width: 18px;
+        left: 1px;
+        bottom: 4px;
+        background-color: white;
+        -webkit-transition: .4s;
+        transition: .4s;
+      }
+
+      input:checked+.slider {
+        background-color: #2196F3;
+      }
+
+      input:focus+.slider {
+        box-shadow: 0 0 1px #2196F3;
+      }
+
+      input:checked+.slider:before {
+        -webkit-transform: translateX(26px);
+        -ms-transform: translateX(26px);
+        transform: translateX(26px);
+      }
+
+      /* Rounded sliders */
+      .slider.round {
+        border-radius: 34px;
+      }
+
+      .slider.round:before {
+        border-radius: 50%;
+      }
+
+      .imagebutton {
+        padding: 11px;
+        margin-left: 14px;
+        margin-right: 9px;
+      }
+
+      .dark .imagebutton {
+        color: white;
+      }
+
+      .embed-responsive {
+        width: 63%;
+
+      }
+
+      /* hover  */
+      .Hover-effect {
+        position: relative;
+      }
+
+      :root {
+        --underline_color: red;
+        --underline-hight: 0.175rem;
+      }
+
+      .Hover-effect::after {
+        content: "";
+        position: absolute;
+        width: 100%;
+        height: var(--underline-hight);
+        background-color: var(--underline_color);
+        left: 0;
+        bottom: 0;
+        transform: scale(0, 1);
+        transition: transform 0.3s ease;
+      }
+
+
+      .active-container::after {
+        transform: scale(1, 1);
+      }
+
+
+      .Hover-effect:hover::after {
+        transform: scale(1, 1);
+      }
+
+
+
+      .svgloader {
+        display: block;
+        width: 30%;
+        margin: 0 auto;
+      }
+
+      .videobut {
+        padding: 9px;
+        margin-right: 8px;
+      }
+
+      .videoicon {
+        padding: 0px;
+        height: 19px;
+        width: 24px;
+      }
+
+      * {
+        box-sizing: border-box !important;
+      }
+
+      .card-1,
+      .card-body-1 {
+        border: none !important;
+      }
+
+      .descp {
+        text-indent: 2em;
+        margin: 0 2em;
+      }
+
+      .rectangle-141 {
+        background-color: white;
+        border-radius: 0.75em;
+        box-shadow: 0em 0.75em 1.5em -0.25em #919eab1f, 0em 0em 0.125em #919eab33;
+        height: 14.6875em;
+        width: 75%;
+        margin: 2em 2em;
       }
 
       .input-question {
@@ -967,7 +1246,7 @@
       .dark .input-question {
         border: none;
         outline: none;
-        background-color: #333;
+        background-color: #444;
         color: var(--text-color);
       }
 
@@ -979,12 +1258,17 @@
         color: lightgray !important
       }
 
-      /* .spn-comment {
-      font-size:xx-small !important;
-      border: 2px solid white;
-      padding: 0.25em !important;
-      border-radius: 0.25em;
-    } */
+      .add-button.cancel-button {
+        background-color: #ec5800;
+        border-color: #ec5800;
+        color: white;
+      }
+
+      .add-button.cancel-button:hover {
+        background-color: #cb410b;
+        border-color: #cb410b;
+      }
+
       @media screen and (max-width: 768px) {
         .above-nav-status {
           display: none;
@@ -1010,12 +1294,13 @@
 
   </div> -->
     <!-- อยากเพิ่มปุ่ม ปล่อยแบบทดสอบ -->
+
     <div class="main-content d-flex w-100 h-auto">
       <%- include("./partials/lessonsList.ejs")%>
         <div class="row allCOntent" style="width: 80% !important;">
           <div class="col-12 aside-right px-4 py-4 bg-white" style="width: 100% !important;">
             <div class="manange-bar p-4 bg-white w-100">
-              <p class="fw-normal fs-6 lesson-bar ms-2">แบบทดสอบ</p>
+              <p class="fw-normal fs-6 lesson-bar ms-2">แบบทดสอบ </p>
               <br>
               <p class="fw-normal fs-3 ms-2 ">
                 <%=quiz.quizname%>
@@ -1069,14 +1354,36 @@
                     class="add-button btn btn-primary my-2 p-2">
                     เพิ่มคำถาม<i class="bi bi-plus-circle-fill ms-2"></i>
                   </a> -->
-                  <a href="/adminIndex/eachQuiz?quizId=<%= quiz._id %>/edit"
-                    class="add-button btn btn-warning my-2 ms-2 p-2" style="color: white;">
-                    <span class="text_btn">แก้ไขแบบทดสอบ</span><i class="bi bi-pencil-square ms-2"></i>
-                  </a>
-                  <a href="*" class="add-button btn btn-primary my-2 ms-2 p-2">
-                    <span class="text_btn">ปล่อยแบบทดสอบ</span><i class="bi bi-rocket-takeoff ms-2"></i>
-                  </a>
+                  <% if (!quiz.isReleased) { %>
+                    <!-- แสดงปุ่มแก้ไขและปล่อยแบบทดสอบ เมื่อยังไม่ได้ปล่อย -->
+                    <a href="/adminIndex/eachQuiz?quizId=<%= quiz._id %>/edit"
+                      class="add-button btn btn-warning my-2 ms-2 p-2" style="color: white;">
+                      <span class="text_btn">แก้ไขแบบทดสอบ</span>
+                      <i class="bi bi-pencil-square ms-2"></i>
+                    </a>
+                    <a href="#" class="add-button btn btn-primary my-2 ms-2 p-2"
+                      onclick="openReleaseQuizModal('<%= quiz._id %>')">
+                      <span class="text_btn">ปล่อยแบบทดสอบ</span>
+                      <i class="bi bi-rocket-takeoff ms-1"></i>
+                    </a>
+                    <% } else { %>
+                      <!-- แสดงปุ่มยกเลิกการปล่อย เมื่อปล่อยแล้ว -->
+                      <a href="#" class="add-button cancel-button btn my-2 ms-2 p-2"
+                        onclick="cancelReleaseQuiz('<%= quiz._id %>')">
+                        <span class="text_btn">ยกเลิกการปล่อย</span>
+                        <i class="bi bi-x-circle ms-1"></i>
+                      </a>
+
+
+                      <% } %>
+
+
+
                 </div>
+
+
+
+
                 <!-- อยากทำปุม่ปล่อย พอกดแล้วมีเลือกวันหมดเขตทำ แล้วเปลี่ยนเป็นปุ่มหยุดปล่อยแทน
                 มีบอกสถานะว่า ปล่อยรึยัง
                 -->
@@ -1090,35 +1397,81 @@
               <br>
               <hr><br>
               <p class="fw-normal w-auto fs-6 mx-2">สถานะ:
-                <span class="fw-normal fs-6 text-danger" style="margin-right: 1em !important;">ยังไม่ได้ปล่อย</span>
+                <span id="releaseStatus" class="fw-normal fs-6" style="margin-right: 1em !important;">
+                  <% if (quiz.isReleased===true) { %>
+                    <span class="text-success">
+                      ปล่อยแล้ว
+                    </span>
+                    <% } else { %>
+                      <span class="text-danger">
+                        ยังไม่ได้ปล่อย
+                      </span>
+                      <% } %>
+                </span>
 
 
               </p>
             </div>
             <br>
-            <% if (foundQuestions && foundQuestions.length> 0) { %>
-              <% foundQuestions.forEach((question, i)=> { %>
-            <div style="margin: 1.2rem !important; ">
-              <span id="question-count" class="me-2 fs-5"> 1 คำถาม</span>
-              <span id="all-points-count" class="grey">( 1 คะแนน)</span>
-            </div>
+            <% if (quiz.questions.length> 0) { %>
 
+              <div style="margin: 1.2rem !important;">
+                <span id="question-count" class="me-2 fs-5">
+                  <%= questions.length %> ข้อ
+                </span>
+                <span id="all-points-count" class="grey">
+                  (<%= questions.reduce((total, question)=> total + question.points, 0) %> คะแนน)
+                </span>
+              </div>
 
-            <div class="lesson-content bg-white w-100 my-4 py-1">
-
-             
-                  <div id="quizContainer"></div>
-                  <% }); %>
+              <div class="questionContainer">
+                <% questions.forEach((question, i)=> { %>
+                  <div class="question" id="question_<%= i %>">
+                    <div class="first">
+                      <div class="input-question">
+                        <%= question.questionText %>
+                      </div>
+                      <span class="grey ms-4">
+                        <%= question.points %> คะแนน
+                      </span>
+                    </div>
+                    <br>
+                    <div class="options">
+                      <% if (question.questionType==='MCQ' || question.questionType==='checkbox' ) { %>
+                        <% question.options.forEach((option, j)=> { %>
+                          <div class="form-check" style="display: flex; align-items: center;">
+                            <input class="input_check"
+                              type="<%= question.questionType === 'MCQ' ? 'radio' : 'checkbox' %>" name="Answ_<%= i %>"
+                              value="<%= j %>" disabled>
+                            <div style="flex-grow: 1; padding: 5px;">
+                              <%= option.optionText %>
+                            </div>
+                          </div>
+                          <% }) %>
+                            <% } else if (question.questionType==='Paragraph' ) { %>
+                              <textarea class="form-control mx-4 mt-2" name="answer_<%= i %>" rows="1"
+                                style="width:90%;" readonly></textarea>
+                              <% } else if (question.questionType==='short_answ' ) { %>
+                                <textarea class="form-control ms-4 mt-2" name="answer_<%= i %>" rows="1"
+                                  style="width:50%;" readonly></textarea>
+                                <% } %>
+                    </div>
+                  </div>
+                  <% }) %>
                     <% } else { %>
                       <p class="px-3">แบบทดสอบยังไม่มีคำถาม เนื่องจากคุณยังไม่ได้เพิ่มคำถามใด ๆ ให้แก่แบบทดสอบนี้</p>
-                      <a href="/adminIndex/eachQuiz?quizId=<%= quiz._id %>/edit"
-                        class="px-3 addContent-a text-primary">เพิ่มคำถาม <i class="bi bi-plus-circle-fill"></i></a>
+                      <a href="/adminIndex/eachQuiz?quizId=<%= quiz._id %>/edit" class="px-3 addContent-a text-primary">
+                        เพิ่มคำถาม <i class="bi bi-plus-circle-fill"></i>
+                      </a>
                       <% } %>
-            </div>
+
+              </div>
 
           </div>
         </div>
     </div>
+
+
 
     </div>
     <%- include("./partials/footer.ejs")%>
@@ -1148,102 +1501,206 @@
           });
         }
 
+        function openReleaseQuizModal(quizId) {
+          Swal.fire({
+            title: '<div class="my-4">ปล่อยแบบทดสอบ</div>',
+            html: `
+      <div><label for="releaseDate" class="form-label me-2">วันเวลาที่จะปล่อย:</label></div>
+      <div class="d-flex justify-content-center mb-3">
+          <div class="m-3">
+              <input type="date" style="width: 125px;" id="releaseDate" class="form-control" required>
+          </div>
+          <div class="m-3">
+              <input type="time" style="width: 125px;" id="releaseTime" class="form-control" required>
+          </div>
+      </div>
 
-        let questions = [
-          {
-            questionText: 'คำถามไม่ระบุชื่อ',
-            options: [{ optionText: 'ตัวเลือก 1' }],
-            questionType: 'MCQ',
-            answer: false,
-            points: 1,
-            open: true
-          }
-        ];
+      <div><label for="deadlineDate" class="form-label me-2">วันเวลาหมดเขต (ทางเลือก):</label></div>
+      <div class="d-flex justify-content-center ">
+          <div class="d-flex align-items-center m-3">
+              <input type="date" style="width: 125px;" id="deadlineDate" class="form-control">
+          </div>
+          <div class="d-flex align-items-center m-3">
+              <input type="time" style="width: 125px;" id="deadlineTime" class="form-control">
+          </div>
+      </div>
+    `,
+            showCancelButton: true,
+            confirmButtonText: 'ปล่อยแบบทดสอบ',
+            cancelButtonText: 'ยกเลิก',
+            customClass: {
+              container: 'swal-container',
+              icon: 'swal-icon',
+              confirmButton: 'swal-launch-button',
+              cancelButton: 'swal-cancel-button'
+            },
 
-        function renderQuestions() {
-          const container = document.getElementById('quizContainer');
-          container.innerHTML = '';
+            didOpen: () => {
+              const releaseDateInput = document.getElementById('releaseDate');
+              const releaseTimeInput = document.getElementById('releaseTime');
 
-          questions.forEach((question, i) => {
-            const questionDiv = document.createElement('div');
-            questionDiv.className = 'question';
-            questionDiv.id = `question_${i}`;
+              console.log('Release Date Element:', releaseDateInput);
+              console.log('Release Time Element:', releaseTimeInput);
+            },
 
-            questionDiv.innerHTML = `
-                <div class="first">
-                  <div class="input-question "  >
-    ${question.questionText}
-</div> 
+            preConfirm: () => {
+              const releaseDate = document.getElementById('releaseDate').value;
+              const releaseTime = document.getElementById('releaseTime').value;
 
-                  
-                    <span class="grey  ms-4" >${question.points} คะแนน</span>
-                  
-                </div>
-                <br>
-              
-                <div class="options" id="options_${i}">
-                    ${renderOptions(question, i)}
-                </div>
-              
-               
-               
-            `;
+              // ตรวจสอบว่าค่าถูกส่งกลับมาหรือไม่
+              console.log('Selected Release Date:', releaseDate);
+              console.log('Selected Release Time:', releaseTime);
 
-            container.appendChild(questionDiv);
+              const deadlineDate = document.getElementById('deadlineDate').value;
+              const deadlineTime = document.getElementById('deadlineTime').value;
+
+              try {
+                const releaseWhen = new Date(`${releaseDate}T${releaseTime}:00`);
+
+                // แปลงเวลาให้เป็นเวลาไทย (UTC+7)
+                const thaiDateTime = new Date(releaseWhen.getTime() + (7 * 60 * 60 * 1000));
+
+                if (isNaN(thaiDateTime.getTime())) {
+                  throw new Error('Invalid release date/time');
+                }
+
+                const deadline = (deadlineDate && deadlineTime) ? `${deadlineDate}T${deadlineTime}:00` : null;
+
+                return {
+                  releaseWhen: thaiDateTime.toISOString(), // ใช้รูปแบบ ISO string
+                  deadline
+                };
+              } catch (error) {
+                Swal.showValidationMessage('รูปแบบวันหรือเวลาผิดพลาด กรุณาลองใหม่');
+                return false;
+              }
+            }
+          }).then((result) => {
+            if (result.isConfirmed) {
+              console.log('Submitted Release:', result.value.releaseWhen);
+              console.log('Submitted Deadline:', result.value.deadline);
+              submitReleaseQuiz(quizId, result.value.releaseWhen, result.value.deadline);
+            }
           });
         }
 
-        function renderOptions(question, questionIndex) {
-          if (question.questionType === 'MCQ' || question.questionType === 'checkbox') {
-            return question.options.map((option, i) => `
-                <div class="form-check p-0" style="display: flex; align-items: center;">
-                    <input class="input_check " type="${question.questionType === 'MCQ' ? 'radio' : 'checkbox'}" name="Answ_${questionIndex}" value="${i}" disabled>
-                    <div name="option_${questionIndex}_${i}" style="flex-grow: 1; padding: 5px;">
-        ${option.optionText}
-    </div>               
-     </div>
-            `).join('');
-          } else if (question.questionType === 'Paragraph') {
-            return `<textarea class="form-control mt-3 mb-2" name="answer_${questionIndex}" rows="1" style="width:90%;" readonly></textarea>`;
-          } else if (question.questionType === 'short_answ') {
-            return `<textarea class="form-control mt-3 mb-2" name="answer_${questionIndex}" rows="1" style="width:50%;" readonly></textarea>`;
-          }
-          return '';
+        function submitReleaseQuiz(quizId, releaseWhen, deadline) {
+          console.log('quizId:', quizId); // ตรวจสอบว่า quizId ถูกส่งมาเป็นสตริงหรือไม่
+
+          const isReleased = true; // ปล่อยแบบทดสอบ
+
+          fetch(`/adminIndex/releaseQuiz/${quizId}`, {  // ใช้ path parameters แทน query parameters
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              isReleased,
+              releaseWhen,
+              deadline
+            })
+          })
+            .then(response => response.json())
+            .then(data => {
+              if (data.success) {
+                Swal.fire({
+                  icon: "success",
+                  title: "ปล่อยแบบทดสอบสำเร็จ",
+                  showConfirmButton: false,
+                  timer: 1500,
+
+                  customClass: {
+                    container: 'swal-container',
+                    icon: 'swal-icon',
+                  },
+                }).then(() => {
+                  location.reload(); // รีเฟรชหน้าจอหลังจากปิด Swal
+                });
+              } else {
+                alert('เกิดข้อผิดพลาดในการปล่อยแบบทดสอบ');
+              }
+            })
+            .catch(error => console.error('Error:', error));
         }
 
-        document.addEventListener('DOMContentLoaded', () => {
-          renderQuestions();
-        });
+        function cancelReleaseQuiz(quizId) {
+  Swal.fire({
+    title: "แน่ใจแล้วหรือยัง?",
+    text: "หากยกเลิกการปล่อยแล้วนักศึกษาทั้งหมดจะไม่เห็นแบบทสอบนี้!",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#d33",
+    cancelButtonColor: "gray",
+    confirmButtonText: "ยืนยัน",
+    cancelButtonText: "ยกเลิก",
+    customClass: {
+      container: 'swal-container',
+      icon: 'swal-icon',
+      confirmButton: 'swal-confirm-button',
+      cancelButton: 'swal-cancel-button'
+    }
+  }).then((result) => {
+    if (result.isConfirmed) {
+      // ถ้าผู้ใช้ยืนยันการยกเลิก
+      fetch(`/adminIndex/releaseQuiz/${quizId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          isReleased: false,  // ตั้ง isReleased เป็น false เพื่อยกเลิกการปล่อย
+        })
+      })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            Swal.fire({
+              icon: "success",
+                  title: "ยกเลิกการปล่อยสำเร็จ",
+                  showConfirmButton: false,
+                  timer: 1500,
+
+                  customClass: {
+                    container: 'swal-container',
+                    icon: 'swal-icon'
+                  },
+            }).then(() => {
+              location.reload(); // รีเฟรชหน้าเพื่ออัปเดตสถานะ
+            });
+          } else {
+            Swal.fire({
+              title: 'เกิดข้อผิดพลาด',
+              text: 'เกิดข้อผิดพลาดในการยกเลิกการปล่อย',
+              icon: 'error',
+              confirmButtonText: 'ตกลง'
+            });
+          }
+        })
+        .catch(error => console.error('Error:', error));
+    }
+  });
+}
 
         function updateQuestionCount() {
           const questionCountElement = document.getElementById('question-count');
-          questionCountElement.innerHTML = ` ${questions.length} คำถาม`;
+          questionCountElement.innerHTML = `${quiz.questions.length} คำถาม`;
         }
-
-        questions.forEach(question => {
-          if (question.questionType === 'checkbox' && !Array.isArray(question.answer)) {
-            question.answer = [];
-          }
-        });
 
         function calculateTotalPoints() {
-          const totalPoints = questions.reduce((sum, question) => sum + question.points, 0);
+          const totalPoints = quiz.questions.reduce((sum, question) => sum + question.points, 0);
           document.getElementById('all-points-count').innerText = `( ${totalPoints} คะแนน)`;
         }
+
         function updateQuestionPoints(index, newPoints) {
           // ปรับคะแนนในอาร์เรย์ questions
-          questions[index].points = Number(newPoints);
+          quiz.questions[index].points = Number(newPoints);
           // คำนวณคะแนนรวมใหม่
           calculateTotalPoints();
         }
-        document.addEventListener('DOMContentLoaded', () => {
-          updateQuestionCount();
-          calculateTotalPoints();
-          updateQuestionPoints
-          renderQuestions();
-        });
+
 
       </script>
+
 
 </body>
 

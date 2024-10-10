@@ -43,7 +43,7 @@
     }
 
     .dark .above-nav-status {
-      background-color: #333 !important;
+      background-color:  var(--secondary-color) !important;
       border-right:1px solid #494949 ;
     }
 
@@ -86,7 +86,7 @@
       justify-content: center !important;
     }
     .dark .manange-bar, .dark .lesson-content{
-      background-color: #333 !important;
+      background-color: var(--secondary-color) !important;
     }
 
     .lesson-nothing {
@@ -239,16 +239,16 @@
     <% if (quiz.length == 0) {%>
       <div class="d-flex">
         <div class="set-border">
-          <p class="fw-bold fs-5 my-1 mx-2">ยังไม่มีบทเรียนใด ๆ ภายในระบบ</p>
+          <p class="fw-bold fs-5 my-1 mx-2">ยังไม่มีแบบทดสอบใด ๆ ภายในระบบ</p>
           <a href="/adminIndex/addQuiz" class="a-add text-primary m-0 p-2">
-            เพิ่มบทเรียน<i class="bi bi-plus-circle-fill mx-2"></i>
+            เพิ่มแบบทดสอบ<i class="bi bi-plus-circle-fill mx-2"></i>
           </a>
         </div>
       </div>
     <% } else if (quiz.length > 0) { %>
       <div class="d-flex">
         <div class="set-border d-flex">
-          <p class="fw-bold fs-5 my-1 mx-2" style="border-left: 0.25em solid #387bef; padding-left: 0.75em !important;">บทเรียน</p>
+          <p class="fw-bold fs-5 my-1 mx-2" style="border-left: 0.25em solid #387bef; padding-left: 0.75em !important;">แบบทดสอบ</p>
           <div class="d-flex justify-content-center" style="align-items: center;">
             <label class="mx-2" for="yearSelector">ปีการศึกษา: </label>
             <select id="yearSelector">
@@ -269,7 +269,7 @@
         <div class="set-border-bottom">
           <p class="my-2 p-schoolYear"><span class=" fw-bold">ปีการศึกษา:</span>
             <span class="text-primary"> <%=year.schoolYear%></span>
-            <a href="/adminIndex/addQuiz?schoolYearId=<%= year.schoolYear%>" class="mx-1 a-add" style="float: right;">เพิ่มบทเรียนของปีการศึกษา: <%= year.schoolYear %> <i class="bi bi-plus-circle-fill mx-1 a-add"></i></a></span>
+            <a href="/adminIndex/addQuiz?schoolYearId=<%= year.schoolYear%>" class="mx-1 a-add" style="float: right;">เพิ่มแบบทดสอบของปีการศึกษา: <%= year.schoolYear %> <i class="bi bi-plus-circle-fill mx-1 a-add"></i></a></span>
           </p>
         </div>
         <div class="setColumn row">
@@ -283,8 +283,8 @@
               </div>
               <div class="card-body-1">
                 <%const image = quiz.file.slice(8);%>
-                <img src="/<%=image%>" alt="รูปภาพประกอบบทเรียน" class="card-img" alt="รูปของบทเรียน" style="width: 100%; height: 20%; max-width: 15.125em; max-height: 8.8125em; border-radius: 0.5em;">
-                <!-- /* <img src="/images/indexMed/DENTISTRY_KKU.svg.png" class="card-img" alt="รูปของบทเรียน" style="height: 100%; width: 50%; object-fit: cover;"> */ -->
+                <img src="/<%=image%>" alt="รูปภาพประกอบแบบทดสอบ" class="card-img" alt="รูปของแบบทดสอบ" style="width: 100%; height: 20%; max-width: 15.125em; max-height: 8.8125em; border-radius: 0.5em;">
+                <!-- /* <img src="/images/indexMed/DENTISTRY_KKU.svg.png" class="card-img" alt="รูปของแบบทดสอบ" style="height: 100%; width: 50%; object-fit: cover;"> */ -->
               </div>
             </div>
           </a>
@@ -295,14 +295,14 @@
                 <p class="text-break" style="font-size: small;"><%= quiz.quizname %></p>
               </div>
               <div class="card-body-1 d-flex justify-content-center p-4">
-                <img src="/images/indexMed/DENTISTRY_KKU.svg.png" class="card-img" alt="รูปของบทเรียน" style="height: 100%; width: 50%; object-fit: cover; max-width: 15.125em; max-height: 8.8125em ;">
+                <img src="/images/indexMed/DENTISTRY_KKU.svg.png" class="card-img" alt="รูปของแบบทดสอบ" style="height: 100%; width: 50%; object-fit: cover; max-width: 15.125em; max-height: 8.8125em ;">
               </div>
             </div>
           </a>
           <% } %>
           <% }); %>
           <% } else if (year.quizArray.length < 1) {%>
-          <p class="showYear show<%=year.schoolYear%> mb-2">ไม่พบบทเรียนในระบบของปีการศึกษา:<span> <%= year.schoolYear%></span>
+          <p class="showYear show<%=year.schoolYear%> mb-2">ไม่พบแบบทดสอบในระบบของปีการศึกษา:<span> <%= year.schoolYear%></span>
           </p>
           <% } %>
         </div>

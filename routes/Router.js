@@ -113,6 +113,8 @@ router.get('/studentIndex', studentMiddleware, studentController.studentIndex);
 router.get('/studentLesson', studentMiddleware, studentController.studentLesson);
 router.get('/studentAssignment', studentMiddleware, studentController.studentAssignment);
 router.get('/studentExam', studentMiddleware, studentController.studentExam);
+router.get('/studentIndex/eachQuiz',studentMiddleware, adminQuizController.eachQuiz);
+
 
 //Student Assignment Router
 const { submitAssignment } = require("../controller/studentAssignment");
@@ -138,6 +140,8 @@ router.get('/markAsRead',  teacherMiddleware,  notification.markAsRead);
 router.get('/adminIndex/adminExamsIndex', teacherMiddleware,adminQuizController.adminExamsIndex);
 router.get('/adminIndex/addQuiz',teacherMiddleware, adminQuizController.addQuizPage);
 router.get('/adminIndex/eachQuiz',teacherMiddleware, adminQuizController.eachQuiz);
+router.post('/adminIndex/releaseQuiz/:quizId', teacherMiddleware, adminQuizController.releaseQuiz);
+
 // router.get('/adminIndex/previewQuiz',teacherMiddleware, adminQuizController.previewQuiz);
 
 
@@ -154,12 +158,16 @@ router.post('/updateQuiz',teacherMiddleware,adminEditDeleteQuizController.update
 
 
 // router.get('/getallquestion/:id',teacherMiddleware,adminManageQuestions.getAllQuestion)
+router.get('/getQuestions',teacherMiddleware, adminManageQuestions.getQuestions);
 router.post('/addQuestion',teacherMiddleware, adminManageQuestions.addQuestion);
+router.get('/deleteQuestion',teacherMiddleware, adminManageQuestions.deleteQuestion);
+
+
 
 //Profile
 router.get('/profile',profileController.profileIndex);
-router.get('/profile/edit',profileController.editProfileIndex);
-router.post('/profile/edit',profileController.editProfile);
+router.get('/profile/edit',profileController.profileIndex);
+router.route('/profile/edit').post(upload.single("img"), profileController.editProfile);
 
 
 module.exports = router;

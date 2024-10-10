@@ -8,6 +8,9 @@ const SchoolYear = require("../models/schoolYear");
 const User = require("../models/user.model");
 const mongoose = require('mongoose');
 
+const Notification = require("../models/notification");
+const { createNotification } = require('./notificationController');
+const { sendEmail } = require('../service/notification');
 
 const fs = require('fs');
 const multer = require('multer');
@@ -24,21 +27,6 @@ const deleteQuiz = async (req, res) => {
           return res.status(404).send('Quiz not found');
       }
 
-      // หา question IDs ทั้งหมดที่อยู่ใน quiz นี้
-      const questionIds = getQuiz.questions.map(question => question._id);
-
-      // ลบ questions ทั้งหมดที่เกี่ยวข้องกับ quiz นี้
-      async function deleteQuestions(questionIds) {
-          if (questionIds.length > 0) {
-              for (const questionId of questionIds) {
-                  await Question.findByIdAndDelete(questionId);
-              }
-          }
-      }
-
-      // เรียกใช้ฟังก์ชัน deleteQuestions
-      await deleteQuestions(questionIds);
-
       // ลบ quiz
       await Quiz.findByIdAndDelete(getQuiz_id);
 
@@ -51,24 +39,81 @@ const deleteQuiz = async (req, res) => {
 
 const updateQuiz = async (req, res) => {
   try {
-      const { quizId, quizname, quizdescription, attemptLimit, timeLimit, schoolYear } = req.body;
-      console.log("Request data:",req.body);
+      const { quizId, quizname, quizdescription, attemptLimit, timeLimit, schoolYear, questions } = req.body;
+      console.log("Request data:", req.body);
+
       // Ensure that schoolYear is a valid ObjectId
       if (!mongoose.Types.ObjectId.isValid(schoolYear)) {
           return res.status(400).json({ success: false, message: 'Invalid schoolYear ObjectId' });
       }
 
-      const updatedQuiz = await Quiz.findByIdAndUpdate(quizId, {
-          quizname,
-          quizdescription,
-          attemptLimit,
-          timeLimit, // This should be an object
-          schoolYear: mongoose.Types.ObjectId(schoolYear)
-      }, { new: true });
+      // Update quiz details
+      const updatedQuiz = await Quiz.findByIdAndUpdate(
+          quizId,
+          {
+              quizname,
+              quizdescription,
+              attemptLimit,
+              timeLimit: {
+                  value: timeLimit.value, // Assuming timeLimit is an object
+                  display: timeLimit.display
+              },
+              schoolYear: new mongoose.Types.ObjectId(schoolYear),
+          },
+          { new: true }
+      );
 
       if (!updatedQuiz) {
           return res.status(404).json({ success: false, message: 'Quiz not found' });
       }
+
+      // Update questions
+      if (questions && Array.isArray(questions)) {
+          // Clear existing questions
+          updatedQuiz.questions = [];
+
+          for (let questionData of questions) {
+              // Check if questionData contains _id for existing questions
+              if (questionData._id && mongoose.Types.ObjectId.isValid(questionData._id)) {
+                  const question = await Question.findByIdAndUpdate(
+                      questionData._id,
+                      {
+                          questionText: questionData.questionText,
+                          questionType: questionData.questionType,
+                          options: questionData.options,
+                          answer: questionData.answer,
+                          answerKey: questionData.answerKey,
+                          points: questionData.points,
+                          open: questionData.open
+                      },
+                      { new: true }
+                  );
+
+                  if (!question) {
+                      return res.status(404).json({ success: false, message: `Question not found for question: ${questionData.questionText}` });
+                  }
+
+                  updatedQuiz.questions.push(question);
+              } else {
+                  // If no _id is provided, create a new question
+                  const newQuestion = new Question({
+                      questionText: questionData.questionText,
+                      questionType: questionData.questionType,
+                      options: questionData.options,
+                      answer: questionData.answer,
+                      answerKey: questionData.answerKey,
+                      points: questionData.points,
+                      open: questionData.open
+                  });
+
+                  const savedQuestion = await newQuestion.save();
+                  updatedQuiz.questions.push(savedQuestion); // Push the new question into the updatedQuiz questions
+              }
+          }
+      }
+
+      // Save the updated quiz with the new questions
+      await updatedQuiz.save();
 
       res.json({ success: true, quiz: updatedQuiz });
   } catch (error) {
@@ -76,6 +121,7 @@ const updateQuiz = async (req, res) => {
       res.status(500).json({ success: false, message: 'Internal server error' });
   }
 };
+
 
 
 

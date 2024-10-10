@@ -1,6 +1,4 @@
 require('dotenv').config();
-
-const Swal = require('sweetalert2')
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
@@ -19,11 +17,14 @@ const session = require("express-session")
 var multer = require('multer');
 const cors = require('cors');
 const passport = require('passport');
+// const LessonProgress = require('./models/lessonsProgress'); // นำเข้ารุ่น (model) LessonProgress
+const PORT = process.env.PORT || 4000;
+const MONGO_URI = process.env.MONGO_URI || "mongodb://127.0.0.1:27017/elearning";
 
-const MongoStore = require('connect-mongo');
+// const MongoStore = require('connect-mongo');
 // const authRouter = require('./routes/auth');
 
-var app = express();
+const app = express();
 
 app.locals.pluralize = require('pluralize');
 
@@ -42,11 +43,15 @@ app.locals.pluralize = require('pluralize');
 // const xlsx = require('xlsx');
 const upload = multer({ dest: 'uploads/' });
 
-const Layout1 = require('./models/Layout1');
-const Layout2 = require('./models/Layout2');
-const Layout3 = require('./models/Layout3');
-const Layout4 = require('./models/Layout4');
-const Lesson = require('./models/Lessons');
+// const Layout1 = require('./models/Layout1');
+// const Layout2 = require('./models/Layout2');
+// const Layout3 = require('./models/Layout3');
+// const Layout4 = require('./models/Layout4');
+// const Lesson = require('./models/Lessons');
+// const subject = require('./models/subjects');
+
+// const User = require('./models/user.model');
+// const Student = require('./models/student.model');
 // const addAthlete = require('./models/AthleteOat')
 // const addEvent = require('./models/Event')
 // // const addMatch = require('./models/Match')
@@ -54,9 +59,10 @@ const Lesson = require('./models/Lessons');
 
 // const addMatch = require('./models/EventOat')
 
-app.use(express.static(path.join(__dirname, 'public')));
+
 const Router = require('./routes/Router.js');
 const manageStudent = require('./controller/manageStudent.js');
+// const reminderJob = require('./service/countdown.js');
 
 const loadNotificationsMiddleware = require('./middleware/notificationMiddleware.js');
 
@@ -70,26 +76,36 @@ const loadNotificationsMiddleware = require('./middleware/notificationMiddleware
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.use(logger('dev'));
-app.use(express.urlencoded({
-    extended: true
-}));
-app.use(express.json());
+// app.use(express.json());
+// app.use(express.urlencoded({
+//     extended: true
+// }));
 
+app.use(express.json({ charset: 'utf-8' }));
+app.use(express.urlencoded({ extended: true, charset: 'utf-8' }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')))
 app.use(express.static(path.join(__dirname, 'uploads')))
-
 app.use(loadNotificationsMiddleware);
 
 app.use('/pdfs', express.static('uploads'));
 
-
+// //session_middleware
+// app.use(session({
+//     secret: 'keyboard cat',
+//     resave: false,
+//     saveUninitialized: true,
+//     store: MongoStore.create({ mongoUrl: 'mongodb://localhost:27017/Elearning', collectionName: "session" }),
+//     cookie: {
+//         maxAge: 1000 * 60 * 60 * 24
+//     }
+// }));
 
 app.use(flash());
 app.use(session({
     secret: "ppw.smw_094",
-    resave: false,
-    saveUninitialized: false,
+    resave: true,
+    saveUninitialized: true
 }));
 
 // custom middleware for login
@@ -99,14 +115,80 @@ app.use(session({
 //     }
 //     next();
 // }
+// app.get('/', (req, res) => {
+//     try {
+//         let permission = req.query.permission;
+//         let noPermission = null
+//         if (permission) {
+//             noPermission = "คุณไม่มีสิทธิ์ในการเข้าใช้งาน"
+//         }
+//         res.render("notLoggedIn", { noPermission });
+//         // หรือ res.send('Home Page') เป็นต้น
+//     } catch (error) {
+//         console.log(error);
+//     }
+// });
 
-app.get('/students', (req, res, next) => {
-    res.render('studentInformation');
-})
-app.post('/upload', manageStudent.upload.single('excelFile'), manageStudent.uploadedFile);
+
+
+// app.get('/uploadStudentId', async (req, res,) => {
+
+//     try {
+//         const getAllStudent = await Student.find();
+//         // let stdList = [];
+//         for (i in getAllStudent) {
+//             // console.log(getAllStudent[i].user)
+//             var userId = getAllStudent[i].user;
+//             var stdId = getAllStudent[i]._id;
+
+//             const updateId = await User.findByIdAndUpdate(
+//                 userId,
+//                 {$push: {student:stdId}},
+//                 {new:true}
+//             )
+//         }
+//         const success = "success"
+//         res.json(success);
+//     } catch (err) {
+//         console.log(err)
+//     }
+
+// });
 
 var type = upload.single('file');
-// Middleware ที่เรียกในทุก request
+
+
+
+// const url = "mongodb://localhost:27017/Elearning";
+
+mongoose.connect(MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+})
+    .then(() => {
+        console.log("Connected to MongoDB");
+        // Start Express server หลังจากที่ MongoDB เชื่อมต่อเรียบร้อยแล้ว
+        app.listen(PORT, () => {
+            console.log("Express server is running on " + PORT);
+        });
+
+    })
+    .catch((err) => {
+        console.error("MongoDB connection error:", err);
+    });
+// mongoose.connect(MONGO_URI, {
+//     useNewUrlParser: true,
+//     useUnifiedTopology: true,
+// })
+//     .then(() => {
+//         console.log("Connected to MongoDB");
+//         // ไม่ต้องเรียกใช้ app.listen ใน Vercel
+//     })
+//     .catch((err) => {
+//         console.error("MongoDB connection error:", err);
+//     });
+
+global.loggedIn = null
 app.use((req, res, next) => {
     // ตรวจสอบว่าผู้ใช้ล็อกอินหรือไม่
     if (req.isAuthenticated) {
@@ -126,31 +208,19 @@ app.use((req, res, next) => {
     }
 });
 app.use(cors());
-
-
-const url = "mongodb://127.0.0.1:27017/elearning";
-
-mongoose.connect(url)
-    .then(() => {
-        console.log("Connected to MongoDB");
-        // Start Express server หลังจากที่ MongoDB เชื่อมต่อเรียบร้อยแล้ว
-        app.listen(4000, () => {
-            console.log("Express server is running in 4000");
-        });
-    })
-    .catch((err) => {
-        console.error(err)
-    })
-
-
-global.loggedIn = null
-
 app.use(passport.session());
 // app.use('/', authRouter);
 // app.use('/teacher', authRouter);
 // app.use('/profile', authRouter);
 app.use('/', Router)
+app.get('/students', (req, res, next) => {
+    res.render('studentInformation');
+});
+app.post('/upload', manageStudent.upload.single('excelFile'), manageStudent.uploadedFile);
 app.use(multer().any());
+
+// Middleware ที่เรียกในทุก request
+
 
 app.use("*", (req, res, next) => {
     loggedIn = req.session.userId
@@ -160,7 +230,7 @@ app.use("*", (req, res, next) => {
 app.use((req, res, next) => {
     logger.info(`Received request: ${req.method} ${req.url}`);
     next();
-  });
+});
 
 app.use(function (err, req, res, next) {
     // set locals, only providing error in development

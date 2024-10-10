@@ -66,6 +66,11 @@
       .dark .text-right {
         color: lightgray;
       }
+      
+      .profile-img {
+                transition: opacity 0.3s ease;
+                border-radius: 10px;
+            }
     </style>
 </head>
 <%- include("./partials/nav2.ejs", { theme: theme, isSidebarOpen: isSidebarOpen }) %>
@@ -78,12 +83,12 @@
           <div class="card-body m-3 m-3 mx-lg-2 my-lg-0 px-5 pt-4 pb-4 rounded-4 shadow-lg">
             <div class="row m-xl-0 p-xl-0">
               <div class="col-lg-6">
-                <br>
                 <div class="profile-image text-center">
-                  <img src="images\image-9.png" alt="Default Image" class="img-fluid  mx-auto" width="310" height="350">
+                  <img src="<%= userData.img %>" id="img" alt="Profile Image"  class="img-fluid mx-auto profile-img" width="310" height="350"
+                  style="max-width: 310px;max-height: 320px; min-width: 310px; min-height: 320px;">
+                  
                 </div>
                 <br>
-                <div class="text-center"><b>รูปโปรไฟล์</b></div>
               </div>
               <div class="col-lg-6 ">
                 <div class="my-3">
@@ -101,7 +106,7 @@
                     </div>
                     <div class="mb-1">
                       <b class="label">ชื่อเล่น:</b>
-                      <span class="text-right">กัปตัน</span>
+                      <span class="text-right">  <%= userData.nickname %></span>
                     </div>
                     <div class="mb-1">
                       <b class="label">คณะ:</b>
@@ -113,7 +118,7 @@
                     </div>
                     <div class="mb-1">
                       <b class="label">หมายเหตุ:</b>
-                      <span class="text-right">-</span>
+                      <span class="text-right">  <%= userData.notes %></span>
                     </div>
                   </div>
 

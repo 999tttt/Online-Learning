@@ -534,20 +534,22 @@
           <p class="fw-normal fs-6 lesson-bar ms-2">แบบทดสอบ</p> 
               <br>
               <p class="fw-normal fs-3 ms-2 ">
-                  ชื่อแบบทดสอบ
+                <%=quiz.quizname%>
               </p>
               <p class="fs-6 mx-2 mt-1" style="color: gray;">
-                คำอธิบาย
+                <%=quiz.quizdescription%>
+
               </p><br>
           
           <p class="fw-normal w-auto fs-6 " style="margin-left: 0.5em !important;">เวลาในการทำแบบทดสอบ: 
-            <span class="fw-normal fs-6 text-primary" style="margin-right: 1em !important;">1 ชั่วโมง</span>
+            <span class="fw-normal fs-6 text-primary" style="margin-right: 1em !important;"><%=quiz.timeLimit.display%>
+            </span>
             จำนวนครั้งที่เข้าทำได้:
 
             
-            <span class="fw-normal fs-6 text-primary" style="margin-right: 1em !important;">2 ครั้ง</span>
+            <span class="fw-normal fs-6 text-primary" style="margin-right: 1em !important;"> <%=quiz.attemptLimit%> ครั้ง</span>
             จำนวนข้อ:
-            <span class="fw-normal fs-6 text-primary " style="margin-right: 1em !important;">30 ข้อ</span>
+            <span class="fw-normal fs-6 text-primary " style="margin-right: 1em !important;"> <%= questions.length %> ข้อ</span>
             
           </p>
             <div>
@@ -558,7 +560,7 @@
                     วันที่และเวลาหมดเขต:
         
                     
-                    <span class="fw-normal fs-6 text-primary" style="margin-right: 1em !important;">12/08/2567 18.00 น. &ensp;(อีก 24 วัน)</span>
+                    <%= quiz.releaseDate ? new Date(quiz.releaseDate).toLocaleString('th-TH', { dateStyle: 'long', timeStyle: 'short' }) : 'ไม่มีการปล่อย' %>
                     
                   </p>
         </p></div>

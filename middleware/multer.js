@@ -47,4 +47,25 @@ const upload = multer({
   fileFilter: fileFilter,
 });
 
+const imgUpload = (destination) =>multer({
+  storage: storage(destination),
+  limits: {
+    fileSize: 2* 1024 * 1024, //2mb,
+
+  },
+  fileFilter: (req, file, cb) =>{
+    if(file.mimetype == "image/png" || file.mimetype == "image/jpg" || file.
+      mimetype == "image/jpeg") {
+        cb(null, true);
+      } else {
+        cb(null, false);
+        return cb(new Error('อนุญาติแค่ไฟล์ .png, .jpg และ .jpeg เท่านั้น'));
+      }
+  },
+  onError : function(err, next) {
+    return console.log('error', err);
+    next(err);
+  }
+})
+
 module.exports = upload;

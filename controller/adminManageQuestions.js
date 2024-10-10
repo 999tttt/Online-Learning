@@ -12,152 +12,114 @@ const question4 = require("../models/question4");
 
 const mongoose = require('mongoose');
 
+
+
 const multer = require('multer');
 const upload = multer();
 
 const Grid = require('gridfs-stream');
 const { Readable } = require('stream');
 
-const addQuestion = async function addQuestion() {
+const addQuestion = async (req, res) => {
+  try {
+    const { questionText, options, questionType, answerKey, points, open, quizId } = req.body;
+
+    // ตรวจสอบว่าค่า quizId ถูกส่งมาหรือไม่
+    if (!quizId) {
+      return res.status(400).json({ success: false, message: 'quizId is required' });
+    }
+
+    // ตรวจสอบค่าอื่น ๆ ว่าถูกต้องหรือไม่
+    if (!questionText || !Array.isArray(options) || options.length === 0 || !questionType || typeof points !== 'number') {
+      return res.status(400).json({ success: false, message: 'Invalid input data' });
+    }
+
     const newQuestion = {
-        questionText: 'คำถาม',
-        options: [{ optionText: 'ตัวเลือก 1' }],
-        questionType: 'MCQ',
-        points: 1,
-        open: true
+      questionText,
+      questionType,
+      options: options.map(opt => ({ optionText: opt })), // แปลง options ให้เป็น array ของ object
+      answerKey,
+      points,
+      open: open !== undefined ? open : true // ถ้าไม่ได้ระบุค่า open ให้ตั้งเป็น true
     };
 
-    try {
-        // ส่งคำถามใหม่ไปยังเซิร์ฟเวอร์
-        const response = await axios.post('/api/questions', newQuestion);
-        
-        // เพิ่มคำถามลงในอาร์เรย์ questions
-        questions.push(response.data); // สมมติว่าเซิร์ฟเวอร์ส่งคำถามที่เพิ่มเข้ามา
+    // ค้นหา quiz จาก database
+    const quiz = await Quiz.findById(quizId);
 
-        updateQuestionCount();
-        calculateTotalPoints();
-        renderQuestions();
-    } catch (error) {
-        console.error('Error adding question:', error);
-        // แสดงข้อความผิดพลาดหรือจัดการข้อผิดพลาดตามต้องการ
+    if (!quiz) {
+      return res.status(404).json({ success: false, message: 'Quiz not found' });
     }
-}
 
+    // เพิ่มคำถามใหม่ลงใน quiz
+    quiz.questions.push(newQuestion);
+    await quiz.save();
 
+    // ส่ง response กลับไปให้ client
+    res.json({ success: true, question: newQuestion });
+  } catch (error) {
+    console.error('Error adding question:', error);
+    res.status(500).json({ success: false, message: 'Internal server error' });
+  }
+};
 
-const createQuestion_1 = async function (req, res, next) {
-    try {
-        // ใน express-fileupload, ไฟล์ที่อัปโหลดจะถูกเก็บใน req.files
-        const files = req.files;
-        // if (!files || !files.Url || !files.Url[0]) {
-        //     return res.status(400).send('ไม่พบไฟล์ "Url1" ที่อัปโหลด');
-        // }
-        const questionCounter = req.body.questionCounter;
-        const _id = req.body._id;
-        // console.log(_id);
+const deleteQuestion = async (req, res) => {
+  try {
+      const { quizId, questionId } = req.body;
 
-        const uploadedFile = req.files.Url;
-
-        // แน่ใจว่า Layout1 ถูก require และอ้างถึงในโค้ดของคุณ
-        const newQuestion1 = await new Question1({
-            questionText: req.body.questionText,
-            options: req.body.options,
-            answer: req.body.answer,
-            questionImage: [{
-                title: req.body.title,
-                Url: {
-                    data: uploadedFile.data,
-                    contentType: uploadedFile.mimetype,
-                },
-                ImageDescription: req.body.ImageDescription
-            }],
-            quizArrayObject: [{
-                quizid: _id
-            }]
-        });
-
-        const savedQuestion1 = await newQuestion1.save();
-        const question1_id = savedQuestion1._id;
-        // ในส่วนที่ใช้ layoutCounter
-        for (let i = 1; i <= questionCounter; i++) {
-            const uploadedFile = req.files[`Url${i}`];
-
-            const updatedContentQuestion1 = {
-                title: req.body[`title${i}`],
-                Url: {
-                    data: uploadedFile.data,
-                    contentType: uploadedFile.mimetype,
-                },
-                ImageDescription: req.body[`ImageDescription${i}`]
-            };
-
-            await question1.findByIdAndUpdate(
-                question1_id,
-                { $push: { questionImage: updatedContentQuestion1 } },
-                { new: true }
-            );
-        }
-
-        const getQuestion1_Id = savedQuestion1._id;
-        const updatedQuiz = await Quiz.findByIdAndUpdate(
-            _id,
-            { $push: { question1ArrayObject: getQuestion1_Id } },
-            { new: true }
-        );
-
-      const quizzes = await Quiz.find().sort({ createdAt: 1 }).exec();
-      const quizid = req.query.quizid;
-      const quiz = await Quiz.findById(quizid);
-      const question1 = quiz.question1ArrayObject;
-      const question2 = quiz.question2ArrayObject;
-      const question3 = quiz.question3ArrayObject;
-      const question4 = quiz.question4ArrayObject;
-  
-      const foundQuestions = [];
-      async function findQuestionsAndStoreData(deleteQuestions, Question) {
-
-      
-        if (deleteQuestions.length > 0) {
-          for (const questionId of deleteQuestions) {
-            const foundQuestion = await Question.findById(questionId);
-            if (foundQuestion) {
-              foundQuestions.push(foundQuestion);
-            }
-          }
-        }
-  
-        return foundQuestions;
+      if (!quizId || !questionId) {
+          return res.status(400).json({ success: false, message: 'quizId and questionId are required' });
       }
 
-       
-      const foundQuestions1 = await findQuestionsAndStoreData(question1, question1);
-      const foundQuestions2 = await findQuestionsAndStoreData(question2, question2);
-      const foundQuestions3 = await findQuestionsAndStoreData(question3, question3);
-      const foundQuestions4 = await findQuestionsAndStoreData(question4, question4);
-  
-      foundQuestions.sort((a, b) => {
-        const dateA = new Date(a.createdAt);
-        const dateB = new Date(b.createdAt);
-  
-        if (dateA < dateB) {
-          return -1;
-        } else if (dateA > dateB) {
-          return 1;
-        } else {
-          return 0;
-        }
-      });
+      const quiz = await Quiz.findById(quizId);
 
-        // res.json(savedLayout1);
-        res.render("nextCreateQuestion", { mytitle: "nextCreateQuestion", quiz, quizzes, foundQuestions });
-    } catch (err) {
-        console.error(err);
-        res.status(500).send("เกิดข้อผิดพลาด");
-    }
+      if (!quiz) {
+          return res.status(404).json({ success: false, message: 'Quiz not found' });
+      }
+
+      const questionIndex = quiz.questions.findIndex(q => q._id.toString() === questionId);
+
+      if (questionIndex === -1) {
+          return res.status(404).json({ success: false, message: 'Question not found' });
+      }
+
+      quiz.questions.splice(questionIndex, 1);
+      await quiz.save();
+
+      res.json({ success: true, message: 'Question deleted successfully' });
+  } catch (error) {
+      console.error('Error deleting question:', error);
+      res.status(500).json({ success: false, message: 'Internal server error' });
+  }
 };
 
 
+
+const getQuestions = async (req, res) => {
+  const { quizId } = req.query;
+
+  try {
+      const quiz = await Quiz.findById(quizId);
+
+      if (!quiz) {
+          return res.status(404).json({ success: false, message: 'Quiz not found' });
+      }
+
+      res.json({ success: true, questions: quiz.questions });
+  } catch (error) {
+      res.status(500).json({ success: false, message: 'Internal server error' });
+  }
+};
+
+
+
+
+
+
+
+
 module.exports = {
-    addQuestion,
-    createQuestion_1,
+  addQuestion,
+  deleteQuestion,
+  getQuestions
+  
 }

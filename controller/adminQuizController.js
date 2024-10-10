@@ -1,5 +1,4 @@
 var Quiz = require('../models/quiz')
-const Question = require("../models/question");
 var User = require('../models/user.model')
 const Student = require("../models/student.model");
 const Teacher = require("../models/teacher.model")
@@ -19,195 +18,97 @@ const Grid = require('gridfs-stream');
 const { Readable } = require('stream');
 
 
+// const Notification = require("../models/notification");
+// const { createNotification } = require('./notificationController');
+// const { sendEmail } = require('../service/notification');
+
+
 exports.createQuiz = async (req, res, next) => {
   try {
-      const userData = await User.findById(req.session.userId);
-      const schoolYear = req.body.schoolYear;
-      const checkExists = await SchoolYear.findOne({ schoolYear });
-      const users = await User.find();
-      const whatCome = "มีแบบทดสอบเรื่อง";
-      const subject = "แบบทดสอบใหม่จาก Online Dentistry Learning"; 
-      const whoemail = req.session.email;
-      console.log("Email:", whoemail);
-      const name = req.body.quizname;
-      const description = req.body.quizdescription;
-      const timeLimit = req.body.timeLimit;
-      const attemptLimit = req.body.attemptLimit;
-      const timeLimitObj = JSON.parse(timeLimit);
-      
-      let questions = [
-        {
-            questionText: 'คำถามไม่ระบุชื่อ',
-            options: [{ optionText: 'ตัวเลือก 1' }],
-            questionType: 'MCQ',
-            answer: false,
-            answerKey: "",
-            points: 1,
-            open: true
-        }
-    ];
+    const userData = await User.findById(req.session.userId);
+    const schoolYear = req.body.schoolYear;
+    const checkExists = await SchoolYear.findOne({ schoolYear });
+    const users = await User.find();
+    const subject = "แบบทดสอบใหม่จาก Online Dentistry Learning";
+    const whoemail = req.session.email;
+    const name = req.body.quizname;
 
-      if (checkExists) {
-          let quizCreate;
+    const description = req.body.quizdescription;
+    const timeLimit = JSON.parse(req.body.timeLimit);
+    const attemptLimit = req.body.attemptLimit;
 
-          if (req.file) {
-              const file = req.file.path;
-              quizCreate = new Quiz({
-                  owneremail: whoemail,
-                  quizname: name,
-                  quizdescription: description,
-                  timeLimit: {
-                      value: timeLimitObj.value,
-                      display: timeLimitObj.display
-                  },
-                  attemptLimit: attemptLimit,
-                  upload: true,
-                  quizImage: {
-                      data: file, // Assuming the file is an image
-                      contentType: req.file.mimetype
-                  },
-                  schoolYear: checkExists._id,
-                  questions: questions // Add questions to the quiz
-              });
-          } else {
-              quizCreate = new Quiz({
-                  owneremail: whoemail,
-                  quizname: name,
-                  quizdescription: description,
-                  timeLimit: {
-                      value: timeLimitObj.value,
-                      display: timeLimitObj.display
-                  },
-                  attemptLimit: attemptLimit,
-                  upload: false,
-                  schoolYear: checkExists._id,
-                  questions: questions // Add questions to the quiz
-              });
-          }
 
-          await quizCreate.save();
-
-          // Update SchoolYear with new quiz
-          await SchoolYear.findByIdAndUpdate(
-              checkExists._id,
-              { $push: { quizArray: quizCreate._id } },
-              { new: true }
-          );
-
-          const schYear = checkExists.schoolYear;
-          const quizzes = await Quiz.find().sort({ createdAt: 1 }).populate("schoolYear");
-          const quizId = quizCreate._id;
-          const quiz = await Quiz.findById(quizId);
-
-          const theme = req.session.theme || 'light'; 
-          const isSidebarOpen = false;
-
-          const foundQuestions = quiz.questions;
-
-          await Promise.all(users.map(async user => {
-              const findUser = await User.findById(user._id)
-                  .populate({
-                      path: "student",
-                      populate: {
-                          path: "schoolYear",
-                      }
-                  });
-              if (findUser.student && (findUser.student.schoolYear.schoolYear == checkExists.schoolYear)) {
-                  const email = user.email;
-                  sendEmail(email, subject, name, userData, whatCome);
-              }
-          }));
-
-          createNotification(`${userData._id}`, `${userData.fname} ${userData.lname}`, `${whatCome} "${name}" ถูกเพิ่มใหม่ลงในระบบ`, req, res, next)
-
-          res.render("eachQuiz", { mytitle: "eachQuiz", quiz, quizzes, foundQuestions, schYear, theme, isSidebarOpen });
-
-      } else {
-          const createSchoolYear = new SchoolYear({
-              schoolYear: schoolYear
-          });
-          await createSchoolYear.save();
-
-          let quizCreate;
-
-          if (req.file) {
-              const file = req.file.path;
-              quizCreate = new Quiz({
-                  owneremail: whoemail,
-                  quizname: name,
-                  quizdescription: description,
-                  timeLimit: {
-                      value: timeLimitObj.value,
-                      display: timeLimitObj.display
-                  },
-                  attemptLimit: attemptLimit,
-                  upload: true,
-                  quizImage: {
-                      data: file,
-                      contentType: req.file.mimetype
-                  },
-                  schoolYear: createSchoolYear._id,
-                  questions: questions // Add questions to the quiz
-              });
-          } else {
-              quizCreate = new Quiz({
-                  owneremail: whoemail,
-                  quizname: name,
-                  quizdescription: description,
-                  timeLimit: {
-                      value: timeLimitObj.value,
-                      display: timeLimitObj.display
-                  },
-                  attemptLimit: attemptLimit,
-                  upload: false,
-                  schoolYear: createSchoolYear._id,
-                  questions: questions // Add questions to the quiz
-              });
-          }
-
-          await quizCreate.save();
-
-          // Update SchoolYear with new quiz
-          await SchoolYear.findByIdAndUpdate(
-              createSchoolYear._id,
-              { $push: { quizArray: quizCreate._id } },
-              { new: true }
-          );
-
-          const schYear = createSchoolYear.schoolYear;
-          const quizzes = await Quiz.find().sort({ createdAt: 1 }).exec();
-          const quizId = quizCreate._id;
-          const quiz = await Quiz.findById(quizId);
-
-          const theme = req.session.theme || 'light'; 
-          const isSidebarOpen = false;
-
-          const foundQuestions = quiz.questions;
-
-          await Promise.all(users.map(async user => {
-              const findUser = await User.findById(user._id)
-                  .populate({
-                      path: "student",
-                      populate: {
-                          path: "schoolYear",
-                      }
-                  });
-              if (findUser.student && (findUser.student.schoolYear.schoolYear == checkExists.schoolYear)) {
-                  const email = user.email;
-                  sendEmail(email, subject, name, userData, whatCome);
-              }
-          }));
-
-          createNotification(`${userData._id}`, `${userData.fname} ${userData.lname}`, `${whatCome} "${name}" ถูกเพิ่มใหม่ลงในระบบ`, req, res, next)
-
-          res.render("eachQuiz", { mytitle: "eachQuiz", quiz, quizzes, foundQuestions, schYear, theme, isSidebarOpen });
+    const questions = [
+      {
+        questionText: 'คำถามไม่ระบุชื่อ',
+        options: [{ optionText: 'ตัวเลือก 1' }],
+        questionType: 'MCQ',
+        answer: false,
+        answerKey: "",
+        points: 1,
+        open: true
       }
+    ];
+    // สร้าง Quiz
+    const quizData = {
+      owneremail: whoemail,
+      quizname: name,
+      quizdescription: description,
+      timeLimit: {
+        value: timeLimit.value,
+        display: timeLimit.display
+      },
+      attemptLimit: attemptLimit,
+      upload: req.file ? true : false,
+      schoolYear: checkExists ? checkExists._id : null,
+      questions: questions // เพิ่มคำถามใน Quiz
+    };
+
+    // ถ้ามีการอัปโหลดไฟล์
+    if (req.file) {
+      quizData.quizImage = {
+        data: req.file.path,
+        contentType: req.file.mimetype
+      };
+    }
+
+    // สร้าง Quiz
+    let quizCreate;
+    if (checkExists) {
+      quizCreate = new Quiz(quizData);
+      await quizCreate.save();
+
+      // อัปเดต SchoolYear ด้วย Quiz ใหม่
+      await SchoolYear.findByIdAndUpdate(
+        checkExists._id,
+        { $push: { quizArray: quizCreate._id } },
+        { new: true }
+      );
+    } else {
+      const createSchoolYear = new SchoolYear({ schoolYear });
+      await createSchoolYear.save();
+      quizData.schoolYear = createSchoolYear._id;
+      quizCreate = new Quiz(quizData);
+      await quizCreate.save();
+
+      // อัปเดต SchoolYear ใหม่
+      await SchoolYear.findByIdAndUpdate(
+        createSchoolYear._id,
+        { $push: { quizArray: quizCreate._id } },
+        { new: true }
+      );
+    }
+
+    // เปลี่ยนเส้นทางไปยังหน้า eachQuiz ที่สร้างใหม่
+    res.redirect(`/adminIndex/eachQuiz?quizId=${quizCreate._id}`);
 
   } catch (err) {
-      console.error(err);
-      res.status(500).send("เกิดข้อผิดพลาด");
+    console.error(err);
+    res.status(500).send("เกิดข้อผิดพลาด");
   }
-}
+};
+
+
 
 
 
@@ -338,9 +239,9 @@ exports.adminExamsIndex = async (req, res) => {
     const quiz = await Quiz.find().sort({ createdAt: 1 }).populate("schoolYear");
     const schoolYears = await SchoolYear.find().sort({ schoolYear: 0 });
     const findYear = null;
-    const theme = req.session.theme || 'light'; 
-    const isSidebarOpen = false; 
-    res.render("adminExam", { mytitle: "adminExam",userData, quiz,schoolYears ,findYear , theme ,isSidebarOpen }); // ถ้าไฟล์อยู่ในโฟลเดอร์ views
+    const theme = req.session.theme || 'light';
+    const isSidebarOpen = false;
+    res.render("adminExam", { mytitle: "adminExam", userData, quiz, schoolYears, findYear, theme, isSidebarOpen }); // ถ้าไฟล์อยู่ในโฟลเดอร์ views
   } catch (err) {
     console.error(err);
     res.status(500).send("เกิดข้อผิดพลาด");
@@ -349,20 +250,20 @@ exports.adminExamsIndex = async (req, res) => {
 // เพิ่มการแสดงหน้าสร้างแบบทดสอบ
 exports.addQuizPage = async (req, res) => {
   // if (req.user) {
-    try {
-      const userData = await User.findById(req.session.userId);
-      const schoolYearId = req.query.schoolYearId;
-      const schoolYears = await SchoolYear.find().sort({ schoolYear: 0 });
-      const theme = req.session.theme || 'light'; 
-      const isSidebarOpen = false; 
+  try {
+    const userData = await User.findById(req.session.userId);
+    const schoolYearId = req.query.schoolYearId;
+    const schoolYears = await SchoolYear.find().sort({ schoolYear: 0 });
+    const theme = req.session.theme || 'light';
+    const isSidebarOpen = false;
 
-      const quiz = await Quiz.find().sort({ createdAt: 1 }).exec();
-      res.render("addQuiz", { mytitle: "addQuiz", quiz, userData ,schoolYearId,schoolYears , theme, isSidebarOpen}); // เปลี่ยนชื่อหน้าตามที่คุณต้องการ
-    } catch (err) {
-      console.error(err);
-      res.status(500).send("เกิดข้อผิดพลาด");
-    }
+    const quiz = await Quiz.find().sort({ createdAt: 1 }).exec();
+    res.render("addQuiz", { mytitle: "addQuiz", quiz, userData, schoolYearId, schoolYears, theme, isSidebarOpen }); // เปลี่ยนชื่อหน้าตามที่คุณต้องการ
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("เกิดข้อผิดพลาด");
   }
+}
 //   else {
 //     res.redirect('/login');
 //   }
@@ -370,103 +271,109 @@ exports.addQuizPage = async (req, res) => {
 
 exports.eachQuiz = async (req, res) => {
   try {
-    const userData = await User.findById(req.session.userId);
-    const quizzes = await Quiz.find().sort({ createdAt: 1 }).exec();
-    let quizid = req.query.quizId;
-
+    let quizId = req.query.quizId;
     // ตรวจสอบว่ามี '/edit' หรือไม่
-    const isEditPage = quizid.includes('/edit');
+    const isEditPage = quizId.includes('/edit');
     if (isEditPage) {
-      quizid = quizid.split('/edit')[0]; // แยก '/edit' ออก
+      quizId = quizId.split('/edit')[0]; // แยก '/edit' ออก
     }
 
-    const isViewPage = quizid.includes('/preview');
+    const isViewPage = quizId.includes('/preview');
     if (isViewPage) {
-      quizid = quizid.split('/preview')[0]; // แยก '/edit' ออก
+      quizId = quizId.split('/preview')[0]; // แยก '/preview' ออก
     }
 
-    const quiz = await Quiz.findById(quizid);
-
+    const quiz = await Quiz.findById(quizId).populate("schoolYear");
     if (!quiz) {
       return res.status(404).send('Quiz not found');
     }
+    if (isEditPage && req.xhr) { // เช็คว่าเป็นการร้องขอผ่าน AJAX หรือไม่
+      return res.json({ success: true, questions: quiz.questions });
+    }
+    const userData = await User.findById(req.session.userId);
+    const quizzes = await Quiz.find().sort({ createdAt: 1 }).exec();
+    const schYear = quiz.schoolYear.schoolYear;
+    const questions = quiz.questions;
+    const options = quiz.questions.options;
+
+
 
     const theme = req.session.theme || 'light';
     const isSidebarOpen = false;
 
-    const foundQuestions = quiz.questions;
-    async function findQuestionsAndStoreData(deleteQuestions, Question) {
-      if (deleteQuestions && deleteQuestions.length > 0) {
-        for (const questionId of deleteQuestions) {
-          const foundQuestion = await Question.findById(questionId);
-          if (foundQuestion) {
-            foundQuestions.push(foundQuestion);
-          }
-        }
-      }
-      return foundQuestions;
-    }
+    const userRole = userData.role; // ดึงบทบาทจาก userData เช่น 'student' หรือ 'teacher'
 
-    // สมมติว่า deleteQuestions เป็น array ของ questionId ที่คุณต้องการหา
-    const deleteQuestions = quiz.questions.map(q => q._id);
 
-    await findQuestionsAndStoreData(deleteQuestions, Question);
-
-    foundQuestions.sort((a, b) => {
-      const dateA = new Date(a.createdAt);
-      const dateB = new Date(b.createdAt);
-      return dateA - dateB;
-    });
-
-    
-
-    // Render หน้าแต่ละหน้า
-    if (isEditPage) {
-      res.render("editEachQuiz_test", {
-        mytitle: "editEachQuiz",
-        quiz,
-        quizzes,
-        foundQuestions,
-        userData,
-        theme,
-        isSidebarOpen
-      });
-    }else if (isViewPage) {
-        res.render("quiz_preview", {
-          mytitle: "viewEachQuiz",
+    // จัดเรียง foundQuestions ตามวันที่สร้าง
+    // questions.sort((a, b) => {
+    //     const dateA = new Date(a.createdAt);
+    //     const dateB = new Date(b.createdAt);
+    //     return dateA - dateB;
+    // });
+    if (userRole === 'teacher') {
+      // Render หน้าแต่ละหน้า
+      if (isEditPage) {
+        res.render("editEachQuiz_test", {
+          mytitle: "editEachQuiz",
+          schYear,
           quiz,
           quizzes,
-          foundQuestions,
+          questions,
+          options,
+          userData,
+          theme,
+          isSidebarOpen
+
+        });
+      } else if (isViewPage) {
+        res.render("quiz_preview_test", {
+          mytitle: "viewEachQuiz",
+          schYear,
+          quiz,
+          quizzes,
+          questions,
+          options,
           userData,
           theme,
           isSidebarOpen
         });
-    } else {
-      res.render("eachQuiz", {
-        mytitle: "eachQuiz",
+      } else {
+        res.render("eachQuiz", {
+          mytitle: "eachQuiz",
+          schYear,
+          quiz,
+          quizzes,
+          questions,
+          options,
+          userData,
+          theme,
+          isSidebarOpen
+        });
+      }
+    } else if (userRole === 'student') {
+      // สำหรับนักเรียน
+      res.render("eachQuizStudent", {
+        mytitle: "eachQuizStudent",
+        schYear,
         quiz,
         quizzes,
-        foundQuestions,
+        questions,
+        options,
         userData,
         theme,
         isSidebarOpen
       });
     }
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("เกิดข้อผิดพลาด");
-  }
-};
+    } catch (err) {
+      console.error(err);
+      res.status(500).send("เกิดข้อผิดพลาด");
+    }
+  };
 
 
 
-
-
-
-
-
-exports.createQuestion = async function (req, res, next) {
-  // if (req.user.role === 'teacher') {
+  exports.createQuestion = async function (req, res, next) {
+    // if (req.user.role === 'teacher') {
     try {
       if (req.files && req.files.quizImage) {
         const uploadedFile = req.files.quizImage;
@@ -497,7 +404,61 @@ exports.createQuestion = async function (req, res, next) {
     }
 
   }
-  // else {
-  //   res.redirect('/login');
-  // }
+// else {
+//   res.redirect('/login');
 // }
+// }
+
+exports.releaseQuiz = async (req, res) => {
+  const { quizId } = req.params; // รับค่า quizId จาก URL
+  const { isReleased, releaseWhen, deadline } = req.body;
+
+  try {
+      // ตรวจสอบว่า quizId เป็น ObjectId ที่ถูกต้องหรือไม่
+      console.log('quizId from params:', quizId); // เพิ่ม log
+
+      if (!mongoose.Types.ObjectId.isValid(quizId)) {
+          return res.status(400).json({ success: false, message: 'quizId ไม่ถูกต้อง' });
+      }
+
+      const quiz = await Quiz.findById(quizId);
+      if (!quiz) {
+          return res.status(404).json({ success: false, message: 'ไม่พบแบบทดสอบ' });
+      }
+
+      // อัปเดตสถานะของแบบทดสอบ
+      console.log('Before update:', quiz.isReleased); // ตรวจสอบสถานะก่อนอัปเดต
+      quiz.isReleased = isReleased;
+      quiz.releaseWhen = releaseWhen;
+      quiz.deadline = deadline;
+      console.log('After update:', quiz.isReleased); // ตรวจสอบสถานะหลังอัปเดต
+
+      await quiz.save(); // บันทึกการเปลี่ยนแปลงลงฐานข้อมูล
+
+      res.json({ success: true, message: 'ปล่อยแบบทดสอบสำเร็จ' });
+  } catch (error) {
+      console.error('Error:', error); // เพิ่ม log ข้อผิดพลาด
+      res.status(500).json({ success: false, message: 'เกิดข้อผิดพลาดในการปล่อยแบบทดสอบ' });
+  }
+};
+
+setInterval(async () => {
+  const now = new Date();
+
+  try {
+      // หา quizzes ที่ releaseWhen ถึงแล้ว และยังไม่ถูกปล่อย
+      const quizzesToRelease = await Quiz.find({
+          releaseWhen: { $lte: now }, // ตรวจสอบว่าถึงเวลา release หรือยัง
+          isReleased: false
+      });
+
+      quizzesToRelease.forEach(async (quiz) => {
+          quiz.isReleased = true;
+          await quiz.save(); // บันทึกการเปลี่ยนแปลง
+      });
+
+      console.log(`${quizzesToRelease.length} แบบทดสอบ ถูกปล่อย`);
+  } catch (error) {
+      console.error('Error releasing quizzes:', error);
+  }
+}, 3600000);

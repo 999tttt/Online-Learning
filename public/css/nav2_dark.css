@@ -7,6 +7,7 @@ body.light {
 
 body.dark {
     --bg-color: #121212;
+    --secondary-color:#444;
     --text-color: #ffffff;
 }
 
@@ -32,13 +33,13 @@ body.dark .li-a {
 
 /* ตัวเลือกอื่น ๆ ในธีม dark */
 body.dark .header {
-    background-color: #333; /* สีพื้นหลังเข้ม */
+    background-color: #444; /* สีพื้นหลังเข้ม */
     color: white; /* สีตัวอักษรขาว */
     border-bottom: 1px solid #494949;
 }
 
 body.dark .header_search {
-    background-color: #494949; /* สีพื้นหลังของแถบค้นหาเข้ม */
+    background-color: #515151; /* สีพื้นหลังของแถบค้นหาเข้ม */
     color: white;
 }
 
@@ -58,13 +59,13 @@ body.dark .ul{
     background-color: #494949;
 }
 body.dark .dropdown {
-    background-color: #333 !important;
+    background-color: #444 !important;
     border-bottom: 1px solid #EAEFF4;
 }
 
 
 body.dark .sub-menu {
-    background-color: #333; /* สีพื้นหลังของเมนูย่อย */
+    background-color: #444; /* สีพื้นหลังของเมนูย่อย */
     border-bottom: 1px solid #EAEFF4;
 }
 

@@ -83,11 +83,14 @@ const studentExam = async (req, res) => {
                     }
                 }
             });
-            const quiz = await Quiz.find().sort({ createdAt: 1 }).populate("schoolYear");
+            const quiz = await Quiz.find({ isReleased: true }).populate('schoolYear').sort({ releaseDate: 1 });
             const theme = req.session.theme || 'light'; 
+            const schoolYears = await SchoolYear.find().sort({ schoolYear: 0 });
+            // const getUserLessons = userData.student.schoolYear.lessonArray;
+            const findYear = null;
             const isSidebarOpen = false;
         // const getUserLessons = userData.student.schoolYear.lessonArray;
-        res.render("studentExam", { userData, quiz ,theme, isSidebarOpen });
+        res.render("studentExam", { userData, quiz ,schoolYears,findYear,theme, isSidebarOpen });
     } catch (error) {
         console.error(error);
     }

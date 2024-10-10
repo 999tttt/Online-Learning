@@ -64,7 +64,7 @@
             width: 100px;
             height: auto;
             max-height: 100px;
-            background: #333;
+            background:  var(--secondary-color);
             border-radius: 10px;
             cursor: pointer;
         }
@@ -181,8 +181,8 @@
         }
 
         .dark .question {
-            background-color: #333;
-            border-left: 6px solid #333;
+            background-color:  var(--secondary-color);
+            border-left: 6px solid  var(--secondary-color);
         }
 
         .question_option-prop,
@@ -230,7 +230,7 @@
         }
 
         .dark .options input {
-            background-color: #333;
+            background-color:  var(--secondary-color);
             color: var(--text-color);
 
         }
@@ -452,7 +452,7 @@
         }
 
         .dark .above-nav-status {
-            background-color: #333 !important;
+            background-color: #444 !important;
             border-right: 1px solid #494949;
         }
 
@@ -492,7 +492,7 @@
 
         .dark .manange-bar,
         .dark .lesson-content {
-            background-color: #333 !important;
+            background-color:  var(--secondary-color) !important;
         }
 
         .lesson-nothing {
@@ -860,7 +860,7 @@
         }
 
         .dark .question_form_top_name {
-            background-color: #333 !important;
+            background-color:  var(--secondary-color) !important;
             color: white;
             border-bottom: 1px #444 solid;
         }
@@ -880,7 +880,7 @@
 
         .dark .question_form_top_desc {
             border-bottom: 1px solid #444;
-            background-color: #333;
+            background-color:  var(--secondary-color);
         }
 
         .input-question {
@@ -893,8 +893,8 @@
         .dark .input-question {
             border: none;
             outline: none;
-            background-color: #333;
-            border-bottom: 1px #444 solid;
+            background-color: var(--secondary-color);
+            border-bottom: 1px #555 solid;
             color: var(--text-color);
         }
 
@@ -954,7 +954,7 @@
         .dark .modal-footer,
         .dark .modal-content,
         .dark .modal-dialog {
-            background-color: #333;
+            background-color:  var(--secondary-color);
         }
 
         .modal-header .modal-title {
@@ -1198,7 +1198,7 @@
                         <span id="all-points-count" class="grey">( รวม 1 คะแนน)</span>
                     </div>
 
-                    <div id="quizContainer">
+                    <div id="questionContainer">
 
                     </div>
                     <div class="center">
@@ -1754,7 +1754,7 @@
             let sortableInitialized = false; // ตัวแปรเพื่อเช็คว่า Sortable ถูกติดตั้งหรือยัง
 
             function renderQuestions() {
-                const container = document.getElementById('quizContainer');
+                const container = document.getElementById('questionContainer');
                 container.innerHTML = '';
 
                 questions.forEach((question, i) => {
@@ -1812,7 +1812,7 @@
             }
 
             function initializeSortable() {
-                const container = document.getElementById('quizContainer');
+                const container = document.getElementById('questionContainer');
                 Sortable.create(container, {
                     animation: 150,
                     onStart: function (evt) {

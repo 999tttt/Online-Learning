@@ -17,6 +17,14 @@ const userSchema = new Schema({
         type: String,
         default: "default",
     },
+    nickname: {
+        type: String,
+        default: "-",
+    },
+    notes: {
+        type: String,
+        default: "-",
+    },
     faculty: {
         type: String,
         default: "default"
@@ -27,7 +35,7 @@ const userSchema = new Schema({
     },
     img: {
         type: String,
-        default: 'https://secure.gravatar.com/avatar/0d36b4ae4b9c67a2b162710923f792ed?s=35&amp;d=identicon'
+        default: '/uploads/user.png'
     },
     role: {
         type: String,
@@ -51,22 +59,7 @@ const userSchema = new Schema({
 }, 
 { timestamps: true })
 
-// userSchema.pre('save', function(next) {
-//     const user = this
 
-//     // const validDomains = /@(kkumail\.com|kku\.ac\.th)$/i; 
-
-//     // if (!validDomains.test(user.email)) {
-//     //     return next(new Error('Invalid email domain. Only kkumail.com and kku.ac.th are allowed.'));
-//     // }
-
-//     bcrypt.hash(user.password, 10).then(hash => {
-//         user.password = hash
-//         next()
-//     }).catch(error => {
-//         console.error(error);
-//     })
-// })
 const User = mongoose.model('User', userSchema);
 
 module.exports = User;

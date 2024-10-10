@@ -47,7 +47,7 @@
     }
 
     .dark .above-nav-status {
-      background-color: #333 !important;
+      background-color:  var(--secondary-color) !important;
       border-right:1px solid #494949 ;
     }
 
@@ -90,7 +90,7 @@
       justify-content: center !important;
     }
     .dark .manange-bar, .dark .lesson-content{
-      background-color: #333 !important;
+      background-color:  var(--secondary-color) !important;
     }
 
     .lesson-nothing {
@@ -171,6 +171,12 @@
     .a-list-2,
     .bi-2 {
       color: #8A2BE2 !important;
+      
+    }
+    @media screen and (max-width: 768px) {
+      .above-nav-status{
+        display: none;
+      }
     }
 </style>
 
@@ -218,7 +224,7 @@
         <% schoolYear.forEach (year => {%>
           <div class="showYear show<%=year.schoolYear%>">
             <div class="set-border-bottom">
-              <p class="my-2 p-schoolYear"><span class="text-dark fw-bold">ปีการศึกษา:</span>
+              <p class="my-2 p-schoolYear"><span class=" fw-bold">ปีการศึกษา:</span>
                 <span class="text-primary"> <%=year.schoolYear%></span>
               </p>
             </div>

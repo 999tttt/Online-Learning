@@ -308,6 +308,7 @@ justify-content: center;    }
 </head>
 
 <body>
+    <%- include("./partials/nav2.ejs") %>
         <br><br><br><br><br>
         <div class="container-my-4">
             <div class="row m-xl-0 p-xl-0">
@@ -318,7 +319,7 @@ justify-content: center;    }
                                 <form action="/profile/edit" method="POST" enctype="multipart/form-data" >
                                     <div class="profile-image text-center position-relative">
                                         <label for="profileImageInput" class="profile-label">
-                                            <img src="/<%=userData.img%>" id="img" alt="Profile Image"
+                                            <img src=" <%= userData.img %>" id="img" alt="Profile Image"
                                                 class="img-fluid mx-auto profile-img" width="310" height="320"
                                                 
                                                 style="cursor: pointer;max-width: 310px;max-height: 320px; min-width: 310px; min-height: 320px;">
@@ -339,12 +340,12 @@ justify-content: center;    }
                                     <div class="form-group">
                                         <div class="form-wrapper">
                                             <label for="fname">ชื่อ:</label>
-                                            <p id="fname" name="fname" class="mt-1">ชื่อ</p>
+                                            <p id="fname" name="fname" class="mt-1"><%= userData.fname %></p>
 
                                         </div>
                                         <div class="form-wrapper">
                                             <label for="lname">นามสกุล:</label>
-                                            <input type="text" class="form-control" value=""
+                                            <input type="text" class="form-control" value="<%= userData.lname %>"
                                                 id="lname" name="lname" placeholder="">
                                         </div>
                                     </div>
@@ -354,28 +355,28 @@ justify-content: center;    }
                                     <div class="mb-1">
                                         <b class="label">รหัสนักศึกษา:</b>
                                         <div class="text-right">
-                                            <input type="text" class="form-control" value="" id="student_id"
+                                            <input type="text" class="form-control" value="643021096-4" id="student_id"
                                                 name="student_id" placeholder="รหัสนักศึกษา" disabled>
                                         </div>
                                     </div>
                                     <div class="mb-1">
                                         <b class="label">ชื่อเล่น:</b>
                                         <div class="text-right">
-                                            <input type="text" class="form-control" value=""
+                                            <input type="text" class="form-control" value="<%= userData.nickname %>"
                                                 id="nickname" name="nickname" placeholder="ชื่อเล่น">
                                         </div>
                                     </div>
                                     <div class="mb-1">
                                         <b class="label">คณะ:</b>
                                         <div class="text-right">
-                                            <input type="text" class="form-control" value="" id="faculty"
+                                            <input type="text" class="form-control" value="CP" id="faculty"
                                                 name="faculty" placeholder="คณะ" disabled>
                                         </div>
                                     </div>
                                     <div class="mb-1">
                                         <b class="label">นักศึกษาจาก:</b>
                                         <div class="text-right">
-                                            <input type="text" class="form-control" value=""
+                                            <input type="text" class="form-control" value="มหาวิทยาลัยขอนแก่น"
                                                 id="student_where" name="student_where" placeholder="นักศึกษาจาก"
                                                 disabled>
                                         </div>
@@ -383,7 +384,7 @@ justify-content: center;    }
                                     <div class="mb-1">
                                         <b class="label">หมายเหตุ:</b>
                                         <div class="text-right">
-                                            <input type="text" class="form-control" value=""
+                                            <input type="text" class="form-control" value="<%= userData.notes %>"
                                                 id="notes" name="notes" placeholder="หมายเหตุ">
                                         </div>
                                     </div>
@@ -403,6 +404,7 @@ justify-content: center;    }
                         <p>
                         <div>@email:</div>
                         <div class="grey">
+                            <%= userData.email %>
                         </div>
                         </p>
                     </div>

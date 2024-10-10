@@ -136,6 +136,12 @@
             font-size: 1rem;
             color: var(--icon-color);
         }
+        .profile-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
     </style>
 </head>
 
@@ -194,7 +200,7 @@
 
             <!-- Profile Button -->
             <button onclick="toggleMenu()" class="profile_button">
-                <i class="bi bi-person-circle m-4"></i>
+                <img src="<%= userData.img %>" alt="Profile Image" class="profile-icon mx-4 my-3" style="height: 40px;">
             </button>
             <div class="sub-menu-wrap" id="subMenu">
                 <div class="sub-menu">
