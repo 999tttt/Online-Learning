@@ -591,3 +591,4 @@
 2024-10-09T10:28:20.378Z error: Error during Google authentication: Request failed with status code 400
 2024-10-09T10:32:24.703Z error: Error during Google authentication: Request failed with status code 401
 2024-10-09T10:32:40.621Z error: Error during Google authentication: Request failed with status code 400
+2024-10-11T04:55:02.906Z info: Teacher logged in: herota151121@gmail.com, IP: ::1, User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36 Edg/129.0.0.0
