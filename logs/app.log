@@ -591,17 +591,3 @@
 2024-10-09T10:28:20.378Z error: Error during Google authentication: Request failed with status code 400
 2024-10-09T10:32:24.703Z error: Error during Google authentication: Request failed with status code 401
 2024-10-09T10:32:40.621Z error: Error during Google authentication: Request failed with status code 400
-2024-10-10T12:32:42.090Z error: Error during Google authentication: Request failed with status code 400
-2024-10-10T16:03:51.892Z error: Error during Google authentication: Request failed with status code 400
-2024-10-11T04:34:18.670Z error: Error during Google authentication: Request failed with status code 400
-2024-10-11T04:59:20.214Z info: Teacher logged in: herota151121@gmail.com, IP: ::1, User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36 Edg/129.0.0.0
-2024-10-11T05:04:35.908Z info: Teacher logged in: herota151121@gmail.com, IP: ::1, User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36 Edg/129.0.0.0
-2024-10-11T05:09:15.825Z info: Teacher logged in: herota151121@gmail.com, IP: ::1, User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36 Edg/129.0.0.0
-2024-10-11T05:12:35.553Z info: Teacher logged in: herota151121@gmail.com, IP: ::1, User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36 Edg/129.0.0.0
-2024-10-11T05:28:21.537Z info: Teacher logged in: herota151121@gmail.com, IP: ::1, User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36 Edg/129.0.0.0
-2024-10-11T05:35:20.854Z info: Teacher logged in: herota151121@gmail.com, IP: ::1, User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36 Edg/129.0.0.0
-2024-10-11T05:41:07.888Z info: Student logged in: kongkungwan.w@kkumail.com, IP: ::1, User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36 Edg/129.0.0.0
-2024-10-11T05:49:08.399Z info: Teacher logged in: herota151121@gmail.com, IP: ::1, User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36 Edg/129.0.0.0
-2024-10-11T05:49:12.297Z info: Student logged in: kongkungwan.w@kkumail.com, IP: ::1, User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36 Edg/129.0.0.0
-2024-10-11T08:47:34.496Z info: Teacher logged in: herota151121@gmail.com, IP: ::1, User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36 Edg/129.0.0.0
-2024-10-11T08:51:21.514Z info: Teacher logged in: herota151121@gmail.com, IP: ::1, User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36 Edg/129.0.0.0
