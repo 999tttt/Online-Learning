@@ -1,4 +1,6 @@
 var express = require('express');
+const fs = require('fs'); 
+const path = require('path'); 
 var multer = require('multer');
 const imgUpload = require('../middleware/multer'); // นำเข้า middleware multer
 var router = express.Router();
@@ -67,17 +69,27 @@ const editProfile = async (req, res) => {
       return res.status(404).json({ message: 'User not found' });
     }
 
-
-
+    // ถ้ามีไฟล์ใหม่ให้ลบไฟล์เก่า
     if (req.file) {
+      if (user.img) {
+        const oldImagePath = path.join(__dirname, '..', 'uploads', user.img);
+        // ลบไฟล์เก่าหากมี
+        fs.unlink(oldImagePath, (err) => {
+          if (err) {
+            console.error('Error deleting old image:', err);
+          }
+        });
+      }
+
       const img = req.file.filename;
       user.fname = req.body.fname || user.fname;
       user.lname = req.body.lname || user.lname;
       user.nickname = req.body.nickname || user.nickname;
       user.notes = req.body.notes || user.notes;
-      user.img = img;
+      user.img = img; // บันทึกชื่อไฟล์ใหม่
       await user.save();
-    } else if (!req.file) {
+    } else {
+      // ถ้าไม่มีไฟล์ใหม่ก็อัปเดตข้อมูลอื่นๆ
       user.fname = req.body.fname || user.fname;
       user.lname = req.body.lname || user.lname;
       user.nickname = req.body.nickname || user.nickname;
@@ -87,13 +99,11 @@ const editProfile = async (req, res) => {
 
     res.redirect('/profile');
 
-    // res.json(req.file);
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'เกิดข้อผิดพลาด', error: err.message });
   }
 }
-
 
 
 module.exports = { profileIndex, editProfile };
