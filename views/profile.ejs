@@ -68,12 +68,23 @@
       }
       
       .profile-img {
-                transition: opacity 0.3s ease;
-                border-radius: 10px;
+                border-radius: 50%;
+                object-fit: cover;
+                max-width: 310px;
+                max-height: 320px;
+                min-width: 310px;
+                min-height: 320px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+                /* border: 1px solid lightgray; */
             }
     </style>
 </head>
-<%- include("./partials/nav2.ejs", { theme: theme, isSidebarOpen: isSidebarOpen }) %>
+<% if (userData.role === 'teacher') { %>
+  <%- include("./partials/nav2.ejs", { theme: theme, isSidebarOpen: isSidebarOpen }) %>
+<% } else if (userData.role === 'student') { %>
+  <%- include("./partials/studentNav.ejs", { theme: theme, isSidebarOpen: isSidebarOpen }) %>
+<% } %>
+
 
   <body class="<%= theme === 'dark' ? 'dark' : 'light' %>">
     <br><br><br><br><br>
@@ -84,7 +95,7 @@
             <div class="row m-xl-0 p-xl-0">
               <div class="col-lg-6">
                 <div class="profile-image text-center">
-                  <img src="<%= userData.img %>" id="img" alt="Profile Image"  class="img-fluid mx-auto profile-img" width="310" height="350"
+                  <img src="/<%= userData.img %>" id="img" alt="Profile Image"  class="img-fluid mx-auto profile-img" width="310" height="350"
                   style="max-width: 310px;max-height: 320px; min-width: 310px; min-height: 320px;">
                   
                 </div>
