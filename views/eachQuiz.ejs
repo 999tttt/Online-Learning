@@ -12,7 +12,9 @@
   <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js"></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css" />
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
   <link rel="stylesheet" href="sweetalert2.min.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css">
 
 
   <%- include("./partials/header.ejs")%>
@@ -1269,6 +1271,12 @@
         border-color: #cb410b;
       }
 
+      .dropdown-menu {
+        z-index: 1050 !important;
+        /* ให้แน่ใจว่า dropdown อยู่ด้านบน */
+        display: block !important;
+      }
+
       @media screen and (max-width: 768px) {
         .above-nav-status {
           display: none;
@@ -1276,6 +1284,8 @@
       }
     </style>
 </head>
+
+<!-- เพิ่มก่อน </body> -->
 
 <body>
 
@@ -1354,18 +1364,30 @@
                     class="add-button btn btn-primary my-2 p-2">
                     เพิ่มคำถาม<i class="bi bi-plus-circle-fill ms-2"></i>
                   </a> -->
-                  <% if (!quiz.isReleased) { %>
+                  <% if (!quiz.releaseWhen) { %>
                     <!-- แสดงปุ่มแก้ไขและปล่อยแบบทดสอบ เมื่อยังไม่ได้ปล่อย -->
                     <a href="/adminIndex/eachQuiz?quizId=<%= quiz._id %>/edit"
-                      class="add-button btn btn-warning my-2 ms-2 p-2" style="color: white;">
+                      class="add-button btn btn-warning my-2 ms-2 p-2 me-4" style="color: white;">
                       <span class="text_btn">แก้ไขแบบทดสอบ</span>
-                      <i class="bi bi-pencil-square ms-2"></i>
+                      <i class="bi bi-pencil-square ms-1 "></i>
                     </a>
-                    <a href="#" class="add-button btn btn-primary my-2 ms-2 p-2"
-                      onclick="openReleaseQuizModal('<%= quiz._id %>')">
-                      <span class="text_btn">ปล่อยแบบทดสอบ</span>
-                      <i class="bi bi-rocket-takeoff ms-1"></i>
-                    </a>
+
+
+                    <div class="btn-group">
+                      <button type="button" class="btn btn-primary px-2"
+                        onclick="confirmRelease('<%= quiz._id %>')">ปล่อยแบบทดสอบ</button>
+                      <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                        <span class="visually-hidden">Toggle Dropdown</span>
+                      </button>
+                      <ul class="dropdown-menu">
+                        <li>
+                          <a class="dropdown-item" href="#"
+                            onclick="openReleaseQuizModal('<%= quiz._id %>')">ตั้งเวลาปล่อย</a>
+                        </li>
+                      </ul>
+                    </div>
+
                     <% } else { %>
                       <!-- แสดงปุ่มยกเลิกการปล่อย เมื่อปล่อยแล้ว -->
                       <a href="#" class="add-button cancel-button btn my-2 ms-2 p-2"
@@ -1400,17 +1422,33 @@
                 <span id="releaseStatus" class="fw-normal fs-6" style="margin-right: 1em !important;">
                   <% if (quiz.isReleased===true) { %>
                     <span class="text-success">
-                      ปล่อยแล้ว
+                      ปล่อยแล้วเมื่อ <%= releaseWhenLocal ? releaseWhenLocal : 'ยังไม่มีการตั้งเวลาปล่อย' %>
                     </span>
-                    <% } else { %>
-                      <span class="text-danger">
-                        ยังไม่ได้ปล่อย
+
+                    <% if (quiz.deadline) { %>
+                      <span class="grey">
+                        | หมดเขต <%= deadlineLocal ? deadlineLocal : 'ยังไม่มีการตั้งเวลาหมดเขต' %>
                       </span>
                       <% } %>
+
+                        <% } else if (quiz.releaseWhen) { %>
+                          <span class="text-warning">
+                            จะปล่อยเมื่อ <%= releaseWhenLocal %>
+                          </span>
+                          <% if (quiz.deadline) { %>
+                            <span class="grey">
+                              | จะหมดเขต <%= deadlineLocal ? deadlineLocal : 'ยังไม่มีการตั้งเวลาหมดเขต' %>
+                            </span>
+                            <% } %>
+
+                              <% } else { %>
+                                <span class="text-danger">
+                                  ยังไม่ได้ปล่อย
+                                </span>
+                                <% } %>
                 </span>
-
-
               </p>
+
             </div>
             <br>
             <% if (quiz.questions.length> 0) { %>
@@ -1475,8 +1513,37 @@
 
     </div>
     <%- include("./partials/footer.ejs")%>
-
+      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+      <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
       <script>
+
+
+        function confirmRelease(quizId) {
+          Swal.fire({
+            title: 'ยืนยันการปล่อยแบบทดสอบ?',
+            text: "คุณแน่ใจหรือไม่ว่าต้องการปล่อยแบบทดสอบนี้ทันที!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            confirmButtonText: 'ใช่, ปล่อยเลย!',
+            cancelButtonText: 'ยกเลิก',
+            customClass: {
+              container: 'swal-container',
+
+              icon: 'swal-icon',
+              confirmButton: 'swal-confirm-button',
+              cancelButton: 'swal-cancel-button'
+            }
+          }).then((result) => {
+            if (result.isConfirmed) {
+              // ปล่อยแบบทดสอบทันที (ปรับเวลาเป็น UTC+7)
+              let releaseWhen = new Date(); // เวลาปัจจุบัน (UTC)
+              releaseWhen = new Date(releaseWhen.getTime() + (7 * 60 * 60 * 1000)); // เพิ่ม 7 ชั่วโมงเพื่อเป็นเวลาไทย (UTC+7)
+              submitReleaseQuiz(quizId, releaseWhen.toISOString(), null); // ส่งในรูปแบบ ISO และไม่มี deadline
+            }
+          });
+        }
+
         function confirmDelete(quizId) {
           Swal.fire({
             title: "แน่ใจแล้วหรือยัง?",
@@ -1538,40 +1605,58 @@
             didOpen: () => {
               const releaseDateInput = document.getElementById('releaseDate');
               const releaseTimeInput = document.getElementById('releaseTime');
+              const deadlineDateInput = document.getElementById('deadlineDate');
+              const deadlineTimeInput = document.getElementById('deadlineTime');
 
-              console.log('Release Date Element:', releaseDateInput);
-              console.log('Release Time Element:', releaseTimeInput);
+              // ตั้งค่า min สำหรับวันที่เป็นวันถัดไปจากวันที่ปัจจุบัน
+              const today = new Date();
+              const tomorrow = new Date(today);
+              tomorrow.setDate(today.getDate() + 1);
+              const tomorrowString = tomorrow.toISOString().split('T')[0];
+
+              releaseDateInput.setAttribute('min', tomorrowString);
+              deadlineDateInput.setAttribute('min', tomorrowString); // ใช้ค่าเดียวกันสำหรับ deadline
             },
 
             preConfirm: () => {
               const releaseDate = document.getElementById('releaseDate').value;
               const releaseTime = document.getElementById('releaseTime').value;
-
-              // ตรวจสอบว่าค่าถูกส่งกลับมาหรือไม่
-              console.log('Selected Release Date:', releaseDate);
-              console.log('Selected Release Time:', releaseTime);
-
               const deadlineDate = document.getElementById('deadlineDate').value;
               const deadlineTime = document.getElementById('deadlineTime').value;
 
+              // ตรวจสอบว่า releaseDate และ releaseTime ต้องไม่ว่าง
+              if (!releaseDate || !releaseTime) {
+                Swal.showValidationMessage('กรุณากรอกวันและเวลาสำหรับการปล่อยแบบทดสอบ');
+                return false;
+              }
+
+              let releaseWhen = new Date(`${releaseDate}T${releaseTime}:00`);
+              releaseWhen = new Date(releaseWhen.getTime() + (7 * 60 * 60 * 1000)); // แปลงเวลาให้เป็นเวลาไทย (UTC+7)
+
               try {
-                const releaseWhen = new Date(`${releaseDate}T${releaseTime}:00`);
-
-                // แปลงเวลาให้เป็นเวลาไทย (UTC+7)
-                const thaiDateTime = new Date(releaseWhen.getTime() + (7 * 60 * 60 * 1000));
-
-                if (isNaN(thaiDateTime.getTime())) {
+                if (isNaN(releaseWhen.getTime())) {
                   throw new Error('Invalid release date/time');
                 }
 
-                const deadline = (deadlineDate && deadlineTime) ? `${deadlineDate}T${deadlineTime}:00` : null;
+                let deadline = null; // กำหนดให้เป็น null ก่อน
+                if (deadlineDate && deadlineTime) {
+                  deadline = new Date(`${deadlineDate}T${deadlineTime}:00`);
+                  deadline = new Date(deadline.getTime() + (7 * 60 * 60 * 1000));
+
+                  // ตรวจสอบว่า deadline หลังจาก releaseWhen หรือไม่
+                  if (deadline <= releaseWhen) {
+                    throw new Error('วันเวลาหมดเขตต้องอยู่หลังวันเวลาปล่อยแบบทดสอบ');
+                  }
+
+                  deadline = deadline.toISOString();
+                }
 
                 return {
-                  releaseWhen: thaiDateTime.toISOString(), // ใช้รูปแบบ ISO string
+                  releaseWhen: releaseWhen.toISOString(),
                   deadline
                 };
               } catch (error) {
-                Swal.showValidationMessage('รูปแบบวันหรือเวลาผิดพลาด กรุณาลองใหม่');
+                Swal.showValidationMessage(error.message);
                 return false;
               }
             }
@@ -1579,7 +1664,7 @@
             if (result.isConfirmed) {
               console.log('Submitted Release:', result.value.releaseWhen);
               console.log('Submitted Deadline:', result.value.deadline);
-              submitReleaseQuiz(quizId, result.value.releaseWhen, result.value.deadline);
+              submitScheduleQuizRelease(quizId, result.value.releaseWhen, result.value.deadline);
             }
           });
         }
@@ -1620,66 +1705,135 @@
                 alert('เกิดข้อผิดพลาดในการปล่อยแบบทดสอบ');
               }
             })
-            .catch(error => console.error('Error:', error));
+            .catch(error => {
+              // จัดการข้อผิดพลาดในกรณีที่ fetch ล้มเหลว
+              console.error('Error:', error);
+              Swal.fire({
+                icon: "error",
+                title: "เกิดข้อผิดพลาดในการเชื่อมต่อ",
+                text: error.message || "ไม่สามารถเชื่อมต่อกับ server ได้",
+                customClass: {
+                  container: 'swal-container',
+
+                  icon: 'swal-icon',
+                  confirmButton: 'swal-confirm-button',
+                  cancelButton: 'swal-cancel-button'
+                },
+              });
+            });
         }
 
-        function cancelReleaseQuiz(quizId) {
-  Swal.fire({
-    title: "แน่ใจแล้วหรือยัง?",
-    text: "หากยกเลิกการปล่อยแล้วนักศึกษาทั้งหมดจะไม่เห็นแบบทสอบนี้!",
-    icon: "warning",
-    showCancelButton: true,
-    confirmButtonColor: "#d33",
-    cancelButtonColor: "gray",
-    confirmButtonText: "ยืนยัน",
-    cancelButtonText: "ยกเลิก",
-    customClass: {
-      container: 'swal-container',
-      icon: 'swal-icon',
-      confirmButton: 'swal-confirm-button',
-      cancelButton: 'swal-cancel-button'
-    }
-  }).then((result) => {
-    if (result.isConfirmed) {
-      // ถ้าผู้ใช้ยืนยันการยกเลิก
-      fetch(`/adminIndex/releaseQuiz/${quizId}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          isReleased: false,  // ตั้ง isReleased เป็น false เพื่อยกเลิกการปล่อย
-        })
-      })
-        .then(response => response.json())
-        .then(data => {
-          if (data.success) {
-            Swal.fire({
-              icon: "success",
-                  title: "ยกเลิกการปล่อยสำเร็จ",
-                  showConfirmButton: false,
-                  timer: 1500,
+        function submitScheduleQuizRelease(quizId, releaseWhen, deadline) {
+          console.log('quizId:', quizId); // ตรวจสอบ quizId
+          console.log('releaseWhen:', releaseWhen); // ตรวจสอบเวลา release
+          console.log('deadline:', deadline); // ตรวจสอบ deadline
 
+          // ส่งค่าไปที่ Back-end
+          fetch(`/adminIndex/scheduleQuizRelease/${quizId}`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              releaseWhen,  // เวลาในการปล่อย
+              deadline      // กำหนดเส้นตาย
+            })
+          })
+            .then(response => response.json())
+            .then(data => {
+              console.log('Response from server:', data); // ดูผลลัพธ์จาก Back-end
+              if (data.success) {
+                Swal.fire({
+                  icon: "success",
+                  title: "ตั้งเวลาปล่อยแบบทดสอบสำเร็จ",
+                  showConfirmButton: false,
                   customClass: {
                     container: 'swal-container',
-                    icon: 'swal-icon'
+
+                    icon: 'swal-icon',
+                    confirmButton: 'swal-confirm-button',
+                    cancelButton: 'swal-cancel-button'
                   },
-            }).then(() => {
-              location.reload(); // รีเฟรชหน้าเพื่ออัปเดตสถานะ
+                  timer: 1500,
+                }).then(() => {
+                  location.reload();
+                });
+              } else {
+                Swal.fire({
+                  icon: "error",
+                  title: "เกิดข้อผิดพลาด",
+                  text: data.message || 'ไม่สามารถตั้งเวลาปล่อยแบบทดสอบได้',
+                });
+              }
+            })
+            .catch(error => {
+              console.error('Error:', error); // แสดงข้อผิดพลาดใน Console
+              Swal.fire({
+                icon: "error",
+                title: "เกิดข้อผิดพลาดในการเชื่อมต่อ",
+                text: error.message || "ไม่สามารถเชื่อมต่อกับ server ได้",
+              });
             });
-          } else {
-            Swal.fire({
-              title: 'เกิดข้อผิดพลาด',
-              text: 'เกิดข้อผิดพลาดในการยกเลิกการปล่อย',
-              icon: 'error',
-              confirmButtonText: 'ตกลง'
-            });
-          }
-        })
-        .catch(error => console.error('Error:', error));
-    }
-  });
-}
+        }
+
+
+        function cancelReleaseQuiz(quizId) {
+          Swal.fire({
+            title: "แน่ใจแล้วหรือยัง?",
+            text: "หากยกเลิกการปล่อยแล้วนักศึกษาทั้งหมดจะไม่เห็นแบบทสอบนี้!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#d33",
+            cancelButtonColor: "gray",
+            confirmButtonText: "ยืนยัน",
+            cancelButtonText: "ยกเลิก",
+            customClass: {
+              container: 'swal-container',
+              icon: 'swal-icon',
+              confirmButton: 'swal-confirm-button',
+              cancelButton: 'swal-cancel-button'
+            }
+          }).then((result) => {
+            if (result.isConfirmed) {
+              // ถ้าผู้ใช้ยืนยันการยกเลิก
+              fetch(`/adminIndex/releaseQuiz/${quizId}`, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                  isReleased: false,  // ตั้ง isReleased เป็น false เพื่อยกเลิกการปล่อย
+                })
+              })
+                .then(response => response.json())
+                .then(data => {
+                  if (data.success) {
+                    Swal.fire({
+                      icon: "success",
+                      title: "ยกเลิกการปล่อยสำเร็จ",
+                      showConfirmButton: false,
+                      timer: 1500,
+
+                      customClass: {
+                        container: 'swal-container',
+                        icon: 'swal-icon'
+                      },
+                    }).then(() => {
+                      location.reload(); // รีเฟรชหน้าเพื่ออัปเดตสถานะ
+                    });
+                  } else {
+                    Swal.fire({
+                      title: 'เกิดข้อผิดพลาด',
+                      text: 'เกิดข้อผิดพลาดในการยกเลิกการปล่อย',
+                      icon: 'error',
+                      confirmButtonText: 'ตกลง'
+                    });
+                  }
+                })
+                .catch(error => console.error('Error:', error));
+            }
+          });
+        }
 
         function updateQuestionCount() {
           const questionCountElement = document.getElementById('question-count');

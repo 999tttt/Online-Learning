@@ -141,6 +141,8 @@ router.get('/adminIndex/adminExamsIndex', teacherMiddleware,adminQuizController.
 router.get('/adminIndex/addQuiz',teacherMiddleware, adminQuizController.addQuizPage);
 router.get('/adminIndex/eachQuiz',teacherMiddleware, adminQuizController.eachQuiz);
 router.post('/adminIndex/releaseQuiz/:quizId', teacherMiddleware, adminQuizController.releaseQuiz);
+router.post('/adminIndex/scheduleQuizRelease/:quizId', teacherMiddleware, adminQuizController.scheduleQuizRelease);
+
 
 // router.get('/adminIndex/previewQuiz',teacherMiddleware, adminQuizController.previewQuiz);
 

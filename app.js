@@ -16,6 +16,7 @@ const session = require("express-session")
 // const fs = require('fs');
 var multer = require('multer');
 const cors = require('cors');
+const schedule = require('node-schedule'); 
 const passport = require('passport');
 // const LessonProgress = require('./models/lessonsProgress'); // นำเข้ารุ่น (model) LessonProgress
 const PORT = process.env.PORT || 4000;
@@ -23,6 +24,7 @@ const MONGO_URI = process.env.MONGO_URI || "mongodb://127.0.0.1:27017/elearning"
 
 // const MongoStore = require('connect-mongo');
 // const authRouter = require('./routes/auth');
+const adminQuizController = require('./controller/adminQuizController');
 
 const app = express();
 
@@ -59,6 +61,8 @@ const upload = multer({ dest: 'uploads/' });
 
 // const addMatch = require('./models/EventOat')
 
+const cron = require('node-cron');
+const Quiz = require('./models/quiz');
 
 const Router = require('./routes/Router.js');
 const manageStudent = require('./controller/manageStudent.js');
@@ -243,6 +247,11 @@ app.use(function (err, req, res, next) {
 });
 
 
+
+// const mJob = schedule.scheduleJob('*/2 * * * * *', () => {
+//     console.log('ปล่อยแบบทดสอบ...')
+//     mJob.cancel()
+// })
 
 
 module.exports = app;

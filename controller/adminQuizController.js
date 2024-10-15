@@ -11,11 +11,14 @@ const question3 = require("../models/question3");
 const question4 = require("../models/question4");
 const multer = require('multer');
 const upload = multer();
+const moment = require('moment-timezone');
 const passport = require('passport');
 const mongoose = require('mongoose');
 var GoogleStrategy = require('passport-google-oauth2').Strategy;
 const Grid = require('gridfs-stream');
 const { Readable } = require('stream');
+const schedule = require('node-schedule');
+const cron = require('node-cron');
 
 
 // const Notification = require("../models/notification");
@@ -290,13 +293,19 @@ exports.eachQuiz = async (req, res) => {
     if (isEditPage && req.xhr) { // เช็คว่าเป็นการร้องขอผ่าน AJAX หรือไม่
       return res.json({ success: true, questions: quiz.questions });
     }
+
+
     const userData = await User.findById(req.session.userId);
     const quizzes = await Quiz.find().sort({ createdAt: 1 }).exec();
     const schYear = quiz.schoolYear.schoolYear;
     const questions = quiz.questions;
     const options = quiz.questions.options;
+    const releaseWhenLocal = quiz.releaseWhen ? moment.utc(quiz.releaseWhen).format('DD/MM/YYYY, เวลา HH:mm') : null;
+    const deadlineLocal = quiz.deadline ? moment.utc(quiz.deadline).format('DD/MM/YYYY, เวลา HH:mm') : null;
 
 
+    console.log("Release When (local):", releaseWhenLocal);
+    console.log("Deadline (local):", deadlineLocal);
 
     const theme = req.session.theme || 'light';
     const isSidebarOpen = false;
@@ -321,6 +330,8 @@ exports.eachQuiz = async (req, res) => {
           questions,
           options,
           userData,
+          releaseWhenLocal,
+          deadlineLocal,
           theme,
           isSidebarOpen
 
@@ -334,6 +345,8 @@ exports.eachQuiz = async (req, res) => {
           questions,
           options,
           userData,
+          releaseWhenLocal,
+          deadlineLocal,
           theme,
           isSidebarOpen
         });
@@ -346,6 +359,8 @@ exports.eachQuiz = async (req, res) => {
           questions,
           options,
           userData,
+          releaseWhenLocal,
+          deadlineLocal,
           theme,
           isSidebarOpen
         });
@@ -360,50 +375,52 @@ exports.eachQuiz = async (req, res) => {
         questions,
         options,
         userData,
+        releaseWhenLocal,
+        deadlineLocal,
         theme,
         isSidebarOpen
       });
     }
-    } catch (err) {
-      console.error(err);
-      res.status(500).send("เกิดข้อผิดพลาด");
-    }
-  };
-
-
-
-  exports.createQuestion = async function (req, res, next) {
-    // if (req.user.role === 'teacher') {
-    try {
-      if (req.files && req.files.quizImage) {
-        const uploadedFile = req.files.quizImage;
-        const quiz = new Quiz({
-          quizname: req.body.quizname,
-          quizImage: {
-            data: uploadedFile.data,
-            contentType: uploadedFile.mimetype,
-          }
-        });
-        await quiz.save();
-        const quiz_id = Quiz._id;
-        const quiz_name = Quiz.quizName;
-        res.render("adminCreateQuestion", { mytitle: "adminCreateQuestion", quiz, quiz_id, quiz_name, user: req.user });
-      } else {
-        const quiz = new Quiz({
-          QuizName: req.body.quizname,
-        });
-        await quiz.save();
-        const quiz_id = quiz._id;
-        const quiz_name = quiz.quizname;
-        res.render("adminCreateQuestion", { mytitle: "adminCreateQuestion", quiz, quiz_id, quiz_name, user: req.user });
-      }
-
-    } catch (err) {
-      console.error(err);
-      res.status(500).send("เกิดข้อผิดพลาด");
-    }
-
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("เกิดข้อผิดพลาด");
   }
+};
+
+
+
+exports.createQuestion = async function (req, res, next) {
+  // if (req.user.role === 'teacher') {
+  try {
+    if (req.files && req.files.quizImage) {
+      const uploadedFile = req.files.quizImage;
+      const quiz = new Quiz({
+        quizname: req.body.quizname,
+        quizImage: {
+          data: uploadedFile.data,
+          contentType: uploadedFile.mimetype,
+        }
+      });
+      await quiz.save();
+      const quiz_id = Quiz._id;
+      const quiz_name = Quiz.quizName;
+      res.render("adminCreateQuestion", { mytitle: "adminCreateQuestion", quiz, quiz_id, quiz_name, user: req.user });
+    } else {
+      const quiz = new Quiz({
+        QuizName: req.body.quizname,
+      });
+      await quiz.save();
+      const quiz_id = quiz._id;
+      const quiz_name = quiz.quizname;
+      res.render("adminCreateQuestion", { mytitle: "adminCreateQuestion", quiz, quiz_id, quiz_name, user: req.user });
+    }
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("เกิดข้อผิดพลาด");
+  }
+
+}
 // else {
 //   res.redirect('/login');
 // }
@@ -414,51 +431,109 @@ exports.releaseQuiz = async (req, res) => {
   const { isReleased, releaseWhen, deadline } = req.body;
 
   try {
-      // ตรวจสอบว่า quizId เป็น ObjectId ที่ถูกต้องหรือไม่
-      console.log('quizId from params:', quizId); // เพิ่ม log
+    // ตรวจสอบว่า quizId เป็น ObjectId ที่ถูกต้องหรือไม่
+    console.log('quizId from params:', quizId); // เพิ่ม log
 
-      if (!mongoose.Types.ObjectId.isValid(quizId)) {
-          return res.status(400).json({ success: false, message: 'quizId ไม่ถูกต้อง' });
-      }
+    if (!mongoose.Types.ObjectId.isValid(quizId)) {
+      return res.status(400).json({ success: false, message: 'quizId ไม่ถูกต้อง' });
+    }
 
-      const quiz = await Quiz.findById(quizId);
-      if (!quiz) {
-          return res.status(404).json({ success: false, message: 'ไม่พบแบบทดสอบ' });
-      }
+    const quiz = await Quiz.findById(quizId);
+    if (!quiz) {
+      return res.status(404).json({ success: false, message: 'ไม่พบแบบทดสอบ' });
+    }
 
-      // อัปเดตสถานะของแบบทดสอบ
-      console.log('Before update:', quiz.isReleased); // ตรวจสอบสถานะก่อนอัปเดต
-      quiz.isReleased = isReleased;
-      quiz.releaseWhen = releaseWhen;
-      quiz.deadline = deadline;
-      console.log('After update:', quiz.isReleased); // ตรวจสอบสถานะหลังอัปเดต
+    // อัปเดตสถานะของแบบทดสอบ
+    console.log('Before update:', quiz.isReleased); // ตรวจสอบสถานะก่อนอัปเดต
+    quiz.isReleased = isReleased;
+    quiz.releaseWhen = releaseWhen;
+    quiz.deadline = deadline;
+    console.log('After update:', quiz.isReleased); // ตรวจสอบสถานะหลังอัปเดต
 
-      await quiz.save(); // บันทึกการเปลี่ยนแปลงลงฐานข้อมูล
+    await quiz.save(); // บันทึกการเปลี่ยนแปลงลงฐานข้อมูล
 
-      res.json({ success: true, message: 'ปล่อยแบบทดสอบสำเร็จ' });
+    res.json({ success: true, message: 'ปล่อยแบบทดสอบสำเร็จ' });
   } catch (error) {
-      console.error('Error:', error); // เพิ่ม log ข้อผิดพลาด
-      res.status(500).json({ success: false, message: 'เกิดข้อผิดพลาดในการปล่อยแบบทดสอบ' });
+    console.error('Error:', error); // เพิ่ม log ข้อผิดพลาด
+    res.status(500).json({ success: false, message: 'เกิดข้อผิดพลาดในการปล่อยแบบทดสอบ' });
   }
 };
 
-setInterval(async () => {
-  const now = new Date();
+exports.scheduleQuizRelease = async (req, res) => {
+  const { quizId } = req.params;
+  const { releaseWhen, deadline } = req.body;
 
   try {
-      // หา quizzes ที่ releaseWhen ถึงแล้ว และยังไม่ถูกปล่อย
-      const quizzesToRelease = await Quiz.find({
-          releaseWhen: { $lte: now }, // ตรวจสอบว่าถึงเวลา release หรือยัง
-          isReleased: false
-      });
+    const quiz = await Quiz.findById(quizId);
+    if (!quiz) {
+      return res.status(404).json({ success: false, message: 'ไม่พบแบบทดสอบ' });
+    }
 
-      quizzesToRelease.forEach(async (quiz) => {
+    // อัปเดต releaseWhen และ deadline ลงในฐานข้อมูลทันที
+    quiz.releaseWhen = releaseWhen;
+    quiz.deadline = deadline;
+
+    await quiz.save();
+
+    const releaseTime = new Date(releaseWhen);
+    const deadlineTime = deadline ? new Date(deadline) : null;
+
+    // ตรวจสอบเวลาที่ใช้สำหรับ cron job
+    console.log('Release time:', releaseTime.toISOString());
+    console.log('Deadline time:', deadlineTime ? deadlineTime.toISOString() : 'ไม่มีเวลา');
+
+    // ตั้งค่า cron job สำหรับการปล่อยแบบทดสอบ
+    const releaseJob = cron.schedule(
+      `${releaseTime.getUTCMinutes()} ${releaseTime.getUTCHours()} ${releaseTime.getUTCDate()} ${releaseTime.getUTCMonth() + 1} *`,
+      async () => {
+        console.log('Cron job เริ่มทำงานที่เวลา:', new Date().toISOString());
+        try {
           quiz.isReleased = true;
-          await quiz.save(); // บันทึกการเปลี่ยนแปลง
-      });
+          await quiz.save();
+          console.log(`แบบทดสอบ ${quizId} ถูกปล่อยที่เวลา ${releaseWhen}`);
+          releaseJob.stop(); // หยุด cron job หลังจากปล่อยแล้ว
+        } catch (error) {
+          console.error('Error while releasing quiz:', error);
+        }
+      },
+      {
+        scheduled: true,
+        timezone: "Asia/Bangkok", // ตั้งค่าเขตเวลาให้ตรงกับเขตเวลาของคุณ
+      }
+    );
 
-      console.log(`${quizzesToRelease.length} แบบทดสอบ ถูกปล่อย`);
+    // ตั้งค่า cron job สำหรับหยุดแบบทดสอบเมื่อถึง deadline
+    if (deadlineTime) {
+      const deadlineJob = cron.schedule(
+        `${deadlineTime.getUTCMinutes()} ${deadlineTime.getUTCHours()} ${deadlineTime.getUTCDate()} ${deadlineTime.getUTCMonth() + 1} *`,
+        async () => {
+          console.log('Cron job สำหรับ deadline เริ่มทำงานที่เวลา:', new Date().toISOString());
+          try {
+            quiz.isReleased = false; // เปลี่ยนสถานะเป็น false เมื่อถึง deadline
+            quiz.releaseWhen = null; // รีเซ็ตค่า releaseWhen
+            quiz.deadline = null; // รีเซ็ตค่า deadline
+            await quiz.save();
+            console.log(`แบบทดสอบ ${quizId} ถูกหยุดที่เวลา ${deadline} และรีเซ็ตค่า releaseWhen และ deadline`);
+            deadlineJob.stop(); // หยุด cron job หลังจากหยุดแล้ว
+          } catch (error) {
+            console.error('Error while stopping quiz:', error);
+          }
+        },
+        {
+          scheduled: true,
+          timezone: "Asia/Bangkok", // ตั้งค่าเขตเวลาให้ตรงกับเขตเวลาของคุณ
+        }
+      );
+    }
+
+    res.json({ success: true, message: 'ตั้งเวลาปล่อยและหยุดแบบทดสอบสำเร็จ' });
   } catch (error) {
-      console.error('Error releasing quizzes:', error);
+    console.error('Error:', error);
+    res.status(500).json({ success: false, message: 'เกิดข้อผิดพลาดในการตั้งเวลาปล่อยแบบทดสอบ' });
   }
-}, 3600000);
+};
+
+
+
+
+

@@ -123,7 +123,7 @@ const quizSchema = mongoose.Schema({
         default: 1,
         min: 1
     },
-    attempts: { // เก็บข้อมูลจำนวนครั้งที่นักเรียนเข้าทำแบบทดสอบ
+    attempts: {
         type: [attemptSchema],
         default: []
     },

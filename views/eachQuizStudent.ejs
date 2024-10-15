@@ -557,10 +557,21 @@
                 <br><hr><br>
                 <p class="fw-normal w-auto fs-6 mx-2">สถานะ:
                     <span class="fw-normal fs-6 text-danger" style="margin-right: 1em !important;">ยังไม่ได้ทำ</span>
-                    วันที่และเวลาหมดเขต:
-        
+                    <% if (quiz.releaseWhen) { %>
                     
-                    <%= quiz.releaseDate ? new Date(quiz.releaseDate).toLocaleString('th-TH', { dateStyle: 'long', timeStyle: 'short' }) : 'ไม่มีการปล่อย' %>
+                        <label>ถูกปล่อยเมื่อ: </label>
+                      <span style="color: rgba(255, 255, 255, 0.6);margin-right: 1em !important;";>
+                          <%= releaseWhenLocal ? releaseWhenLocal : 'ยังไม่มีการตั้งเวลาปล่อย' %>
+                    </span>
+                   
+                    <% } %>
+                    
+                    <% if (quiz.deadline) { %>
+                        <label>หมดเขต: </label>
+                        <span style="color: rgba(255, 255, 255, 0.6);">  
+                          <%= deadlineLocal ? deadlineLocal : 'ยังไม่มีการตั้งเวลาหมดเขต' %>
+                      </span>
+                    <% } %>
                     
                   </p>
         </p></div>
