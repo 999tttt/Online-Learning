@@ -1569,9 +1569,9 @@
         }
 
         function openReleaseQuizModal(quizId) {
-          Swal.fire({
-            title: '<div class="my-4">ปล่อยแบบทดสอบ</div>',
-            html: `
+  Swal.fire({
+    title: '<div class="my-4">ปล่อยแบบทดสอบ</div>',
+    html: `
       <div><label for="releaseDate" class="form-label me-2">วันเวลาที่จะปล่อย:</label></div>
       <div class="d-flex justify-content-center mb-3">
           <div class="m-3">
@@ -1583,7 +1583,7 @@
       </div>
 
       <div><label for="deadlineDate" class="form-label me-2">วันเวลาหมดเขต (ทางเลือก):</label></div>
-      <div class="d-flex justify-content-center ">
+      <div class="d-flex justify-content-center">
           <div class="d-flex align-items-center m-3">
               <input type="date" style="width: 125px;" id="deadlineDate" class="form-control">
           </div>
@@ -1592,82 +1592,113 @@
           </div>
       </div>
     `,
-            showCancelButton: true,
-            confirmButtonText: 'ปล่อยแบบทดสอบ',
-            cancelButtonText: 'ยกเลิก',
-            customClass: {
-              container: 'swal-container',
-              icon: 'swal-icon',
-              confirmButton: 'swal-launch-button',
-              cancelButton: 'swal-cancel-button'
-            },
+    showCancelButton: true,
+    confirmButtonText: 'ปล่อยแบบทดสอบ',
+    cancelButtonText: 'ยกเลิก',
+    customClass: {
+      container: 'swal-container',
+      icon: 'swal-icon',
+      confirmButton: 'swal-launch-button',
+      cancelButton: 'swal-cancel-button'
+    },
+    didOpen: () => {
+      const releaseDateInput = document.getElementById('releaseDate');
+      const releaseTimeInput = document.getElementById('releaseTime');
+      const deadlineDateInput = document.getElementById('deadlineDate');
+      const deadlineTimeInput = document.getElementById('deadlineTime');
 
-            didOpen: () => {
-              const releaseDateInput = document.getElementById('releaseDate');
-              const releaseTimeInput = document.getElementById('releaseTime');
-              const deadlineDateInput = document.getElementById('deadlineDate');
-              const deadlineTimeInput = document.getElementById('deadlineTime');
+      // สร้างวันที่ปัจจุบันตามเวลาไทย (UTC+7)
+      const now = new Date();
+      const timeOffsetInHours = 7; // เวลาชดเชย (UTC+7)
+      const localNow = new Date(now.getTime() + (timeOffsetInHours * 60 * 60 * 1000));
 
-              // ตั้งค่า min สำหรับวันที่เป็นวันถัดไปจากวันที่ปัจจุบัน
-              const today = new Date();
-              const tomorrow = new Date(today);
-              tomorrow.setDate(today.getDate() + 1);
-              const tomorrowString = tomorrow.toISOString().split('T')[0];
+      // แปลงเป็นรูปแบบ YYYY-MM-DD สำหรับการตั้งค่า min
+      const today = localNow.toISOString().split('T')[0];
+      releaseDateInput.setAttribute('min', today);
+      deadlineDateInput.setAttribute('min', today);
 
-              releaseDateInput.setAttribute('min', tomorrowString);
-              deadlineDateInput.setAttribute('min', tomorrowString); // ใช้ค่าเดียวกันสำหรับ deadline
-            },
+      // ตั้งค่าเวลาในรูปแบบ HH:MM ตามเวลาไทย
+      const hours = String(localNow.getUTCHours()).padStart(2, '0');
+      const minutes = String(localNow.getUTCMinutes()).padStart(2, '0');
+      const currentTimeString = `${hours}:${minutes}`;
 
-            preConfirm: () => {
-              const releaseDate = document.getElementById('releaseDate').value;
-              const releaseTime = document.getElementById('releaseTime').value;
-              const deadlineDate = document.getElementById('deadlineDate').value;
-              const deadlineTime = document.getElementById('deadlineTime').value;
-
-              // ตรวจสอบว่า releaseDate และ releaseTime ต้องไม่ว่าง
-              if (!releaseDate || !releaseTime) {
-                Swal.showValidationMessage('กรุณากรอกวันและเวลาสำหรับการปล่อยแบบทดสอบ');
-                return false;
-              }
-
-              let releaseWhen = new Date(`${releaseDate}T${releaseTime}:00`);
-              releaseWhen = new Date(releaseWhen.getTime() + (7 * 60 * 60 * 1000)); // แปลงเวลาให้เป็นเวลาไทย (UTC+7)
-
-              try {
-                if (isNaN(releaseWhen.getTime())) {
-                  throw new Error('Invalid release date/time');
-                }
-
-                let deadline = null; // กำหนดให้เป็น null ก่อน
-                if (deadlineDate && deadlineTime) {
-                  deadline = new Date(`${deadlineDate}T${deadlineTime}:00`);
-                  deadline = new Date(deadline.getTime() + (7 * 60 * 60 * 1000));
-
-                  // ตรวจสอบว่า deadline หลังจาก releaseWhen หรือไม่
-                  if (deadline <= releaseWhen) {
-                    throw new Error('วันเวลาหมดเขตต้องอยู่หลังวันเวลาปล่อยแบบทดสอบ');
-                  }
-
-                  deadline = deadline.toISOString();
-                }
-
-                return {
-                  releaseWhen: releaseWhen.toISOString(),
-                  deadline
-                };
-              } catch (error) {
-                Swal.showValidationMessage(error.message);
-                return false;
-              }
-            }
-          }).then((result) => {
-            if (result.isConfirmed) {
-              console.log('Submitted Release:', result.value.releaseWhen);
-              console.log('Submitted Deadline:', result.value.deadline);
-              submitScheduleQuizRelease(quizId, result.value.releaseWhen, result.value.deadline);
-            }
-          });
+      releaseDateInput.addEventListener('change', () => {
+        const selectedDate = releaseDateInput.value;
+        if (selectedDate === today) {
+          releaseTimeInput.setAttribute('min', currentTimeString);
+        } else {
+          releaseTimeInput.removeAttribute('min'); // ถ้าไม่ใช่วันปัจจุบัน ลบ min ของ releaseTimeInput ออก
         }
+      });
+
+      // เรียกฟังก์ชันตรวจสอบเมื่อหน้าเว็บโหลด
+      if (releaseDateInput.value === today) {
+        releaseTimeInput.setAttribute('min', currentTimeString);
+      }
+    },
+    preConfirm: () => {
+      const releaseDate = document.getElementById('releaseDate').value;
+      const releaseTime = document.getElementById('releaseTime').value;
+
+      if (!releaseDate || !releaseTime) {
+        Swal.showValidationMessage('กรุณากรอกวันและเวลาสำหรับการปล่อยแบบทดสอบ');
+        return false;
+      }
+
+      let releaseWhen = new Date(`${releaseDate}T${releaseTime}:00`);
+
+      // แปลงเวลาให้เป็นเวลาไทย (UTC+7)
+      releaseWhen = new Date(releaseWhen.getTime() + (7 * 60 * 60 * 1000));
+
+      // สร้างวันที่และเวลาปัจจุบัน
+      const now = new Date();
+      const localNow = new Date(now.getTime() + (7 * 60 * 60 * 1000));
+
+      // ตรวจสอบว่าเวลาที่เลือกอยู่ก่อนเวลาปัจจุบันหรือไม่
+      if (releaseWhen < localNow) {
+        Swal.showValidationMessage('ไม่สามารถเลือกวันหรือเวลาก่อนเวลาปัจจุบันได้');
+        return false;
+      }
+
+      const deadlineDate = document.getElementById('deadlineDate').value;
+      const deadlineTime = document.getElementById('deadlineTime').value;
+
+      try {
+        if (isNaN(releaseWhen.getTime())) {
+          throw new Error('Invalid release date/time');
+        }
+
+        let deadline = null;
+        if (deadlineDate && deadlineTime) {
+          deadline = new Date(`${deadlineDate}T${deadlineTime}:00`);
+          deadline = new Date(deadline.getTime() + (7 * 60 * 60 * 1000)); // แปลงเวลาเป็น UTC+7
+
+          // ตรวจสอบว่า deadline หลังจาก releaseWhen หรือไม่
+          if (deadline <= releaseWhen) {
+            Swal.showValidationMessage('วันเวลาหมดเขตต้องอยู่หลังวันเวลาปล่อยแบบทดสอบ');
+            return false;
+          }
+
+          deadline = deadline.toISOString();
+        }
+
+        return {
+          releaseWhen: releaseWhen.toISOString(),
+          deadline
+        };
+      } catch (error) {
+        Swal.showValidationMessage('รูปแบบวันหรือเวลาผิดพลาด กรุณาลองใหม่');
+        return false;
+      }
+    }
+  }).then((result) => {
+    if (result.isConfirmed) {
+      console.log('Submitted Release:', result.value.releaseWhen);
+      console.log('Submitted Deadline:', result.value.deadline);
+      submitScheduleQuizRelease(quizId, result.value.releaseWhen, result.value.deadline);
+    }
+  });
+}
 
         function submitReleaseQuiz(quizId, releaseWhen, deadline) {
           console.log('quizId:', quizId); // ตรวจสอบว่า quizId ถูกส่งมาเป็นสตริงหรือไม่
