@@ -1,0 +1,16 @@
+<!-- searchResults.ejs -->
+<body>
+    <h2>ผลการค้นหาสำหรับ "<%= searchQuery %>"</h2>
+
+    <% if (results.length > 0) { %>
+        <ul>
+            <% results.forEach(quiz => { %>
+                <li><a href="/quiz/<%= quiz._id %>"><%= quiz.quizname %></a></li>
+            <% }) %>
+        </ul>
+    <% } else { %>
+        <p>ไม่พบผลการค้นหาที่ตรงกัน</p>
+    <% } %>
+    
+
+</body>

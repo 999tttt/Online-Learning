@@ -17,9 +17,12 @@
             --link: rgb(27, 129, 112);
             --link-hover: rgb(24, 94, 82);
         }
-        .header{
+
+        .header {
             padding: 0.3rem 0 !important;
+            position: fixed !important;
         }
+
         .switch_theme {
             position: relative;
             width: 60px;
@@ -108,9 +111,9 @@
         .sub-menu-link {
             display: flex;
             align-items: center;
-          
+
             text-decoration: none;
-            color:  var(--secondary-color);
+            color: var(--secondary-color);
             transition: background 0.3s;
         }
 
@@ -138,24 +141,28 @@
             font-size: 1rem;
             color: var(--icon-color);
         }
-        .quiz_nav_name{
+
+        .quiz_nav_name {
             border: none;
             outline: none;
             padding-right: 0.6rem;
-            
+
             /* border-bottom: 1px lightgray solid; */
         }
-        .dark .quiz_nav_name{
-            background-color:  #444 !important;
+
+        .dark .quiz_nav_name {
+            background-color: #444 !important;
             color: white;
             /* border-bottom: 1px #444 solid; */
         }
+
         .quiz_nav_name:focus,
-        .dark .quiz_nav_name:focus{
-            border-bottom: 2px solid rgb(103, 58, 183)  !important;
+        .dark .quiz_nav_name:focus {
+            border-bottom: 2px solid rgb(103, 58, 183) !important;
 
         }
-        .bi-clock:hover{
+
+        .bi-clock:hover {
             cursor: default;
         }
 
@@ -163,11 +170,12 @@
 
             .theme_toggle {
                 display: block !important;
-              
+
             }
-            .quiz_nav_name{
+
+            .quiz_nav_name {
                 display: none !important;
-        }
+            }
         }
     </style>
 </head>
@@ -177,9 +185,9 @@
     <header class="header">
 
         <div class="header_info">
-           
+
             <!-- <span class="fw-normal fs-5 "> <%=quiz.quizname%></span> -->
-           
+
         </div>
 
         <div class="header_right">
@@ -191,8 +199,14 @@
             </label> -->
 
             <!-- Profile Button -->
-           
-           <div class="p-4 mx-4" ><i class="bi bi-clock" style="color: #8A2BE2;"></i> <span class="grey ps-2 pe-4"><%= JSON.stringify(quiz.timeLimit.display) %></span></div>
+
+            <div class="p-4 mx-4">
+                <i class="bi bi-clock" style="color: #8A2BE2;"></i>
+                <span id="countdownTimer" class="grey ps-2 pe-4">
+                    <%= timeLimitFormatted %>
+                </span>
+            </div>
+
         </div>
     </header>
 
@@ -243,6 +257,42 @@
                 sidebar.classList.add('open');
             }
         })();
+
+        let timeLimit = <%= timeLimitMilliseconds / 1000 %>; // รับค่า milliseconds จาก backend
+        let countdownElement = document.getElementById("countdownTimer");
+
+        function formatTime(milliseconds) {
+            const totalSeconds = Math.floor(milliseconds / 1000);
+            const hours = Math.floor(totalSeconds / 3600);
+            const minutes = Math.floor((totalSeconds % 3600) / 60);
+            const seconds = totalSeconds % 60;
+
+            // แสดงผลเป็น 2 หลักเสมอ
+            return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        }
+
+        function startCountdown() {
+            let interval = setInterval(function () {
+                if (timeLimit <= 0) {
+                    clearInterval(interval);
+                    countdownElement.innerHTML = "Time's up!";
+                } else {
+                    countdownElement.innerHTML = formatTime(timeLimit);
+                    timeLimit -= 1000; // ลดลงทีละวินาที
+                }
+            }, 1000); // อัปเดตทุกวินาที
+        }
+
+        // เริ่มนับถอยหลังหลังจากโหลดหน้าเสร็จ
+        window.onload = function () {
+            if (timeLimit > 0) {
+                startCountdown();
+            } else {
+                countdownElement.innerHTML = "Time's up!";
+            }
+        };
+
+
     </script>
 </body>
 

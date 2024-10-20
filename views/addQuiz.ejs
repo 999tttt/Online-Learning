@@ -375,14 +375,15 @@
           <div class="mb-3">
             <label for="timeLimit" class="form-label">ระยะเวลาในการทำแบบทดสอบ:</label>
             <select class="form-select px-3 w-50" id="timeLimit" name="timeLimit" required>
-                <option value='{"value":"15min","display":"15 นาที"}' selected>15 นาที</option>
-                <option value='{"value":"30min","display":"30 นาที"}'>30 นาที</option>
-                <option value='{"value":"1hour","display":"1 ชั่วโมง"}'>1 ชั่วโมง</option>
-                <option value='{"value":"1h30min","display":"1 ชั่วโมง 30 นาที"}'>1 ชั่วโมง 30 นาที</option>
-                <option value='{"value":"2hours","display":"2 ชั่วโมง"}'>2 ชั่วโมง</option>
-                <option value='{"value":"3hours","display":"3 ชั่วโมง"}'>3 ชั่วโมง</option>
+              <option value='{"value":900,"display":"15 นาที"}' selected>15 นาที</option> <!-- 15 นาที = 900 วินาที -->
+              <option value='{"value":1800,"display":"30 นาที"}'>30 นาที</option> <!-- 30 นาที = 1800 วินาที -->
+              <option value='{"value":3600,"display":"1 ชั่วโมง"}'>1 ชั่วโมง</option> <!-- 1 ชั่วโมง = 3600 วินาที -->
+              <option value='{"value":5400,"display":"1 ชั่วโมง 30 นาที"}'>1 ชั่วโมง 30 นาที</option> <!-- 1 ชั่วโมง 30 นาที = 5400 วินาที -->
+              <option value='{"value":7200,"display":"2 ชั่วโมง"}'>2 ชั่วโมง</option> <!-- 2 ชั่วโมง = 7200 วินาที -->
+              <option value='{"value":10800,"display":"3 ชั่วโมง"}'>3 ชั่วโมง</option> <!-- 3 ชั่วโมง = 10800 วินาที -->
             </select>            
           </div>
+          
           
           <div class="mb-3">
             <label for="attemptLimit" class="form-label">จำนวนครั้งที่เข้าทำได้:</label>

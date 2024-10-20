@@ -246,6 +246,29 @@ app.use(function (err, req, res, next) {
     res.render('error');
 });
 
+app.get('/search=:query', async (req, res) => {
+    const searchQuery = req.params.query;
+    const userRole = req.session.role; // สมมติว่า role ถูกเก็บใน session
+
+    try {
+        // ค้นหา quizname ที่ตรงกับ query
+        const results = await Quiz.find({ quizname: new RegExp(searchQuery, 'i') });
+
+        if (userRole === 'Teacher') {
+            // ถ้าเป็น Teacher ให้ไปหน้า teacherIndex/searchResults
+            res.render('adminIndex/searchResults', { results, searchQuery });
+        } else if (userRole === 'Student') {
+            // ถ้าเป็น Student ให้ไปหน้า studentIndex/searchResults
+            res.render('studentIndex/searchResults', { results, searchQuery });
+        } else {
+            res.status(403).send('คุณไม่มีสิทธิ์ในการเข้าถึงเส้นทางนี้');
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('เกิดข้อผิดพลาดในการค้นหา');
+    }
+});
+
 
 
 // const mJob = schedule.scheduleJob('*/2 * * * * *', () => {

@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const Schema = mongoose.Schema;
+
+// User schema
 const userSchema = new Schema({
     googleId: String,
     email: {
@@ -8,7 +10,6 @@ const userSchema = new Schema({
         unique: true,
         required: [true, 'Please provide email']
     },
-   
     fname: {
         type: String,
         default: "default",
@@ -39,10 +40,11 @@ const userSchema = new Schema({
     },
     role: {
         type: String,
+        required: true, // Make role required
     },
     teacher: {
         type: mongoose.Schema.ObjectId,
-        ref: 'teacher'
+        ref: 'Teacher'
     },
     student: {
         type: mongoose.Schema.ObjectId,
@@ -56,9 +58,27 @@ const userSchema = new Schema({
         type: mongoose.Schema.ObjectId,
         ref: 'submitAssign'
     }]
-}, 
-{ timestamps: true })
+}, { timestamps: true });
 
+// Hook หลังจากการบันทึก user
+userSchema.post('save', async function(doc) {
+    const Student = require('./student'); // Import student model
+    const Teacher = require('./teacher'); // Import teacher model
+
+    if (doc.role === 'student') {
+        const student = new Student({
+            user: doc._id,
+            // กำหนดค่าอื่น ๆ ที่ต้องการ
+        });
+        await student.save();
+    } else if (doc.role === 'teacher') {
+        const teacher = new Teacher({
+            user: doc._id,
+            // กำหนดค่าอื่น ๆ ที่ต้องการ
+        });
+        await teacher.save();
+    }
+});
 
 const User = mongoose.model('User', userSchema);
 

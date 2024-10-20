@@ -40,6 +40,26 @@ const studentSchema = new Schema(
         type: mongoose.Schema.ObjectId,
         ref: 'schoolYear'
     },
+    attempts: [{
+        quizId: {
+            type: mongoose.Schema.ObjectId,
+            ref: 'Quiz' // อ้างอิงไปยัง Quiz model
+        },
+        attemptCount: {
+            type: Number,
+            default: 0, // จำนวนครั้งที่เข้าทำ
+            min: 0
+        },
+        score: {
+            type: Number,
+            default: 0, // คะแนนที่ทำได้ในการพยายามนี้
+            min: 0
+        },
+        date: {
+            type: Date,
+            default: Date.now // วันที่เข้าทำ
+        }
+    }]
 }, {
     timestamps: true
 }

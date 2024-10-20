@@ -14,6 +14,7 @@ const notification = require("../controller/notificationController");
 const adminQuizController  = require('../controller/adminQuizController');
 const adminEditDeleteQuizController = require("../controller/adminEditDeleteQuizController ");
 const profileController = require('../controller/profileController');
+const studentQuizController = require('../controller/studentQuizController')
 
 // Middleware For Files Uploading
 const upload = require("../middleware/multer");
@@ -142,6 +143,13 @@ router.get('/adminIndex/addQuiz',teacherMiddleware, adminQuizController.addQuizP
 router.get('/adminIndex/eachQuiz',teacherMiddleware, adminQuizController.eachQuiz);
 router.post('/adminIndex/releaseQuiz/:quizId', teacherMiddleware, adminQuizController.releaseQuiz);
 router.post('/adminIndex/scheduleQuizRelease/:quizId', teacherMiddleware, adminQuizController.scheduleQuizRelease);
+
+
+router.get('/adminIndex/search=:query', adminQuizController.searchQuizTeacher);
+router.get('/studentIndex/search=:query', adminQuizController.searchQuizStudent);
+
+
+router.post('/sendQuizAnswers',studentQuizController.sendQuizAnswers);
 
 
 // router.get('/adminIndex/previewQuiz',teacherMiddleware, adminQuizController.previewQuiz);

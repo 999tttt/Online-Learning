@@ -45,7 +45,7 @@
     }
 
     .dark .above-nav-status {
-      background-color: #333 !important;
+      background-color: #444 !important;
       border-right:1px solid #494949 ;
     }
 
@@ -83,7 +83,7 @@
       justify-content: center !important;
     }
     .dark .manange-bar, .dark .lesson-content{
-      background-color: #333 !important;
+      background-color: #444 !important;
     }
 
     .lesson-nothing {
@@ -494,6 +494,54 @@
     .btn{
       border: none;
     }
+    .grey {
+      color: gray !important;
+    }
+    .swal-container {
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        text-align: center !important;
+
+      }
+
+      .swal-title {
+        font-size: 1.5em !important;
+        font-weight: bold !important;
+      }
+
+      .swal-text {
+        margin: 1em 0 !important;
+      }
+
+      .swal-icon {
+
+        margin: 2em auto !important;
+      }
+
+      .swal-confirm-button,
+      .swal-cancel-button,
+      .swal-launch-button {
+        margin: 2em 1em !important;
+      }
+
+      .swal-confirm-button {
+        background-color: #d33;
+        border-color: #d33;
+        padding: 0.75rem !important;
+      }
+
+      .swal-launch-button {
+        background-color: #0d6efd;
+        border-color: #0d6efd;
+        padding: 0.75rem !important;
+      }
+
+      .swal-cancel-button {
+        background-color: gray;
+        border-color: gray;
+        padding: 0.75rem !important;
+      }
 
     /* .spn-comment {
       font-size:xx-small !important;
@@ -560,7 +608,7 @@
                     <% if (quiz.releaseWhen) { %>
                     
                         <label>ถูกปล่อยเมื่อ: </label>
-                      <span style="color: rgba(255, 255, 255, 0.6);margin-right: 1em !important;";>
+                      <span class="grey" style="margin-right: 1em !important;";>
                           <%= releaseWhenLocal ? releaseWhenLocal : 'ยังไม่มีการตั้งเวลาปล่อย' %>
                     </span>
                    
@@ -577,10 +625,36 @@
         </p></div>
           
          <br>
-         <div class="d-flex justify-content-center my-2">
-          <a href="*" class="add-button btn btn-secondary" style="background-color: #8A2BE2 !important; padding: 0.8rem !important;">
-            เริ่มทำแบบทดสอบ
-          </a></div>
+         <% if (attemptCount === 0) { %>
+          <div class="d-flex justify-content-center my-2">
+              <a href="javascript:void(0)" onclick="confirmStartQuiz('<%= quiz._id %>')" 
+                 class="add-button btn btn-secondary" style="background-color: #8A2BE2 !important; padding: 0.8rem !important;">
+                  เริ่มทำแบบทดสอบ
+              </a>
+          </div>
+      <% } else if (attemptCount > 1) { %>
+          <div class="d-flex justify-content-center">
+              <div class="score-display text-center mx-2">
+                <p>คะแนนที่ทำได้: <br><br>
+                  <h2>
+                      <%= studentScore %>/<%= totalPoints %>  <span class="fs-4">(<%=
+                                      percentage.toFixed(0) %>%)
+                                      <a class="fs-6 " href="/studentIndex/eachQuiz?quizId=<%= quiz._id %>/rdetail"  target="_blank">ดูรายละเอียด</a>
+                              </span>
+                  </h2>
+
+                  </p>
+              </div>
+          </div>
+          <br/>
+          <div class="d-flex justify-content-center my-2">
+              <a href="javascript:void(0)" onclick="confirmStartQuiz('<%= quiz._id %>')" 
+                 class="add-button btn btn-secondary" style="background-color: #8A2BE2 !important; padding: 0.8rem !important;">
+                  ทำแบบทดสอบอีกครั้ง
+              </a>
+          </div>
+      <% } %>
+      
         </div>
 
        
@@ -592,5 +666,33 @@
 
 
 </body>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+  function confirmStartQuiz(quizId) {
+    Swal.fire({
+      title: 'คุณแน่ใจหรือไม่?',
+      text: "คุณต้องการเริ่มทำแบบทดสอบนี้หรือไม่?",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'ใช่, เริ่มเลย!',
+      cancelButtonText: 'ยกเลิก',
+      customClass: {
+              container: 'swal-container',
+              icon: 'swal-icon',
+              confirmButton: 'swal-confirm-button',
+              cancelButton: 'swal-cancel-button'
+            }
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // ถ้าผู้ใช้กด "ใช่" จะเปลี่ยนเส้นทางไปยังแบบทดสอบ
+        window.location.href = '/studentIndex/eachQuiz?quizId=' + quizId + '/test';
+      }
+    });
+  }
+</script>
 
 </html>

@@ -281,10 +281,26 @@ exports.eachQuiz = async (req, res) => {
       quizId = quizId.split('/edit')[0]; // แยก '/edit' ออก
     }
 
+    const isTestPage = quizId.includes('/test');
+    if (isTestPage) {
+      quizId = quizId.split('/test')[0]; // แยก '/edit' ออก
+    }
+
+    const isResultPage = quizId.includes('/result');
+    if (isResultPage) {
+      quizId = quizId.split('/result')[0]; // แยก '/edit' ออก
+    }
+
     const isViewPage = quizId.includes('/preview');
     if (isViewPage) {
       quizId = quizId.split('/preview')[0]; // แยก '/preview' ออก
     }
+
+    const isResultDetailPage = quizId.includes('/rdetail');
+    if (isResultDetailPage) {
+      quizId = quizId.split('/rdetail')[0]; // แยก '/resultDetail' ออก
+    }
+
 
     const quiz = await Quiz.findById(quizId).populate("schoolYear");
     if (!quiz) {
@@ -303,6 +319,17 @@ exports.eachQuiz = async (req, res) => {
     const releaseWhenLocal = quiz.releaseWhen ? moment.utc(quiz.releaseWhen).format('DD/MM/YYYY, เวลา HH:mm') : null;
     const deadlineLocal = quiz.deadline ? moment.utc(quiz.deadline).format('DD/MM/YYYY, เวลา HH:mm') : null;
 
+    const timeLimitMilliseconds = quiz.timeLimit.value * 1000; // แปลงเป็น milliseconds
+    const timeLimitFormatted = formatTime(timeLimitMilliseconds);
+
+    function formatTime(milliseconds) {
+      const totalSeconds = Math.floor(milliseconds / 1000);
+      const hours = Math.floor(totalSeconds / 3600);
+      const minutes = Math.floor((totalSeconds % 3600) / 60);
+      const seconds = totalSeconds % 60;
+
+      return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+    }
 
     console.log("Release When (local):", releaseWhenLocal);
     console.log("Deadline (local):", deadlineLocal);
@@ -311,7 +338,18 @@ exports.eachQuiz = async (req, res) => {
     const isSidebarOpen = false;
 
     const userRole = userData.role; // ดึงบทบาทจาก userData เช่น 'student' หรือ 'teacher'
+    const totalPoints = quiz.questions.reduce((total, question) => total + question.points, 0);
 
+    let studentScore = 0;
+    let attemptCount = 0;
+
+    if (userRole === 'student' && isResultPage) {
+      const studentAttempt = quiz.attempts.find(attempt => attempt.studentId.toString() === req.session.userId);
+      if (studentAttempt) {
+        studentScore = studentAttempt.score; // สมมุติว่ามีการเก็บคะแนนในฟิลด์นี้
+        attemptCount = studentAttempt.attemptCount;
+      }
+    }
 
     // จัดเรียง foundQuestions ตามวันที่สร้าง
     // questions.sort((a, b) => {
@@ -347,6 +385,8 @@ exports.eachQuiz = async (req, res) => {
           userData,
           releaseWhenLocal,
           deadlineLocal,
+          timeLimitMilliseconds,
+          timeLimitFormatted,
           theme,
           isSidebarOpen
         });
@@ -366,20 +406,87 @@ exports.eachQuiz = async (req, res) => {
         });
       }
     } else if (userRole === 'student') {
-      // สำหรับนักเรียน
-      res.render("eachQuizStudent", {
-        mytitle: "eachQuizStudent",
-        schYear,
-        quiz,
-        quizzes,
-        questions,
-        options,
-        userData,
-        releaseWhenLocal,
-        deadlineLocal,
-        theme,
-        isSidebarOpen
-      });
+      if (isTestPage) {
+        res.render("quiz_test", {
+          mytitle: "quizTestPage",
+          schYear,
+          quiz,
+          quizzes,
+          questions,
+          options,
+          userData,
+          releaseWhenLocal,
+          deadlineLocal,
+          timeLimitMilliseconds,
+          timeLimitFormatted,
+          theme,
+          isSidebarOpen
+        });
+      }
+      else if (isResultPage) {
+        res.render("quiz_result", {
+          mytitle: "isResultPage",
+          schYear,
+          quiz,
+          quizzes,
+          questions,
+          options,
+          userData,
+          releaseWhenLocal,
+          deadlineLocal,
+          timeLimitMilliseconds,
+          timeLimitFormatted,
+          totalPoints,
+          studentScore,
+          attemptCount,
+          percentage: (studentScore / totalPoints) * 100,
+          theme,
+          isSidebarOpen
+        });
+      }
+      else if (isResultDetailPage) {
+        res.render("quiz_resultDetail", {
+          mytitle: "Quiz Result Detail",
+          schYear,
+          quiz,
+          quizzes,
+          questions,
+          options,
+          userData,
+          releaseWhenLocal,
+          deadlineLocal,
+          timeLimitMilliseconds,
+          timeLimitFormatted,
+          totalPoints,
+          studentScore,
+          attemptCount,
+          percentage: (studentScore / totalPoints) * 100,
+          theme,
+          isSidebarOpen
+        });
+      }
+
+      else {
+        res.render("eachQuizStudent", {
+          mytitle: "eachQuizStudent",
+          schYear,
+          quiz,
+          quizzes,
+          questions,
+          options,
+          userData,
+          releaseWhenLocal,
+          deadlineLocal,
+          totalPoints,
+          studentScore,
+          attemptCount,
+          percentage: (studentScore / totalPoints) * 100,
+          theme,
+          isSidebarOpen,
+
+
+        });
+      }
     }
   } catch (err) {
     console.error(err);
@@ -530,6 +637,34 @@ exports.scheduleQuizRelease = async (req, res) => {
   } catch (error) {
     console.error('Error:', error);
     res.status(500).json({ success: false, message: 'เกิดข้อผิดพลาดในการตั้งเวลาปล่อยแบบทดสอบ' });
+  }
+};
+
+// ฟังก์ชันสำหรับค้นหาฝั่งครู
+exports.searchQuizTeacher = async (req, res) => {
+  const searchQuery = req.params.query;
+  try {
+      // ค้นหาในฐานข้อมูลโดยใช้ชื่อแบบทดสอบ
+      const results = await Quiz.find({ quizname: new RegExp(searchQuery, 'i') });
+      // แสดงผลลัพธ์ในหน้า searchResultsTeacher.ejs
+      res.render('searchResults', { results, searchQuery });
+  } catch (error) {
+      console.error(error);
+      res.status(500).send('เกิดข้อผิดพลาดในการค้นหาแบบทดสอบ');
+  }
+};
+
+// ฟังก์ชันสำหรับค้นหาฝั่งนักเรียน
+exports.searchQuizStudent = async (req, res) => {
+  const searchQuery = req.params.query;
+  try {
+      // ค้นหาในฐานข้อมูลโดยใช้ชื่อแบบทดสอบ
+      const results = await Quiz.find({ quizname: new RegExp(searchQuery, 'i') });
+      // แสดงผลลัพธ์ในหน้า searchResultsStudent.ejs
+      res.render('searchResults', { results, searchQuery });
+  } catch (error) {
+      console.error(error);
+      res.status(500).send('เกิดข้อผิดพลาดในการค้นหาแบบทดสอบ');
   }
 };
 

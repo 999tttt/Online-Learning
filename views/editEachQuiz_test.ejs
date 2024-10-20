@@ -1097,6 +1097,7 @@
                         <img id="themeImageID_" src="" alt="">
                     </div>
 
+                    <br><br><br>
                     <div class="quiz">
                         <p class="fw-normal fs-6 lesson-bar ms-2">แบบทดสอบ</p>
                         <div class="input-container mx-2">
@@ -1126,21 +1127,21 @@
                             เวลาในการทำแบบทดสอบ:
                             <span class="fw-normal fs-6 text-primary" style="margin-right: 1em !important;">
                                 <select class="select" style="font-size: 0.9rem; max-width: 10em;" id="timeLimit"
-                                    name="timeLimit" required onchange="autosaveQuizSettings()">
-                                    <option value='{"value":"15min","display":"15 นาที"}'
-                                        <%=quiz.timeLimit.value==="15min" ? 'selected' : '' %>>15 นาที</option>
-                                    <option value='{"value":"30min","display":"30 นาที"}'
-                                        <%=quiz.timeLimit.value==="30min" ? 'selected' : '' %>>30 นาที</option>
-                                    <option value='{"value":"1hour","display":"1 ชั่วโมง"}'
-                                        <%=quiz.timeLimit.value==="1hour" ? 'selected' : '' %>>1 ชั่วโมง</option>
-                                    <option value='{"value":"1h30min","display":"1 ชั่วโมง 30 นาที"}'
-                                        <%=quiz.timeLimit.value==="1h30min" ? 'selected' : '' %>>1 ชั่วโมง 30 นาที
-                                    </option>
-                                    <option value='{"value":"2hours","display":"2 ชั่วโมง"}'
-                                        <%=quiz.timeLimit.value==="2hours" ? 'selected' : '' %>>2 ชั่วโมง</option>
-                                    <option value='{"value":"3hours","display":"3 ชั่วโมง"}'
-                                        <%=quiz.timeLimit.value==="3hours" ? 'selected' : '' %>>3 ชั่วโมง</option>
-                                </select>
+                                name="timeLimit" required onchange="autosaveQuizSettings()">
+                                <option value='{"value":900,"display":"15 นาที"}'
+                                    <%= quiz.timeLimit.value === 900 ? 'selected' : '' %>>15 นาที</option> <!-- 15 นาที = 900 วินาที -->
+                                <option value='{"value":1800,"display":"30 นาที"}'
+                                    <%= quiz.timeLimit.value === 1800 ? 'selected' : '' %>>30 นาที</option> <!-- 30 นาที = 1800 วินาที -->
+                                <option value='{"value":3600,"display":"1 ชั่วโมง"}'
+                                    <%= quiz.timeLimit.value === 3600 ? 'selected' : '' %>>1 ชั่วโมง</option> <!-- 1 ชั่วโมง = 3600 วินาที -->
+                                <option value='{"value":5400,"display":"1 ชั่วโมง 30 นาที"}'
+                                    <%= quiz.timeLimit.value === 5400 ? 'selected' : '' %>>1 ชั่วโมง 30 นาที</option> <!-- 1 ชั่วโมง 30 นาที = 5400 วินาที -->
+                                <option value='{"value":7200,"display":"2 ชั่วโมง"}'
+                                    <%= quiz.timeLimit.value === 7200 ? 'selected' : '' %>>2 ชั่วโมง</option> <!-- 2 ชั่วโมง = 7200 วินาที -->
+                                <option value='{"value":10800,"display":"3 ชั่วโมง"}'
+                                    <%= quiz.timeLimit.value === 10800 ? 'selected' : '' %>>3 ชั่วโมง</option> <!-- 3 ชั่วโมง = 10800 วินาที -->
+                            </select>
+                            
                             </span>
 
                             จำนวนครั้งที่เข้าทำได้:

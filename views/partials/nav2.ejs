@@ -194,14 +194,14 @@
             </ul>
         </div>
         <div class="header_search">
-            <button class="search_button">
+            <button class="search_button" onclick="searchQuiz()">
                 <% if (theme==='light' ) { %>
                     <i class="bi bi-search m-2"></i>
                     <% } else { %>
                         <i class="bi bi-search m-2" style="color: white;"></i>
                         <% } %>
             </button>
-            <input class="search-input" type="text" name="search" placeholder="ค้นหา" />
+            <input id="searchInput" class="search-input" type="text" name="search" placeholder="ค้นหา" />
         </div>
         <div class="header_right">
             <!-- Theme Toggle Switch -->
@@ -213,7 +213,8 @@
 
             <!-- Profile Button -->
             <button onclick="toggleMenu()" class="profile_button">
-                <img src="/<%= userData.img %>" alt="Profile Image" class="profile-icon mx-4 my-3" style="height: 40px;">
+                <img src="/<%= userData.img %>" alt="Profile Image" class="profile-icon mx-4 my-3"
+                    style="height: 40px;">
             </button>
             <div class="sub-menu-wrap" id="subMenu">
                 <div class="sub-menu">
@@ -296,6 +297,28 @@
                     sidebar.classList.add('open');
                 }
             })();
+
+            function searchQuiz() {
+    const searchQuery = document.getElementById('searchInput').value;
+    const userRole = '<%= userData.role %>';  // สมมติว่า role ถูกส่งจาก EJS
+
+    if (searchQuery) {
+        let searchPath = '';
+        if (userRole === 'teacher') {
+            searchPath = `/adminIndex/search=${encodeURIComponent(searchQuery)}`;
+        } else if (userRole === 'student') {
+            searchPath = `/studentIndex/search=${encodeURIComponent(searchQuery)}`;
+        } else {
+            alert('ไม่สามารถค้นหาได้ กรุณาลองใหม่');
+            return;
+        }
+        window.location.href = searchPath;
+    } else {
+        alert('กรุณากรอกคำค้นหา');
+    }
+}
+
+
         </script>
 </body>
 

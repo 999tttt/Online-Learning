@@ -17,36 +17,68 @@ var GoogleStrategy = require('passport-google-oauth2').Strategy;
 const Grid = require('gridfs-stream');
 const { Readable } = require('stream');
 
-exports.submitQuiz = async (req, res) => {
-    const { quizId, studentId } = req.body;
+exports.sendQuizAnswers = async (req, res) => {
+    // ค้นหา quizId จาก URL parameters
+    const quizId =Quiz._id; 
+    const answers = req.body.answers; // รับ answers จาก body
+
+    console.log("Received data:", { quizId, answers });
+
+    // ตรวจสอบว่าข้อมูลทั้งหมดมีหรือไม่
+    if (!quizId || !answers) {
+        console.log("Missing data:", { quizId, answers });
+        return res.status(400).json({ success: false, message: 'ข้อมูลไม่ครบถ้วนในการส่งคำตอบ' });
+    }
 
     try {
+        // ค้นหา quiz โดยใช้ quizId
         const quiz = await Quiz.findById(quizId);
         if (!quiz) {
             return res.status(404).json({ success: false, message: 'ไม่พบแบบทดสอบ' });
         }
 
-        // หา attempt ของนักเรียน
-        const studentAttempt = quiz.attempts.find(attempt => attempt.studentId.toString() === studentId);
+        // หา user ID จาก req.user
+        const studentId = req.user._id; // ใช้ user._id แทน
 
-        // ถ้าพบนักเรียนใน attempts ให้ตรวจสอบจำนวนครั้ง
+        // หา attempt ของนักเรียน
+        let studentAttempt = quiz.attempts.find(attempt => attempt.studentId.toString() === studentId.toString());
+
         if (studentAttempt) {
             if (studentAttempt.attemptCount >= quiz.attemptLimit) {
                 return res.status(400).json({ success: false, message: 'คุณทำแบบทดสอบครบจำนวนครั้งที่กำหนดแล้ว' });
             }
-            // ถ้าจำนวนครั้งยังไม่เกิน ให้เพิ่มจำนวนครั้ง
-            studentAttempt.attemptCount += 1;
+            studentAttempt.attemptCount += 1; // เพิ่มจำนวนครั้งในการทำแบบทดสอบ
         } else {
-            // ถ้านักเรียนยังไม่เคยทำแบบทดสอบนี้ ให้เพิ่ม entry ใหม่ใน attempts
-            quiz.attempts.push({ studentId, attemptCount: 1 });
+            // ถ้ายังไม่มีการทำแบบทดสอบให้สร้าง attempt ใหม่
+            studentAttempt = { studentId, attemptCount: 1, answers: [], score: 0 };
+            quiz.attempts.push(studentAttempt);
         }
+
+        // ตรวจสอบคำตอบและคำนวณคะแนน
+        let totalScore = 0;
+        quiz.questions.forEach((question, i) => {
+            const studentAnswer = answers[i]; // ดึงคำตอบของนักเรียนจาก answers
+            if (question.answerKey === studentAnswer) {
+                totalScore += question.points; // เพิ่มคะแนนถ้าคำตอบถูกต้อง
+            }
+            // บันทึกคำตอบของนักเรียนในแต่ละข้อ
+            studentAttempt.answers.push({ questionId: question._id, answer: studentAnswer });
+        });
+
+        // อัปเดตคะแนนใน attempt ของนักเรียน
+        studentAttempt.score = totalScore;
 
         // บันทึกการเปลี่ยนแปลงลงในฐานข้อมูล
         await quiz.save();
 
-        res.json({ success: true, message: 'ส่งแบบทดสอบสำเร็จ' });
+        // ส่งข้อมูลตอบกลับไปยังลูกค้า
+        res.json({ success: true, message: 'ส่งแบบทดสอบสำเร็จ', score: totalScore });
     } catch (error) {
         console.error(error);
         res.status(500).json({ success: false, message: 'เกิดข้อผิดพลาดในการส่งแบบทดสอบ' });
     }
 };
+
+
+
+

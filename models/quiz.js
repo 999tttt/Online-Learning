@@ -62,6 +62,15 @@ const attemptSchema = mongoose.Schema({
         type: Number,
         default: 0,
         min: 0
+    },
+    score: {
+        type: Number,
+        default: 0, // คะแนนที่ทำได้ในการพยายามนี้
+        min: 0
+    },
+    date: {
+        type: Date,
+        default: Date.now // วันที่และเวลาที่ทำแบบทดสอบ
     }
 });
 
@@ -108,9 +117,8 @@ const quizSchema = mongoose.Schema({
     },
     timeLimit: {
         value: {
-            type: String,
+            type: Number,
             required: true,
-            trim: true
         },
         display: {
             type: String,
