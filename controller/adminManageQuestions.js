@@ -5,10 +5,7 @@ const Teacher = require("../models/teacher.model")
 const fs = require('fs');
 const path = require('path');
 const Question = require("../models/question");
-const question1 = require("../models/question1");
-const question2 = require("../models/question2");
-const question3 = require("../models/question3");
-const question4 = require("../models/question4");
+
 
 const mongoose = require('mongoose');
 

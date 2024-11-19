@@ -186,7 +186,7 @@
 
         <div class="header_info">
 
-            <!-- <span class="fw-normal fs-5 "> <%=quiz.quizname%></span> -->
+            <span class="fw-normal fs-5  my-4" style="margin-left: 7rem;"> <%=quiz.quizname%></span>
 
         </div>
 
@@ -200,12 +200,23 @@
 
             <!-- Profile Button -->
 
-            <div class="p-4 mx-4">
+            <div class="py-4 pe-1 mx-4">
                 <i class="bi bi-clock" style="color: #8A2BE2;"></i>
                 <span id="countdownTimer" class="grey ps-2 pe-4">
                     <%= timeLimitFormatted %>
+                    
                 </span>
             </div>
+            <div class="pe-4 ">
+                <button type="button" class="btn btn-primary px-4"
+                style="background-color: #8A2BE2; border: 1px solid #8A2BE2;"
+                 onclick="confirmSubmitQuiz('<%= quiz._id %>')">
+                  <!-- onclick="goToResultPage('<%= quiz._id %>')"> -->
+               
+              
+                ส่ง
+            </button>
+        </div>
 
         </div>
     </header>

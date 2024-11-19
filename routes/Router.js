@@ -145,11 +145,10 @@ router.post('/adminIndex/releaseQuiz/:quizId', teacherMiddleware, adminQuizContr
 router.post('/adminIndex/scheduleQuizRelease/:quizId', teacherMiddleware, adminQuizController.scheduleQuizRelease);
 
 
-router.get('/adminIndex/search=:query', adminQuizController.searchQuizTeacher);
-router.get('/studentIndex/search=:query', adminQuizController.searchQuizStudent);
+router.get('/adminIndex/search=:query', adminQuizController.searchTeacher);
+router.get('/studentIndex/search=:query', adminQuizController.searchStudent);
 
 
-router.post('/sendQuizAnswers',studentQuizController.sendQuizAnswers);
 
 
 // router.get('/adminIndex/previewQuiz',teacherMiddleware, adminQuizController.previewQuiz);
@@ -171,6 +170,7 @@ router.post('/updateQuiz',teacherMiddleware,adminEditDeleteQuizController.update
 router.get('/getQuestions',teacherMiddleware, adminManageQuestions.getQuestions);
 router.post('/addQuestion',teacherMiddleware, adminManageQuestions.addQuestion);
 router.get('/deleteQuestion',teacherMiddleware, adminManageQuestions.deleteQuestion);
+router.post('/studentIndex/submitQuiz/:quizId', studentQuizController.submitQuiz);
 
 
 

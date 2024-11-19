@@ -16,7 +16,9 @@
   * {
       box-sizing: border-box !important;
     }
-
+    body.dark {
+        background-color: #212121 !important;
+      }
     .card-1,
     .card-body-1 {
       border: none !important;
@@ -197,7 +199,7 @@
   </div>
   <div class="main-content d-flex w-100 h-auto">
     <%- include("./partials/lessonsList.ejs")%>
-    <div class="aside-right w-75 h-auto p-4">
+    <div class="aside-right  h-auto p-4 m-3">
       <div class="manange-bar px-4 py-3 bg-white d-flex w-100 row" id="topBar">
         <div class="col-6">
           <p class="fw-bold fs-3 lesson-bar">งานที่มอบหมาย</p>

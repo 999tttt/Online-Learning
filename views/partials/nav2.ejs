@@ -201,8 +201,10 @@
                         <i class="bi bi-search m-2" style="color: white;"></i>
                         <% } %>
             </button>
-            <input id="searchInput" class="search-input" type="text" name="search" placeholder="ค้นหา" />
+            <input id="searchInput" class="search-input" type="search" name="search" placeholder="ค้นหา" />
         </div>
+
+
         <div class="header_right">
             <!-- Theme Toggle Switch -->
             <label class="switch_theme">
@@ -298,26 +300,32 @@
                 }
             })();
 
+            document.getElementById('searchInput').addEventListener('keypress', function (event) {
+                if (event.key === 'Enter') {
+                    event.preventDefault();  
+                    searchQuiz();  
+                }
+            });
+
             function searchQuiz() {
-    const searchQuery = document.getElementById('searchInput').value;
-    const userRole = '<%= userData.role %>';  // สมมติว่า role ถูกส่งจาก EJS
+                const searchQuery = document.getElementById('searchInput').value.trim(); 
+                const userRole = '<%= userData.role %>';  // สมมติว่า role ถูกส่งจาก EJS
 
-    if (searchQuery) {
-        let searchPath = '';
-        if (userRole === 'teacher') {
-            searchPath = `/adminIndex/search=${encodeURIComponent(searchQuery)}`;
-        } else if (userRole === 'student') {
-            searchPath = `/studentIndex/search=${encodeURIComponent(searchQuery)}`;
-        } else {
-            alert('ไม่สามารถค้นหาได้ กรุณาลองใหม่');
-            return;
-        }
-        window.location.href = searchPath;
-    } else {
-        alert('กรุณากรอกคำค้นหา');
-    }
-}
-
+                if (searchQuery.length > 0) {
+                    let searchPath = '';
+                    if (userRole === 'teacher') {
+                        searchPath = `/adminIndex/search=${encodeURIComponent(searchQuery)}`;
+                    } else if (userRole === 'student') {
+                        searchPath = `/studentIndex/search=${encodeURIComponent(searchQuery)}`;
+                    } else {
+                        alert('ไม่สามารถค้นหาได้ กรุณาลองใหม่');
+                        return;
+                    }
+                    window.location.href = searchPath;
+                } else {
+                    alert('กรุณากรอกคำค้นหา');
+                }
+            }
 
         </script>
 </body>

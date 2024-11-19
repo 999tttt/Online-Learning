@@ -195,7 +195,7 @@ body.light .a-li:hover {
 
 
 /* Breakpoints */
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 900px) {
     .ul-nav {
         display: none;
     }

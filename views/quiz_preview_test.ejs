@@ -1106,6 +1106,36 @@
       transform: scale(1.1);
     }
 
+    .pagination {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 1em;
+        }
+
+        .pagination-btn {
+            padding: 0.1em 0.75em;
+            margin: 0.2em;
+            border: 1px solid #ccc;
+            background-color: #D9D9D9;
+            cursor: pointer;
+        }
+
+        .pagination-btn.answered {
+            background-color: #8A2BE2;
+            /* สีม่วงสำหรับข้อที่ตอบแล้ว */
+            color: white;
+        }
+
+        .pagination-btn.chevron {
+            background-color: transparent;
+            color: #8A2BE2;
+            border: none;
+        }
+
+        .pagination-btn.chevron i {
+            font-size: 1.5em;
+        }
+
 
     /* .spn-comment {
       font-size:xx-small !important;
@@ -1187,54 +1217,74 @@
 
 
           <!-- title  -->
-          <br><br><br>
-          <div class="question">
+          <br><br><br><br>
+                  <!-- Pagination -->
+        <div class="pagination">
+          <button type="button" class="pagination-btn chevron" onclick="prevPage()">
+              <i class="bi bi-chevron-left"></i>
+          </button>
+          
+          <% for (let i = 0; i < Math.min(10, questions.length); i++) { %>
+              <button type="button"
+                  class="pagination-btn <%= questions[i].isAnswered ? 'answered' : '' %>"
+                  onclick="goToQuestion('<%= i %>')">
+                  <%= i + 1 %>
+              </button>
+          <% } %>
+
+          <button type="button" class="pagination-btn chevron" onclick="nextPage()">
+              <i class="bi bi-chevron-right"></i>
+          </button>
+      </div>
+
+
+        <div class="question">
             <p class="fw-normal fs-6 lesson-bar ms-2">แบบทดสอบ</p>
 
-            <form id="quizForm">
 
-              <div class="input-container mx-2">
+            <div class="input-container mx-2">
                 <p class="mx-2">
                 <div class="question_form_top_name" id="quizname" name="quizname"
-                  oninput="saveQuizSettings(); togglePlaceholder('quizname', 'ชื่อแบบทดสอบ')"
-                  onfocus="removePlaceholder('quizname')" onblur="addPlaceholder('quizname', 'ชื่อแบบทดสอบ')">
-                  <%=quiz.quizname%>
+                    oninput="saveQuizSettings(); togglePlaceholder('quizname', 'ชื่อแบบทดสอบ')"
+                    onfocus="removePlaceholder('quizname')"
+                    onblur="addPlaceholder('quizname', 'ชื่อแบบทดสอบ')">
+                    <%=quiz.quizname%>
                 </div>
                 </p>
-              </div>
-              <p class="mx-2" style="color: gray;">
-              <div class="input-container mx-2">
+            </div>
+            <p class="mx-2" style="color: gray;">
+            <div class="input-container mx-2">
                 <p>
                 <div class="question_form_top_desc" id="quizdescription" style="color: gray !important;"
-                  name="quizdescription"
-                  oninput="saveQuizSettings(); togglePlaceholder('quizdescription', 'คำอธิบายแบบทดสอบ')"
-                  onfocus="removePlaceholder('quizdescription')"
-                  onblur="addPlaceholder('quizdescription', 'คำอธิบายแบบทดสอบ')">
-                  <%=quiz.quizdescription%>
+                    name="quizdescription"
+                    oninput="saveQuizSettings(); togglePlaceholder('quizdescription', 'คำอธิบายแบบทดสอบ')"
+                    onfocus="removePlaceholder('quizdescription')"
+                    onblur="addPlaceholder('quizdescription', 'คำอธิบายแบบทดสอบ')">
+                    <%=quiz.quizdescription%>
                 </div>
                 </p>
-              </div>
-              </p>
+            </div>
+            </p>
 
 
 
 
-              <!-- จำนวนข้อ: 
-  
-  
-                  <span class="fw-normal fs-6 text-primary" style="margin-right: 1em !important;">0 ข้อ</span> -->
+            <!-- จำนวนข้อ: 
+
+
+      <span class="fw-normal fs-6 text-primary" style="margin-right: 1em !important;">0 ข้อ</span> -->
 
 
 
-              <div class="d-flex">
+            <div class="d-flex">
 
 
-              </div>
-            </form>
+            </div>
 
 
 
-          </div>
+
+        </div>
 
           <div style="margin: 0 4rem;">
             <span id="question-count" class="me-2 fs-5 d-none"></span>
@@ -1246,6 +1296,7 @@
               <div class="question" id="question_<%= i %>">
                 <div class="first">
                   <div class="input-question">
+                    <!-- <%= i + 1 %>)  -->
                     <%= question.questionText %>
                   </div>
                   <span class="grey ms-4">
@@ -1278,9 +1329,7 @@
               
           </div>
 
-          <div class="d-flex" style="padding: 0 2rem; ">
-            <button type="submit" class="btn btn-primary px-4 " style="background-color: #8A2BE2; border: 1px solid #8A2BE2;">ส่ง</button>
-          </div>
+        
         </div>
 
       </form>
@@ -1539,6 +1588,121 @@
       function goToEditPage() {
         window.location.href = '/adminIndex/eachQuiz?quizId=<%= quiz._id %>/edit';  
       }
+
+      function goToQuestion(index) {
+        // ซ่อนคำถามทั้งหมด
+        document.querySelectorAll('.question').forEach(q => q.style.display = 'none');
+        // แสดงคำถามที่ถูกเลือก
+        document.getElementById('question_' + index).style.display = 'block';
+    }
+
+    goToQuestion(0);
+      // let currentPage = 0;
+      //       const questionsPerPage = 10;
+      //       const totalPages = Math.ceil(questions.length / questionsPerPage);
+
+      //       function goToQuestion(index) {
+      //           document.querySelectorAll('.question').forEach(q => q.style.display = 'none');
+      //           document.getElementById('question_' + index).style.display = 'block';
+      //       }
+
+      //       function updatePagination() {
+      //           const paginationContainer = document.querySelector('.pagination');
+      //           paginationContainer.innerHTML = '';
+
+      //           // Add left chevron
+      //           const leftChevron = document.createElement('button');
+      //           leftChevron.type = 'button';
+      //           leftChevron.className = 'pagination-btn chevron';
+      //           leftChevron.innerHTML = '<i class="bi bi-chevron-left"></i>';
+      //           leftChevron.onclick = prevPage;
+      //           paginationContainer.appendChild(leftChevron);
+
+      //           // Add page numbers
+      //           const start = currentPage * questionsPerPage;
+      //           const end = Math.min(start + questionsPerPage, questions.length);
+      //           for (let i = start; i < end; i++) {
+      //               const btn = document.createElement('button');
+      //               btn.type = 'button';
+      //               btn.className = `pagination-btn ${questions[i].isAnswered ? 'answered' : ''}`;
+      //               btn.innerHTML = '' + (i + 1);
+      //               btn.onclick = () => goToQuestion(i);
+      //               paginationContainer.appendChild(btn);
+      //           }
+
+      //           // Add right chevron
+      //           const rightChevron = document.createElement('button');
+      //           rightChevron.type = 'button';
+      //           rightChevron.className = 'pagination-btn chevron';
+      //           rightChevron.innerHTML = '<i class="bi bi-chevron-right"></i>';
+      //           rightChevron.onclick = nextPage;
+      //           paginationContainer.appendChild(rightChevron);
+      //       }
+
+      //       function prevPage() {
+      //           if (currentPage > 0) {
+      //               currentPage--;
+      //               updatePagination();
+      //           }
+      //       }
+
+      //       function nextPage() {
+      //           if (currentPage < totalPages - 1) {
+      //               currentPage++;
+      //               updatePagination();
+      //           }
+      //       }
+
+      //       // Initialize pagination
+      //       updatePagination();
+      //       goToQuestion(0);
+
+
+      function confirmSubmitQuiz(quizId) {
+                Swal.fire({
+                    title: 'คุณแน่ใจหรือไม่?',
+                    html: "คุณต้องการส่งแบบทดสอบนี้หรือไม่?<br>โปรดตรวจสอบว่าคุณกรอกคำตอบแล้วทุกข้อ",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'ใช่, ส่งเลย!',
+                    cancelButtonText: 'ยกเลิก'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // ส่งข้อมูลฟอร์มหลัก
+                        const formData = new FormData(document.getElementById('form'));
+
+                        // เพิ่ม quizId ลงใน formData
+                        formData.append('quizId', quizId);
+
+                        // ส่งข้อมูลไปยัง backend
+                        fetch('/sendQuizAnswers', {
+                            method: 'POST',
+                            body: formData,
+                            headers: {
+                                'Accept': 'application/json'
+                                // ไม่ต้องใส่ 'Content-Type' เมื่อส่งเป็น FormData เพราะ browser จะตั้งให้เอง
+                            }
+                        })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    // เปลี่ยนเส้นทางไปยังหน้าผลลัพธ์
+                                    window.location.href = `/studentIndex/eachQuiz?quizId=${quizId}`;
+                                } else {
+                                    // แสดงข้อความแสดงข้อผิดพลาดหากไม่สำเร็จ
+                                    Swal.fire('เกิดข้อผิดพลาด', data.message || 'ไม่สามารถส่งคำตอบได้', 'error');
+                                }
+                            })
+                            .catch((error) => {
+                                console.error('Error:', error);
+                                Swal.fire('เกิดข้อผิดพลาด', 'ไม่สามารถส่งคำตอบได้', 'error');
+                            });
+                    }
+                });
+            }
+
     </script>
     <button id="backToEditBtn" onclick="goToEditPage()">🖉</button>
 

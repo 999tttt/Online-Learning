@@ -14,7 +14,9 @@
    * {
       box-sizing: border-box !important;
     }
-
+    body.dark {
+        background-color: #212121 !important;
+      }
     .card-1,
     .card-body-1 {
       border: none !important;
@@ -576,7 +578,7 @@
   <!-- อยากเพิ่มปุ่ม ปล่อยแบบทดสอบ -->
   <div class="main-content d-flex w-100 h-auto">
     <%- include("./partials/studentAside.ejs")%>
-    <div class="row allCOntent" style="width: 80% !important;">
+    <div class="row allCOntent m-3" style="width: 80% !important;">
       <div class="col-12 aside-right px-4 py-4 bg-white" style="width: 100% !important;">
         <div class="manange-bar p-4 bg-white w-100">
           <p class="fw-normal fs-6 lesson-bar ms-2">แบบทดสอบ</p> 

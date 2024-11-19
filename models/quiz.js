@@ -53,11 +53,6 @@ const questionSchema = mongoose.Schema({
 
 // เพิ่ม schema สำหรับเก็บข้อมูลจำนวนครั้งที่เข้าทำแบบทดสอบของนักเรียน
 const attemptSchema = mongoose.Schema({
-    studentId: {
-        type: mongoose.Schema.ObjectId,
-        ref: 'Student', // อ้างอิงไปยังคอลเล็กชันของนักเรียน
-        required: true
-    },
     attemptCount: {
         type: Number,
         default: 0,

@@ -6,7 +6,7 @@ body.light {
 }
 
 body.dark {
-    --bg-color: #121212;
+    --bg-color: #212121 ;
     --secondary-color:#444;
     --text-color: #ffffff;
 }

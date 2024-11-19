@@ -172,7 +172,7 @@ body.light {
 }
 
 body.dark {
-    --bg-color: #121212;
+    --bg-color: #212121;
     --text-color: #ffffff;
 }
 
@@ -343,4 +343,18 @@ body.light .sidebar_nav a:hover {
 
 body.dark .sidebar_nav a:hover {
     background-color: #444;
+}
+
+@media screen and (max-width: 900px) {
+    .above-nav-status {
+        display: none;
+    }
+
+    .scores {
+        gap: 0px;
+    }
+    .score-display {
+    padding: 18px 28px !important;
+    max-height: 80px;
+}
 }

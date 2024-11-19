@@ -798,15 +798,7 @@ const eachLessonStudent = async (req, res) => {
   }
 }
 
-const adminExamsIndex = async (req, res) => {
-  try {
-    res.render("adminExam");
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("เกิดข้อผิดพลาด");
-  }
 
-}
 
 const pdfDowload = async (req, res) => {
   try {
@@ -1162,7 +1154,6 @@ const deleteComment = async (req, res) => {
 module.exports = {
   adminIndex,
   adminLessonIndex,
-  adminExamsIndex,
   addLesson,
   createLayout,
   eachLessons,

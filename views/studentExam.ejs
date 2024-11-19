@@ -13,7 +13,9 @@
             * {
                 box-sizing: border-box !important;
             }
-
+            body.dark {
+        background-color: #212121 !important;
+      }
             .card-1,
             .card-body-1 {
                 border: none !important;
@@ -238,7 +240,7 @@
     <%- include("./partials/studentNav.ejs") %>
         <div class="main-content d-flex">
             <%- include("./partials/studentAside.ejs") %>
-                <div class="aside-right bg-white h-auto p-4" style="width: 80%;">
+                <div class="aside-right  h-auto p-4 m-3" style="width: 80%;">
                     <div class="manange-bar px-4 py-3 bg-white d-flex w-100">
                         <p class="fw-bold fs-3 lesson-bar">แบบทดสอบ</p>
                     </div>
@@ -258,7 +260,7 @@
                                 <% } else if (quiz.length > 0) { %>
                                   <div class="d-flex">
                                     <div class="set-border d-flex">
-                                      <p class="fw-bold fs-5 my-1 mx-2" style="border-left: 0.25em solid #387bef; padding-left: 0.75em !important;">บทเรียน</p>
+                                      <p class="fw-bold fs-5 my-1 mx-2" style="border-left: 0.25em solid #387bef; padding-left: 0.75em !important;">แบบทดสอบ</p>
                                       <div class="d-flex justify-content-center" style="align-items: center;">
                                         <label class="mx-2" for="yearSelector">ปีการศึกษา: </label>
                                         <select id="yearSelector">
@@ -272,7 +274,7 @@
                                   </div>
                                 <% } %>
                                 
-                                <% if (quiz.length > 0 || quiz.length < 1)  { %>
+                                <% if (quiz.length > 0 )  { %>
                                 <div class="px-3 my-3">
                                   <% schoolYears.forEach (year => {%>
                                   <div class="showYear show<%=year.schoolYear%>" data-aos="fade-left" data-aos-duration="1000">
@@ -292,8 +294,8 @@
                                           </div>
                                           <div class="card-body-1">
                                             <%const image = quiz.file.slice(8);%>
-                                            <img src="/<%=image%>" alt="รูปภาพประกอบบทเรียน" class="card-img" alt="รูปของบทเรียน" style="width: 100%; height: 20%; max-width: 15.125em; max-height: 8.8125em; border-radius: 0.5em;">
-                                            <!-- /* <img src="/images/indexMed/DENTISTRY_KKU.svg.png" class="card-img" alt="รูปของบทเรียน" style="height: 100%; width: 50%; object-fit: cover;"> */ -->
+                                            <img src="/<%=image%>" alt="รูปภาพประกอบแบบทดสอบ" class="card-img" alt="รูปของแบบทดสอบ" style="width: 100%; height: 20%; max-width: 15.125em; max-height: 8.8125em; border-radius: 0.5em;">
+                                            <!-- /* <img src="/images/indexMed/DENTISTRY_KKU.svg.png" class="card-img" alt="รูปของแบบทดสอบ" style="height: 100%; width: 50%; object-fit: cover;"> */ -->
                                           </div>
                                         </div>
                                       </a>
@@ -304,7 +306,7 @@
                                             <p class="text-break" style="font-size: small;"><%= quiz.quizname %></p>
                                           </div>
                                           <div class="card-body-1 d-flex justify-content-center p-4">
-                                            <img src="/images/indexMed/DENTISTRY_KKU.svg.png" class="card-img" alt="รูปของบทเรียน" style="height: 100%; width: 50%; object-fit: cover; max-width: 15.125em; max-height: 8.8125em ;">
+                                            <img src="/images/indexMed/DENTISTRY_KKU.svg.png" class="card-img" alt="รูปของแบบทดสอบ" style="height: 100%; width: 50%; object-fit: cover; max-width: 15.125em; max-height: 8.8125em ;">
                                           </div>
                                         </div>
                                       </a>
@@ -312,7 +314,7 @@
                                       <% } %>
                                       <% }); %>
                                       <% } else if (year.quizArray.length < 1) {%>
-                                      <p class="showYear show<%=year.schoolYear%> mb-2">ไม่พบบทเรียนในระบบของปีการศึกษา:<span> <%= year.schoolYear%></span>
+                                      <p class="showYear show<%=year.schoolYear%> mb-2">ไม่พบแบบทดสอบในระบบของปีการศึกษา:<span> <%= year.schoolYear%></span>
                                       </p>
                                       <% } %>
                                     </div>
@@ -332,37 +334,37 @@
                 AOS.init();
             </script>
             <script>
-                // document.getElementById('yearSelector').addEventListener('change', function() {
-                //   const selectedYear = this.value;
-                //   const showYearAll = document.querySelectorAll(`.showYear`);
+                document.getElementById('yearSelector').addEventListener('change', function() {
+                  const selectedYear = this.value;
+                  const showYearAll = document.querySelectorAll(`.showYear`);
 
-                //   showYearAll.forEach(element => {
-                //     const classList = element.classList;
-                //     for (i = 1; i < 2; i++) {
-                //       const getDiv = document.querySelector(`.${classList[i]}`);
+                  showYearAll.forEach(element => {
+                    const classList = element.classList;
+                    for (i = 1; i < 2; i++) {
+                      const getDiv = document.querySelector(`.${classList[i]}`);
 
-                //       const showYearAll2 = document.querySelector(`.show${selectedYear}`);
-                //       if (getDiv != showYearAll2) {
-                //         getDiv.style.display = "none";
-                //       } else if (getDiv === showYearAll2) {
-                //         showYearAll2.style.display = "block";
-                //       }
+                      const showYearAll2 = document.querySelector(`.show${selectedYear}`);
+                      if (getDiv != showYearAll2) {
+                        getDiv.style.display = "none";
+                      } else if (getDiv === showYearAll2) {
+                        showYearAll2.style.display = "block";
+                      }
 
-                //       if (selectedYear === "all") {
-                //         showYearAll.forEach(element => {
-                //           const classList = element.classList;
-                //           for (i = 1; i < 2; i++) {
-                //             const getDiv = document.querySelector(`.${classList[i]}`);
-                //             getDiv.style.display = "block";
+                      if (selectedYear === "all") {
+                        showYearAll.forEach(element => {
+                          const classList = element.classList;
+                          for (i = 1; i < 2; i++) {
+                            const getDiv = document.querySelector(`.${classList[i]}`);
+                            getDiv.style.display = "block";
 
-                //           }
-                //         });
-                //       }
-                //     }
-                //   });
+                          }
+                        });
+                      }
+                    }
+                  });
 
 
-                // });
+                });
             </script>
 
 

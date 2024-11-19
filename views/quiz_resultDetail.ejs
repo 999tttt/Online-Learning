@@ -1211,6 +1211,9 @@
             <div style="margin: 0 4rem;">
               <span id="question-count" class="me-2 fs-5 d-none"></span>
               <span id="all-points-count" class="grey d-none"></span>
+              <span class="me-4">  <%= questions.length %>  
+              ข้อ  <span class="grey"> (<%= questions.reduce((total, question)=> total + question.points, 0) %> คะแนน) </span>
+            </span>
              <span> คะแนนที่ทำได้: <span class="grey"><%= studentScore %>/<%= totalPoints %>  (<%=
                 percentage.toFixed(0) %>%)</span></span>
             </div>
@@ -1233,7 +1236,7 @@
                         <div class="form-check" style="display: flex; align-items: center;">
                           <input class="input_check"
                             type="<%= question.questionType === 'MCQ' ? 'radio' : 'checkbox' %>" name="Answ_<%= i %>"
-                            value="<%= j %>" >
+                            value="<%= j %>" disabled>
                           <div style="flex-grow: 1; padding: 5px;">
                             <%= option.optionText %>
                           </div>

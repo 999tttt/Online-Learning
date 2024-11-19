@@ -1,14 +1,11 @@
 var Quiz = require('../models/quiz')
+const Lesson = require("../models/Lessons");
 var User = require('../models/user.model')
 const Student = require("../models/student.model");
 const Teacher = require("../models/teacher.model")
 const SchoolYear = require("../models/schoolYear");
 const fs = require('fs');
 const path = require('path');
-const question1 = require("../models/question1");
-const question2 = require("../models/question2");
-const question3 = require("../models/question3");
-const question4 = require("../models/question4");
 const multer = require('multer');
 const upload = multer();
 const moment = require('moment-timezone');
@@ -301,6 +298,11 @@ exports.eachQuiz = async (req, res) => {
       quizId = quizId.split('/rdetail')[0]; // แยก '/resultDetail' ออก
     }
 
+    const isResponsePage = quizId.includes('/response');
+    if (isResponsePage) {
+      quizId = quizId.split('/response')[0]; // แยก '/response' ออก
+    }
+
 
     const quiz = await Quiz.findById(quizId).populate("schoolYear");
     if (!quiz) {
@@ -360,7 +362,7 @@ exports.eachQuiz = async (req, res) => {
     if (userRole === 'teacher') {
       // Render หน้าแต่ละหน้า
       if (isEditPage) {
-        res.render("editEachQuiz_test", {
+        res.render("editEachQuiz", {
           mytitle: "editEachQuiz",
           schYear,
           quiz,
@@ -387,6 +389,46 @@ exports.eachQuiz = async (req, res) => {
           deadlineLocal,
           timeLimitMilliseconds,
           timeLimitFormatted,
+          theme,
+          isSidebarOpen
+        });
+      } else if (isResponsePage) {
+        res.render("quiz_response", {
+          mytitle: "responseEachQuiz",
+          schYear,
+          quiz,
+          quizzes,
+          questions,
+          options,
+          userData,
+          releaseWhenLocal,
+          deadlineLocal,
+          timeLimitMilliseconds,
+          timeLimitFormatted,
+          totalPoints,
+          studentScore,
+          attemptCount,
+          percentage: (studentScore / totalPoints) * 100,
+          theme,
+          isSidebarOpen
+        });
+      } else if (isResultDetailPage) { // เพิ่มเงื่อนไขสำหรับ render หน้า rdetail
+        res.render("quiz_resultDetailResponse", {
+          mytitle: "Quiz Result Detail Response",
+          schYear,
+          quiz,
+          quizzes,
+          questions,
+          options,
+          userData,
+          releaseWhenLocal,
+          deadlineLocal,
+          timeLimitMilliseconds,
+          timeLimitFormatted,
+          totalPoints,
+          studentScore,
+          attemptCount,
+          percentage: (studentScore / totalPoints) * 100,
           theme,
           isSidebarOpen
         });
@@ -641,32 +683,152 @@ exports.scheduleQuizRelease = async (req, res) => {
 };
 
 // ฟังก์ชันสำหรับค้นหาฝั่งครู
-exports.searchQuizTeacher = async (req, res) => {
+exports.searchTeacher = async (req, res) => {
   const searchQuery = req.params.query;
+
   try {
-      // ค้นหาในฐานข้อมูลโดยใช้ชื่อแบบทดสอบ
-      const results = await Quiz.find({ quizname: new RegExp(searchQuery, 'i') });
-      // แสดงผลลัพธ์ในหน้า searchResultsTeacher.ejs
-      res.render('searchResults', { results, searchQuery });
+    // ดึงข้อมูลผู้ใช้งานจาก session
+    const userData = await User.findById(req.session.userId);
+    const originPage = req.query.originPage;
+
+    // ค้นหาแบบทดสอบทั้งหมดเพื่อแสดงใน sidebar หรือเมนูอื่น ๆ
+    const quizzes = await Quiz.find().sort({ createdAt: 1 }).exec();
+
+    // ค้นหาแบบทดสอบที่เกี่ยวข้องกับการค้นหา
+    const quizResults = await Quiz.find({ quizname: new RegExp(searchQuery, 'i') });
+
+    // ค้นหาในฐานข้อมูลสำหรับบทเรียน (lessons)
+    const lessonResults = await Lesson.find({ LessonName: new RegExp(searchQuery, 'i') });
+    const schoolYears = await SchoolYear.find().sort({ schoolYear: 0 });
+
+
+    const theme = req.session.theme || 'light';
+    const isSidebarOpen = false;
+
+    // หากมีผลลัพธ์จากการค้นหาแบบทดสอบ ให้ดึงข้อมูลเพิ่มเติม
+    if (quizResults.length > 0) {
+      const quiz = quizResults[0]; // เอาผลลัพธ์ตัวแรกมาใช้
+      const schYear = quiz.schoolYear ? quiz.schoolYear.schoolYear : '';
+      const questions = quiz.questions || [];
+      const releaseWhenLocal = quiz.releaseWhen ? moment.utc(quiz.releaseWhen).format('DD/MM/YYYY, เวลา HH:mm') : null;
+      const deadlineLocal = quiz.deadline ? moment.utc(quiz.deadline).format('DD/MM/YYYY, เวลา HH:mm') : null;
+
+      // แสดงผลลัพธ์ในหน้า searchResultsTeacher.ejs พร้อมข้อมูลที่ดึงมา
+      return res.render('searchResults', {
+        quiz: quizResults,
+        lessons: lessonResults,
+        searchQuery,
+        userData,
+        quizzes,
+        schYear,
+        questions,
+        releaseWhenLocal,
+        deadlineLocal,
+        theme,
+        isSidebarOpen,
+        originPage,
+        schoolYears
+      });
+    }
+
+    // หากไม่มีผลลัพธ์จากการค้นหาแบบทดสอบ
+    res.render('searchResults', {
+      quiz: [],
+      lessons: lessonResults,
+      searchQuery,
+      userData,
+      quizzes,
+      schYear: '',
+      questions: [],
+      releaseWhenLocal: null,
+      deadlineLocal: null,
+      theme,
+      isSidebarOpen,
+      originPage,
+      schoolYears
+    });
+
   } catch (error) {
-      console.error(error);
-      res.status(500).send('เกิดข้อผิดพลาดในการค้นหาแบบทดสอบ');
+    console.error(error);
+    res.status(500).send('เกิดข้อผิดพลาดในการค้นหาแบบทดสอบและบทเรียน');
   }
 };
 
+
 // ฟังก์ชันสำหรับค้นหาฝั่งนักเรียน
-exports.searchQuizStudent = async (req, res) => {
+exports.searchStudent = async (req, res) => {
   const searchQuery = req.params.query;
+
   try {
-      // ค้นหาในฐานข้อมูลโดยใช้ชื่อแบบทดสอบ
-      const results = await Quiz.find({ quizname: new RegExp(searchQuery, 'i') });
-      // แสดงผลลัพธ์ในหน้า searchResultsStudent.ejs
-      res.render('searchResults', { results, searchQuery });
+    // ดึงข้อมูลผู้ใช้งานจาก session
+    const userData = await User.findById(req.session.userId);
+    const originPage = req.query.originPage;
+
+    // ค้นหาแบบทดสอบทั้งหมดเพื่อแสดงใน sidebar หรือเมนูอื่น ๆ
+    const quizzes = await Quiz.find().sort({ createdAt: 1 }).exec();
+
+    // ค้นหาแบบทดสอบที่เกี่ยวข้องกับการค้นหา
+    const quizResults = await Quiz.find({ quizname: new RegExp(searchQuery, 'i') });
+
+    // ค้นหาในฐานข้อมูลสำหรับบทเรียน (lessons)
+    const lessonResults = await Lesson.find({ LessonName: new RegExp(searchQuery, 'i') });
+    const schoolYears = await SchoolYear.find().sort({ schoolYear: 0 });
+
+
+    const theme = req.session.theme || 'light';
+    const isSidebarOpen = false;
+
+    // หากมีผลลัพธ์จากการค้นหาแบบทดสอบ ให้ดึงข้อมูลเพิ่มเติม
+    if (quizResults.length > 0) {
+      const quiz = quizResults[0]; // เอาผลลัพธ์ตัวแรกมาใช้
+      const schYear = quiz.schoolYear ? quiz.schoolYear.schoolYear : '';
+      const questions = quiz.questions || [];
+      const releaseWhenLocal = quiz.releaseWhen ? moment.utc(quiz.releaseWhen).format('DD/MM/YYYY, เวลา HH:mm') : null;
+      const deadlineLocal = quiz.deadline ? moment.utc(quiz.deadline).format('DD/MM/YYYY, เวลา HH:mm') : null;
+
+      // แสดงผลลัพธ์ในหน้า searchResultsStudent.ejs พร้อมข้อมูลที่ดึงมา
+      return res.render('searchResults', {
+        quiz: quizResults,
+        lessons: lessonResults,
+        searchQuery,
+        userData,
+        quizzes,
+        schYear,
+        questions,
+        releaseWhenLocal,
+        deadlineLocal,
+        theme,
+        isSidebarOpen,
+        originPage,
+        schoolYears,
+
+      });
+    }
+
+    // หากไม่มีผลลัพธ์จากการค้นหาแบบทดสอบ
+    res.render('searchResults', {
+      quiz: [],
+      lessons: lessonResults,
+      searchQuery,
+      userData,
+      quizzes,
+      schYear: '',
+      questions: [],
+      releaseWhenLocal: null,
+      deadlineLocal: null,
+      theme,
+      isSidebarOpen,
+      originPage,
+      schoolYears
+    });
+
   } catch (error) {
-      console.error(error);
-      res.status(500).send('เกิดข้อผิดพลาดในการค้นหาแบบทดสอบ');
+    console.error(error);
+    res.status(500).send('เกิดข้อผิดพลาดในการค้นหาแบบทดสอบและบทเรียน');
   }
 };
+
+
 
 
 

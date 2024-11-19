@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const Schema = mongoose.Schema;
-
 // User schema
 const userSchema = new Schema({
     googleId: String,
@@ -57,28 +56,13 @@ const userSchema = new Schema({
     submitAssign: [{
         type: mongoose.Schema.ObjectId,
         ref: 'submitAssign'
-    }]
+    }],
+    attempts: [{
+        type: mongoose.Schema.ObjectId,
+        ref: 'attemptEachQuiz' 
+    }],
 }, { timestamps: true });
 
-// Hook หลังจากการบันทึก user
-userSchema.post('save', async function(doc) {
-    const Student = require('./student'); // Import student model
-    const Teacher = require('./teacher'); // Import teacher model
-
-    if (doc.role === 'student') {
-        const student = new Student({
-            user: doc._id,
-            // กำหนดค่าอื่น ๆ ที่ต้องการ
-        });
-        await student.save();
-    } else if (doc.role === 'teacher') {
-        const teacher = new Teacher({
-            user: doc._id,
-            // กำหนดค่าอื่น ๆ ที่ต้องการ
-        });
-        await teacher.save();
-    }
-});
 
 const User = mongoose.model('User', userSchema);
 
