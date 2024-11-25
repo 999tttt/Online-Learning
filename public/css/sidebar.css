@@ -345,7 +345,7 @@ body.dark .sidebar_nav a:hover {
     background-color: #444;
 }
 
-@media screen and (max-width: 900px) {
+@media screen and (max-width: 1020px) {
     .above-nav-status {
         display: none;
     }

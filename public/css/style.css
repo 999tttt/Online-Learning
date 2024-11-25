@@ -3,9 +3,7 @@
   margin: 0 !important;
   padding: 0 !important;
 }
-/* body{
-  margin-top: 5.6rem !important;
-} */
+
 a {
   color: #00B7FF;
 }
@@ -954,3 +952,10 @@ a {
 /* .ImageFile{
   box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
 } */
+@media (max-width: 1020px) {
+  .main-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
